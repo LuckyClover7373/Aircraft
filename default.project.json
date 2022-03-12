@@ -10,8 +10,8 @@
     },
 
     "ServerScriptService": {
-      "Server": {
-        "$path": "src/server"
+     "Server": {
+         "$path": "src/server"
       }
     },
 
@@ -48,6 +48,10 @@
             512
           ]
         }
+      },
+      "Plane": {
+        "$className": "Model",
+        "$path": "src/model"
       }
     },
     "Lighting": {
