@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>0</X>
-					<Y>20</Y>
-					<Z>20</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>-0</R02>
+					<X>-8.47454357</X>
+					<Y>17.8207226</Y>
+					<Z>0.149732172</Z>
+					<R00>0.965020359</R00>
+					<R01>0.236381993</R01>
+					<R02>-0.113399506</R02>
 					<R10>-0</R10>
-					<R11>0.780868828</R11>
-					<R12>0.624695063</R12>
-					<R20>0</R20>
-					<R21>-0.624695063</R21>
-					<R22>0.780868828</R22>
+					<R11>0.432533234</R11>
+					<R12>0.901618004</R12>
+					<R20>0.262175322</R20>
+					<R21>-0.870079756</R21>
+					<R22>0.417403281</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>-5</Z>
+					<X>-8.24774456</X>
+					<Y>16.0174866</Y>
+					<Z>-0.685074389</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -322,55 +322,11 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				</Vector3>
 			</Properties>
 		</Item>
-		<Item class="Part" referent="RBX2CA33CD28491496099945A0ECF31243A">
+		<Item class="Model" referent="RBX458D498EC59940FE82CED3847A86330C">
 			<Properties>
-				<bool name="Anchored">false</bool>
 				<BinaryString name="AttributesSerialize"></BinaryString>
-				<float name="BackParamA">-0.5</float>
-				<float name="BackParamB">0.5</float>
-				<token name="BackSurface">0</token>
-				<token name="BackSurfaceInput">0</token>
-				<float name="BottomParamA">-0.5</float>
-				<float name="BottomParamB">0.5</float>
-				<token name="BottomSurface">0</token>
-				<token name="BottomSurfaceInput">0</token>
-				<CoordinateFrame name="CFrame">
-					<X>0</X>
-					<Y>0.500003994</Y>
-					<Z>-5.0999999</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>0</R02>
-					<R10>0</R10>
-					<R11>1</R11>
-					<R12>0</R12>
-					<R20>0</R20>
-					<R21>0</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<bool name="CanCollide">true</bool>
-				<bool name="CanQuery">true</bool>
-				<bool name="CanTouch">true</bool>
-				<bool name="CastShadow">true</bool>
-				<int name="CollisionGroupId">0</int>
-				<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
-				<PhysicalProperties name="CustomPhysicalProperties">
-					<CustomPhysics>false</CustomPhysics>
-				</PhysicalProperties>
-				<float name="FrontParamA">-0.5</float>
-				<float name="FrontParamB">0.5</float>
-				<token name="FrontSurface">0</token>
-				<token name="FrontSurfaceInput">0</token>
-				<float name="LeftParamA">-0.5</float>
-				<float name="LeftParamB">0.5</float>
-				<token name="LeftSurface">0</token>
-				<token name="LeftSurfaceInput">0</token>
-				<bool name="Locked">false</bool>
-				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
-				<string name="MaterialVariantSerialized"></string>
-				<string name="Name">Part</string>
-				<CoordinateFrame name="PivotOffset">
+				<token name="LevelOfDetail">0</token>
+				<CoordinateFrame name="ModelMeshCFrame">
 					<X>0</X>
 					<Y>0</Y>
 					<Z>0</Z>
@@ -384,38 +340,175 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 					<R21>0</R21>
 					<R22>1</R22>
 				</CoordinateFrame>
-				<float name="Reflectance">0</float>
-				<float name="RightParamA">-0.5</float>
-				<float name="RightParamB">0.5</float>
-				<token name="RightSurface">0</token>
-				<token name="RightSurfaceInput">0</token>
-				<int name="RootPriority">0</int>
-				<Vector3 name="RotVelocity">
+				<SharedString name="ModelMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				<Vector3 name="ModelMeshSize">
 					<X>0</X>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
+				<string name="Name">Plane</string>
+				<bool name="NeedsPivotMigration">false</bool>
+				<Ref name="PrimaryPart">null</Ref>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
-				<float name="TopParamA">-0.5</float>
-				<float name="TopParamB">0.5</float>
-				<token name="TopSurface">0</token>
-				<token name="TopSurfaceInput">0</token>
-				<float name="Transparency">0</float>
-				<UniqueId name="UniqueId">08b1746d6c9ea536023decaf000b34bb</UniqueId>
-				<Vector3 name="Velocity">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<token name="formFactorRaw">1</token>
-				<token name="shape">1</token>
-				<Vector3 name="size">
-					<X>4</X>
-					<Y>1</Y>
-					<Z>2</Z>
-				</Vector3>
+				<UniqueId name="UniqueId">08b1746d6c9ea536023decaf000b37ef</UniqueId>
+				<OptionalCoordinateFrame name="WorldPivotData">
+					<CFrame>
+						<X>0</X>
+						<Y>0.500003994</Y>
+						<Z>-5.0999999</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CFrame>
+				</OptionalCoordinateFrame>
 			</Properties>
+			<Item class="ModuleScript" referent="RBX5F32A2FA65F14110A7A4B66641E2B40D">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Aircraft_Engine</string>
+					<string name="ScriptGuid">{D87BA7BF-5BE5-4873-92E4-9BDA432FC131}</string>
+					<ProtectedString name="Source"><![CDATA[local engine = {}
+
+engine.liftSlope = 6.2
+engine.skinFriction = 0.02
+engine.zeroLiftAoA = 0
+engine.stallAngle = 15
+engine.chord = 1
+engine.flapFraction = 0.2
+engine.aspectAratio = 2
+
+return engine]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+					<UniqueId name="UniqueId">08b1746d6c9ea536023decaf001380bf</UniqueId>
+				</Properties>
+				<Item class="Script" referent="RBX600BA58917A54F758E55731EDD5198B2">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<bool name="Disabled">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">engine</string>
+						<string name="ScriptGuid">{0D4551B2-9B0D-479D-8D8C-BE933BF155B3}</string>
+						<ProtectedString name="Source"><![CDATA[local engine = require(script.Parent)
+
+
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">08b1746d6c9ea536023decaf001381af</UniqueId>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="VehicleSeat" referent="RBX63D55E9813AC4624B7859CA3F4B0137F">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<CoordinateFrame name="CFrame">
+						<X>-8.5</X>
+						<Y>0.500003994</Y>
+						<Z>-1.79999995</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">true</bool>
+					<bool name="CanQuery">true</bool>
+					<bool name="CanTouch">true</bool>
+					<bool name="CastShadow">true</bool>
+					<int name="CollisionGroupId">0</int>
+					<Color3uint8 name="Color3uint8">4279970357</Color3uint8>
+					<PhysicalProperties name="CustomPhysicalProperties">
+						<CustomPhysics>false</CustomPhysics>
+					</PhysicalProperties>
+					<bool name="Disabled">false</bool>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<bool name="HeadsUpDisplay">true</bool>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<bool name="Massless">false</bool>
+					<token name="Material">256</token>
+					<string name="MaterialVariantSerialized"></string>
+					<float name="MaxSpeed">25</float>
+					<string name="Name">body</string>
+					<CoordinateFrame name="PivotOffset">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<int name="RootPriority">0</int>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<int64 name="SourceAssetId">-1</int64>
+					<int name="Steer">0</int>
+					<float name="SteerFloat">0</float>
+					<BinaryString name="Tags"></BinaryString>
+					<int name="Throttle">0</int>
+					<float name="ThrottleFloat">0</float>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Torque">10</float>
+					<float name="Transparency">0</float>
+					<float name="TurnSpeed">1</float>
+					<UniqueId name="UniqueId">08b1746d6c9ea536023decaf00138227</UniqueId>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<Vector3 name="size">
+						<X>4</X>
+						<Y>1</Y>
+						<Z>2</Z>
+					</Vector3>
+				</Properties>
+			</Item>
 		</Item>
 	</Item>
 	<Item class="SoundService" referent="6">
@@ -594,19 +687,6 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				<BinaryString name="Tags"></BinaryString>
 				<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae11</UniqueId>
 			</Properties>
-			<Item class="LocalScript" referent="9">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<bool name="Disabled">false</bool>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">Client</string>
-					<string name="ScriptGuid">{711EEDE2-E2E2-4322-AFC7-F7E0F48B146E}</string>
-					<ProtectedString name="Source">print(&quot;Hello world, from client! THis is testaaa&quot;)</ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-					<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae12</UniqueId>
-				</Properties>
-			</Item>
 		</Item>
 		<Item class="StarterCharacterScripts" referent="RBX438A591920634FA3835BE61C471DAEB2">
 			<Properties>
@@ -807,19 +887,6 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada0</UniqueId>
 		</Properties>
-		<Item class="Script" referent="5">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<bool name="Disabled">false</bool>
-				<Content name="LinkedSource"><null></null></Content>
-				<string name="Name">Server</string>
-				<string name="ScriptGuid">{C9512EA5-2502-4D81-89A3-826D0483245A}</string>
-				<ProtectedString name="Source">print(&quot;Hello world, from server!&quot;)</ProtectedString>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae09</UniqueId>
-			</Properties>
-		</Item>
 	</Item>
 	<Item class="ServerStorage" referent="RBXB919C38811654D7C95837CA3C8FCC793">
 		<Properties>
@@ -838,29 +905,6 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada2</UniqueId>
 		</Properties>
-		<Item class="Folder" referent="2">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<string name="Name">Common</string>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae07</UniqueId>
-			</Properties>
-			<Item class="ModuleScript" referent="3">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">Hello</string>
-					<string name="ScriptGuid">{2780FE93-344D-4C34-ACFB-266B4369026E}</string>
-					<ProtectedString name="Source"><![CDATA[return function()
-	print("Hello, world!")
-end]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-					<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae08</UniqueId>
-				</Properties>
-			</Item>
-		</Item>
 	</Item>
 	<Item class="LuaWebService" referent="RBX7E199C79181A4F328925891208A966BA">
 		<Properties>

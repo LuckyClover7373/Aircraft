@@ -32,10 +32,9 @@
       },
       "Plane": {
         "$className": "Model",
-        "$path": "src/model",
+        
         "Aircraft_Engine": {
-          "$className": "ModuleScript",
-          "$path": "src/Engine"
+          "$path": "src/engine"
         }
       }
     }
