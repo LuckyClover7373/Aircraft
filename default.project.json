@@ -34,7 +34,13 @@
         "$className": "Model",
         
         "Aircraft_Engine": {
-          "$path": "src/engine"
+          "$path": "src/engine",
+
+          "modules": {
+            "$className": "Folder",
+  
+            "$path": "src/engine/modules"
+          }
         }
       }
     }
