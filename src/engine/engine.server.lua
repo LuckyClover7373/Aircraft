@@ -41,9 +41,9 @@ local function PredictVelocity(force: Vector3, delta: number)
 end
 
 local function PredictAnguVelocity(torque: Vector3, delta: number)
-    local inertiaTensorWorldRotation = Quaternion.fromCFrame(drive.CFrame) --* rb.inertiaTensorRotation
-    local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation:inverse() * torque
-	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X --[[/ rb.inertiaTensor.x]], torqueInDiagonalSpace.Y --[[/ rb.inertiaTensor.y]], torqueInDiagonalSpace.Z --[[/ rb.inertiaTensor.z]])
+    local inertiaTensorWorldRotation = Quaternion.fromCFrame(drive.CFrame) * drive.AssemblyAngularVelocity
+    local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
+	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
 
     return drive.AssemblyAngularVelocity + delta * PREDICTION_TIMESTEP_FRACTION * (inertiaTensorWorldRotation * angularVelocityChangeInDiagonalSpace)
 end
@@ -57,7 +57,7 @@ while true do
 
     local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
-    local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity, 0) * drive.Mass, delta)
+    local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
     local angularVelocityPrediction = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
 
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)

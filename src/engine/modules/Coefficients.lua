@@ -155,7 +155,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord * math.clamp(1.5 - wing.AssemblyAngularVelocity.Magnitude / 100, 0.5, 1.5)
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
