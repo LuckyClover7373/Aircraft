@@ -113,7 +113,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+    flapAngle = math.clamp(angle, -math.rad(90), math.rad(90))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)

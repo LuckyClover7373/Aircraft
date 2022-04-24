@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-10.6009483</X>
-					<Y>15.8987741</Y>
-					<Z>-0.251097441</Z>
-					<R00>0.978144705</R00>
-					<R01>0.158813104</R01>
-					<R02>-0.134206772</R02>
+					<X>-11.4260626</X>
+					<Y>15.2533245</Y>
+					<Z>-2.09726143</Z>
+					<R00>0.999902725</R00>
+					<R01>-0.00808137748</R01>
+					<R02>0.0113716125</R02>
 					<R10>-0</R10>
-					<R11>0.645455837</R11>
-					<R12>0.76379776</R12>
-					<R20>0.207925603</R20>
-					<R21>-0.747104764</R21>
-					<R22>0.631349087</R22>
+					<R11>0.815128088</R11>
+					<R12>0.579280853</R12>
+					<R20>-0.0139507074</R20>
+					<R21>-0.579224527</R21>
+					<R22>0.815048695</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-10.3325348</X>
-					<Y>14.3711786</Y>
-					<Z>-1.51379561</Z>
+					<X>-11.4488058</X>
+					<Y>14.0947628</Y>
+					<Z>-3.72735882</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -411,7 +411,7 @@ engine.flapFraction = 0.2
 engine.span = 1
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 3000
+engine.thrust = 1000
 
 return engine]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
@@ -630,7 +630,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+    flapAngle = math.clamp(angle, -math.rad(90), math.rad(90))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
@@ -1020,7 +1020,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+    flapAngle = math.clamp(angle, -math.rad(90), math.rad(90))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
