@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-6.867239</X>
-					<Y>20.5633907</Y>
-					<Z>-8.11013317</Z>
-					<R00>-0.743138671</R00>
-					<R01>-0.564979196</R01>
-					<R02>0.358529657</R02>
-					<R10>-1.49011612e-08</R10>
-					<R11>0.535808682</R11>
-					<R12>0.84433949</R12>
-					<R20>-0.669137478</R20>
-					<R21>0.627461314</R21>
-					<R22>-0.398180157</R22>
+					<X>-12.433651</X>
+					<Y>39.3295746</Y>
+					<Z>-10.4989939</Z>
+					<R00>-0.998026609</R00>
+					<R01>0.0521197356</R01>
+					<R02>-0.0350208245</R02>
+					<R10>-0</R10>
+					<R11>0.557721138</R11>
+					<R12>0.830028415</R12>
+					<R20>0.062792711</R20>
+					<R21>0.828390419</R21>
+					<R22>-0.556620538</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-7.58430147</X>
-					<Y>18.8747044</Y>
-					<Z>-7.31376934</Z>
+					<X>-12.3636093</X>
+					<Y>37.6695175</Y>
+					<Z>-9.38575268</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -355,7 +355,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				<OptionalCoordinateFrame name="WorldPivotData">
 					<CFrame>
 						<X>-8.5</X>
-						<Y>5.7000041</Y>
+						<Y>17.5000038</Y>
 						<Z>-1.79999995</Z>
 						<R00>1</R00>
 						<R01>0</R01>
@@ -490,11 +490,9 @@ while true do
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
-    drive:ApplyImpulse(currentForceAndTorque.force)
-	drive:ApplyAngularImpulse(currentForceAndTorque.torque) -- s	
-	--print(_G.per)
 	
-    drive:ApplyImpulse(drive.CFrame.LookVector * engine.thrust * per)
+    drive.AssemblyLinearVelocity = ((currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta).Magnitude > 0 and (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta or Vector3.zero
+    drive.AssemblyAngularVelocity = (currentForceAndTorque.torque * 60 / delta).Magnitude > 0 and currentForceAndTorque.torque * 60 / delta or Vector3.zero
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -1204,7 +1202,7 @@ return quaternion;]]></ProtectedString>
 					<token name="BottomSurfaceInput">0</token>
 					<CoordinateFrame name="CFrame">
 						<X>-8.5</X>
-						<Y>5.7000041</Y>
+						<Y>17.5000038</Y>
 						<Z>-1.79999995</Z>
 						<R00>1</R00>
 						<R01>0</R01>
@@ -1366,7 +1364,7 @@ return quaternion;]]></ProtectedString>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
 							<X>-20.75</X>
-							<Y>5.7000041</Y>
+							<Y>17.5000038</Y>
 							<Z>-1.79999995</Z>
 							<R00>1</R00>
 							<R01>0</R01>
@@ -1461,7 +1459,7 @@ return quaternion;]]></ProtectedString>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
 							<X>3.75000095</X>
-							<Y>5.7000041</Y>
+							<Y>17.5000038</Y>
 							<Z>-1.79999995</Z>
 							<R00>1</R00>
 							<R01>0</R01>
