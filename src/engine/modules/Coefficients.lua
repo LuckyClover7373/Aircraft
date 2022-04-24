@@ -1,8 +1,10 @@
 local Coefficidents = {}
 
 local engine = require(script.Parent.Parent)
+local BiVector = require(script.Parent.BiVector)
+local Quaternion = require(script.Parent.Quaternion)
 
-local flapAngle: number = 0;
+local flapAngle: number = 0
 
 local function lerp(a: number, b: number, t: number): number
     return a + (b - a) * t
@@ -14,6 +16,14 @@ end
 
 local function FrictionAt90Degrees(flapAngle: number): number
     return 1.98 - 4.26e-2 * flapAngle^2 + 2.1e-1 * flapAngle
+end
+
+local function FlapEffectivnessCorrection(flapAngle: number): number
+    return lerp(0.8, 0.4, (math.deg(math.abs(flapAngle)) - 10) / 50)
+end
+
+local function LiftCoefficientMaxFraction(flapFraction: number): number
+    return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
 end
 
 local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number): Vector3
@@ -62,11 +72,7 @@ local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLif
     return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
 end
 
-function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
-end
-
-function Coefficidents.CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
     local aerodynamicCoefficidents: Vector3
 
     local paddingAngleHigh: number = math.rad(lerp(15, 5, (math.deg(flapAngle) + 50) / 100))
@@ -104,6 +110,58 @@ function Coefficidents.CalculateCoefficidents(angleOfAttack: number, correctedLi
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
     return aerodynamicCoefficidents
+end
+
+function Coefficidents.setFlapAngle(angle: number)
+    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+end
+
+game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
+    Coefficidents.setFlapAngle(f)
+end)
+
+function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+    local forceAndTorque = BiVector.new()
+    
+    local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
+    (engine.aspectRatio + 2 * (engine.aspectRatio + 4) / (engine.aspectRatio + 2))
+
+    local theta: number = math.acos(2 * engine.flapFraction - 1)
+    local flapEffectivness: number = 1 - (theta - math.sin(theta)) / math.pi
+    local deltaLift: number = correctedLiftSlope * flapEffectivness * FlapEffectivnessCorrection(flapAngle) * flapAngle
+
+    local zeroLiftAoABase: number = math.rad(engine.zeroLiftAoA)
+    local zeroLiftAoA: number = zeroLiftAoABase - deltaLift / correctedLiftSlope
+
+    local stallAngleHighBase: number = math.rad(engine.stallAngleHigh)
+    local stallAngleLowBase: number = math.rad(engine.stallAngleLow)
+
+    local clMaxHigh: number = correctedLiftSlope * (stallAngleHighBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+    local clMaxLow: number = correctedLiftSlope * (stallAngleLowBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+
+    local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
+    local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
+
+    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
+    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
+
+    local area: number = engine.chord * engine.span
+    local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
+    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+
+    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
+
+    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
+    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+
+    forceAndTorque.force += lift + drag
+    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
+    forceAndTorque.torque += torque
+
+    return forceAndTorque
 end
 
 return Coefficidents

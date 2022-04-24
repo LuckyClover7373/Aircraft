@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>40.7461319</X>
-					<Y>11.0264263</Y>
-					<Z>37.6492844</Z>
-					<R00>0.559175551</R00>
-					<R01>0.421939164</R01>
-					<R02>-0.713645697</R02>
-					<R10>-1.49011612e-08</R10>
-					<R11>0.860800147</R11>
-					<R12>0.508943379</R12>
-					<R20>0.829049349</R20>
-					<R21>-0.284588695</R21>
-					<R22>0.481338322</R22>
+					<X>-11.0395803</X>
+					<Y>17.9586735</Y>
+					<Z>9.06287098</Z>
+					<R00>0.999902487</R00>
+					<R01>0.00977608096</R01>
+					<R02>-0.00998306274</R02>
+					<R10>-0</R10>
+					<R11>0.714474857</R11>
+					<R12>0.699661255</R12>
+					<R20>0.0139725916</R20>
+					<R21>-0.699593008</R21>
+					<R22>0.71440506</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>42.1734238</X>
-					<Y>10.0085392</Y>
-					<Z>36.6866074</Z>
+					<X>-11.0196142</X>
+					<Y>16.559351</Y>
+					<Z>7.63406086</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -375,17 +375,43 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Aircraft_Engine</string>
 					<string name="ScriptGuid">{D87BA7BF-5BE5-4873-92E4-9BDA432FC131}</string>
-					<ProtectedString name="Source"><![CDATA[local engine = {}
+					<ProtectedString name="Source"><![CDATA[--[[                        
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢠⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⡆⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢀⣼⡿⣿⣿⡏⠉⠉⠉⠉⠉⠉⠉⠁⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣠⣿⠟⠁⣿⣿⡇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣼⣿⠋⠄⠄⣿⣿⡇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⣠⣿⠟⠁⠄⠄⠄⣿⣿⡿⠿⠿⠿⠿⠿⠿⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⢀⣼⣿⣯⣤⣤⣤⣤⣤⣿⣿⡇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⢠⣿⡟⠛⠛⠛⠛⠛⠛⠛⣿⣿⡇⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⢀⣼⣿⠋⠄⠄⠄⠄⠄⠄⠄⠄⣿⣿⣇⣀⣀⣀⣀⣀⣀⣀⡀⠄⠄⠄
+⠄⠄⠄⠄⠛⠛⠃⠄⠄⠄⠄⠄⠄⠄⠄⠄⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠇⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
 
-engine.airDensity = 1
+Aircraft Engine
+Made by LuckyClover7373 (Thanks for wjoh0315)
 
-engine.liftSlope = 6.2
+]]--
+
+local engine = {}
+
+engine.airDensity = 1.3
+
+engine.liftSlope = 6.28
 engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
-engine.stallAngle = 15
+engine.stallAngleHigh = 15
+engine.stallAngleLow = -15
 engine.chord = 1
 engine.flapFraction = 0.2
-engine.aspectAratio = 2
+engine.span = 1
+engine.autoAspectRatio = true
+engine.aspectRatio = 2
+engine.thrust = 300
 
 return engine]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
@@ -401,44 +427,765 @@ return engine]]></ProtectedString>
 						<string name="ScriptGuid">{0D4551B2-9B0D-479D-8D8C-BE933BF155B3}</string>
 						<ProtectedString name="Source"><![CDATA[local engine = require(script.Parent)
 
+local modules = script.Parent.modules
+local Coefficidents = require(modules.Coefficients)
+local BiVector = require(modules.BiVector)
+local Quaternion = require(modules.Quaternion)
+
 local RUN_SERVICE = game:GetService("RunService")
 
-local drive = script.Parent.Parent.drive
+local drive: VehicleSeat = script.Parent.Parent:FindFirstChildWhichIsA("VehicleSeat")
+local wings: Folder = script.Parent.Parent.wings
+
+local PREDICTION_TIMESTEP_FRACTION: number = 0.5
 
 drive:SetNetworkOwner(nil)
+local per = 0
 
-local function lerp(a, b, t)
-    return a + (b - a) * t
+local function engineFix()
+    if engine.flapFraction > 0.4 then engineFix.flapFraction = 0.4 end
+    if engine.flapFraction < 0 then engine.flapFraction = 0 end
+    if engine.stallAngleHigh < 0 then engine.stallAngleHigh = 0 end
+    if engine.stallAngleLow > 0 then engine.stallAngleLow = 0 end
+    if engine.chord < 0.001 then engine.chord = 0.001 end
+    if engine.autoAspectRatio then engine.aspectRatio = engine.span / engine.chord end
+end
+engineFix()
+
+local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3)
+    local forceAndTorque = BiVector.new()
+    for i: number, wing: BasePart in pairs(wings:GetChildren()) do
+        if not wing:IsA("BasePart") then return end
+
+        local relativePosition: Vector3 = wing.Position - centerOfMass
+        forceAndTorque += Coefficidents.CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition, wing)
+    end
+    return forceAndTorque
 end
 
-while true do
-    local delta = RUN_SERVICE.Stepped:Wait()
+local function PredictVelocity(force: Vector3, delta: number)
+    return drive.AssemblyLinearVelocity + delta * PREDICTION_TIMESTEP_FRACTION * force / drive.Mass
+end
 
-    
+local function PredictAnguVelocity(torque: Vector3, delta: number)
+    local inertiaTensorWorldRotation = Quaternion.fromCFrame(drive.CFrame) --* rb.inertiaTensorRotation
+    local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation:inverse() * torque
+	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X --[[/ rb.inertiaTensor.x]], torqueInDiagonalSpace.Y --[[/ rb.inertiaTensor.y]], torqueInDiagonalSpace.Z --[[/ rb.inertiaTensor.z]])
+
+    return drive.AssemblyAngularVelocity + delta * PREDICTION_TIMESTEP_FRACTION * (inertiaTensorWorldRotation * angularVelocityChangeInDiagonalSpace)
+end
+
+game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
+	per = rper / 100
+end)
+
+while true do
+    local delta: number = RUN_SERVICE.Stepped:Wait()
+
+    local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
+
+    local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity, 0) * drive.Mass, delta)
+    local angularVelocityPrediction = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
+
+    local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
+
+    local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
+    drive:ApplyImpulse(currentForceAndTorque.force)
+	drive:ApplyAngularImpulse(currentForceAndTorque.torque) -- s	
+	--print(_G.per)
+	
+    drive:ApplyImpulse(drive.CFrame.LookVector * engine.thrust * per)
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 						<UniqueId name="UniqueId">08b1746d6c9ea536023decaf001381af</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="Folder" referent="RBX512A47B37B494DA7B1097E03FE42F6D6">
+				<Item class="Folder" referent="RBXA2CC87D1355240A68CFB2DAF667DF955">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<string name="Name">modules</string>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">0f858ea6c332bc1f027521d200029375</UniqueId>
+						<UniqueId name="UniqueId">4b05a47187468cf302755eb9000285e9</UniqueId>
 					</Properties>
-					<Item class="ModuleScript" referent="RBXC1A56E218D624696862A2DF80B86B4A8">
+					<Item class="ModuleScript" referent="RBX8F27D6FD6E4F4C90B6CF70C355F3CBA0">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<Content name="LinkedSource"><null></null></Content>
 							<string name="Name">Coefficients</string>
-							<string name="ScriptGuid">{2012D4BD-D7BA-43B1-95BA-925C42BB44B8}</string>
-							<ProtectedString name="Source"></ProtectedString>
+							<string name="ScriptGuid">{99929367-7B7E-470A-A65C-81B2F6663638}</string>
+							<ProtectedString name="Source"><![CDATA[local Coefficidents = {}
+
+local engine = require(script.Parent.Parent)
+local BiVector = require(script.Parent.BiVector)
+local Quaternion = require(script.Parent.Quaternion)
+
+local flapAngle: number = 0
+
+local function lerp(a: number, b: number, t: number): number
+    return a + (b - a) * t
+end
+
+local function TorqCoefficientProportion(effectiveAngle: number): number
+    return 0.25 - 0.175 * (1 - 2 * math.abs(effectiveAngle) / math.pi)
+end
+
+local function FrictionAt90Degrees(flapAngle: number): number
+    return 1.98 - 4.26e-2 * flapAngle^2 + 2.1e-1 * flapAngle
+end
+
+local function FlapEffectivnessCorrection(flapAngle: number): number
+    return lerp(0.8, 0.4, (math.deg(math.abs(flapAngle)) - 10) / 50)
+end
+
+local function LiftCoefficientMaxFraction(flapFraction: number): number
+    return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
+end
+
+local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number): Vector3
+    local liftCoefficient: number = correctedLiftSlope * (angleOfAttack - zeroLiftAoA)
+    local inducedAngle: number = liftCoefficient / (math.pi * engine.aspectRatio)
+    local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
+
+    local tangentialCoefficient: number = engine.skinFriction * math.cos(effectiveAngle)
+
+    local normalCoefficient = (liftCoefficient +
+    math.sin(effectiveAngle) * tangentialCoefficient) / math.cos(effectiveAngle)
+    local dragCoefficient = normalCoefficient * math.sin(effectiveAngle) + tangentialCoefficient * math.cos(effectiveAngle)
+    local torqueCoefficient = -normalCoefficient * TorqCoefficientProportion(effectiveAngle)
+
+    return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
+end
+
+local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+    local liftCoefficientLowAoA: number
+    if angleOfAttack > stallAngleHigh then
+        liftCoefficientLowAoA = correctedLiftSlope * (stallAngleHigh - zeroLiftAoA)
+    else
+        liftCoefficientLowAoA = correctedLiftSlope * (stallAngleLow - zeroLiftAoA)
+    end
+
+    local inducedAngle: number = liftCoefficientLowAoA / (math.pi * engine.aspectRatio)
+
+    local lerpAlpha: number
+    if angleOfAttack > stallAngleHigh then
+        lerpAlpha = (math.pi / 2 - math.clamp(angleOfAttack, -math.pi / 2, math.pi / 2)) / (math.pi / 2 - stallAngleHigh)
+    else
+        lerpAlpha = (-math.pi / 2 - math.clamp(angleOfAttack, -math.pi / 2, math.pi / 2)) / (-math.pi / 2 - stallAngleLow)
+    end
+    inducedAngle = lerp(0, inducedAngle, lerpAlpha)
+    local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
+
+    local normalCoefficient: number = FrictionAt90Degrees(flapAngle) * math.sin(effectiveAngle) *
+    (1 / (0.56 + 0.44 * math.abs(math.sin(effectiveAngle))) -
+    0.41 * (1 - math.exp(-17 / engine.aspectRatio)))
+    local tangentialCoefficient: number = 0.5 * engine.skinFriction * math.cos(effectiveAngle)
+
+    local liftCoefficient: number = normalCoefficient * math.cos(effectiveAngle) - tangentialCoefficient * math.sin(effectiveAngle)
+    local dragCoefficient: number = normalCoefficient * math.sin(effectiveAngle) + tangentialCoefficient * math.cos(effectiveAngle)
+    local torqueCoefficient: number = -normalCoefficient * TorqCoefficientProportion(effectiveAngle)
+
+    return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
+end
+
+local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+    local aerodynamicCoefficidents: Vector3
+
+    local paddingAngleHigh: number = math.rad(lerp(15, 5, (math.deg(flapAngle) + 50) / 100))
+    local paddingAngleLow: number = math.rad(lerp(15, 5, (-math.deg(flapAngle) + 50) / 100))
+    local paddedStallAngleHigh: number = stallAngleHigh + paddingAngleHigh
+    local paddedStallAngleLow: number = stallAngleLow - paddingAngleLow
+
+    if angleOfAttack < stallAngleHigh and angleOfAttack > stallAngleLow then
+        aerodynamicCoefficidents = CalculateCoefficidentsAtLowAoA(angleOfAttack, correctedLiftSlope, zeroLiftAoA)
+    elseif angleOfAttack > paddedStallAngleHigh or angleOfAttack < paddingAngleLow then
+        aerodynamicCoefficidents = CalculateCoefficidentsAtStall(
+            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+        )
+    else
+        local aerodynamicCoefficientsLow: Vector3
+        local aerodynamicCoefficientsStall: Vector3
+        local lerpAlpha: number
+
+        if angleOfAttack > stallAngleHigh then
+            aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
+                stallAngleHigh, correctedLiftSlope, zeroLiftAoA)
+            aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
+                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+            )
+            lerpAlpha = (angleOfAttack - stallAngleHigh) / (paddedStallAngleHigh - stallAngleHigh)
+        else
+            aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
+                stallAngleLow, correctedLiftSlope, zeroLiftAoA
+            )
+            aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
+                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+            )
+            lerpAlpha = (angleOfAttack - stallAngleLow) / (paddedStallAngleLow - stallAngleLow)
+        end
+        aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
+    end
+    return aerodynamicCoefficidents
+end
+
+function Coefficidents.setFlapAngle(angle: number)
+    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+end
+
+game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
+    Coefficidents.setFlapAngle(f)
+end)
+
+function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+    local forceAndTorque = BiVector.new()
+    
+    local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
+    (engine.aspectRatio + 2 * (engine.aspectRatio + 4) / (engine.aspectRatio + 2))
+
+    local theta: number = math.acos(2 * engine.flapFraction - 1)
+    local flapEffectivness: number = 1 - (theta - math.sin(theta)) / math.pi
+    local deltaLift: number = correctedLiftSlope * flapEffectivness * FlapEffectivnessCorrection(flapAngle) * flapAngle
+
+    local zeroLiftAoABase: number = math.rad(engine.zeroLiftAoA)
+    local zeroLiftAoA: number = zeroLiftAoABase - deltaLift / correctedLiftSlope
+
+    local stallAngleHighBase: number = math.rad(engine.stallAngleHigh)
+    local stallAngleLowBase: number = math.rad(engine.stallAngleLow)
+
+    local clMaxHigh: number = correctedLiftSlope * (stallAngleHighBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+    local clMaxLow: number = correctedLiftSlope * (stallAngleLowBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+
+    local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
+    local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
+
+    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
+    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
+
+    local area: number = engine.chord * engine.span
+    local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
+    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+
+    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
+
+    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
+    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+
+    forceAndTorque.force += lift + drag
+    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
+    forceAndTorque.torque += torque
+
+    return forceAndTorque
+end
+
+return Coefficidents]]></ProtectedString>
 							<int64 name="SourceAssetId">-1</int64>
 							<BinaryString name="Tags"></BinaryString>
-							<UniqueId name="UniqueId">0f858ea6c332bc1f027521d2000367a8</UniqueId>
+							<UniqueId name="UniqueId">4b05a47187468cf302755eb9000285ea</UniqueId>
+						</Properties>
+					</Item>
+					<Item class="ModuleScript" referent="RBXFB6F86E8ECAC4165B696A09F4C1E5628">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<Content name="LinkedSource"><null></null></Content>
+							<string name="Name">BiVector</string>
+							<string name="ScriptGuid">{77A7EF1E-2AFF-4214-83C6-E3C032325DCA}</string>
+							<ProtectedString name="Source"><![CDATA[local BiVector = {}
+BiVector.__Index = BiVector
+
+function BiVector.new(force: Vector3?, torque: Vector3?)
+    local new = {
+        ["force"] = force or Vector3.zero,
+        ["torque"] = torque or Vector3.zero
+    }
+    return setmetatable(new, BiVector)
+end
+
+BiVector.__add = function(self: table, value: table)
+    return BiVector.new(self.force + value.force, self.torque + value.torque)
+end
+
+BiVector.__sub = function(self: table, value: table)
+    return BiVector.new(self.force - value.force, self.torque - value.torque)
+end
+
+BiVector.__mul = function(self: (table | number), value: (table | number))
+	local calcBiVector = nil
+	
+	if typeof(self) == "table" and typeof(value) == "table" then
+		calcBiVector = BiVector.new(self.force * value.force, self.torque * value.torque)
+	elseif typeof(self) == "table" and typeof(value) == "number" then
+		calcBiVector = BiVector.new(self.force * value, self.torque * value)
+	elseif typeof(self) == "number" and typeof(value) == "table" then
+		calcBiVector = BiVector.new(self * value.force, self * value.torque)
+	end
+	
+	return calcBiVector
+end
+
+
+return BiVector]]></ProtectedString>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">4b05a47187468cf302755eb9000953cc</UniqueId>
+						</Properties>
+					</Item>
+					<Item class="ModuleScript" referent="RBX0CC8BAEE02704277A1E57DA3ADC2C230">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<Content name="LinkedSource"><null></null></Content>
+							<string name="Name">Quaternion</string>
+							<string name="ScriptGuid">{806C2BC3-0B43-4A45-86AF-61CB8E24F004}</string>
+							<ProtectedString name="Source"><![CDATA[local quaternion = {__type = "quaternion"};
+local quaternion_mt = {__index = quaternion};
+local ref = setmetatable({}, {__mode = "k"});
+
+local PI = math.pi;
+local abs = math.abs;
+local cos = math.cos;
+local sin = math.sin;
+local acos = math.acos;
+local sqrt = math.sqrt;
+
+function quaternion_mt.__mul(q0, q1)
+	if (typeof(q0) == "table" and q0.__type == "quaternion") and (typeof(q1) == "table" and q1.__type == "quaternion") then
+		local w0, w1 = q0.w, q1.w;
+		local v0, v1 = ref[q0], ref[q1];
+		local nw = w0*w1 - v0:Dot(v1);
+		local nv = v0*w1 + v1*w0 + v0:Cross(v1);
+		return quaternion.new(nw, nv.x, nv.y, nv.z);
+	elseif (typeof(q0) == "table" and q0.__type == "quaternion") and typeof(q1) == "Vector3" then
+		return q0:toAxisAngle() * q1
+	elseif typeof(q0) == "Vector3" and (typeof(q1) == "table" and q1.__type == "quaternion") then
+		return q1:toAxisAngle() * q0
+	end
+end
+
+function quaternion_mt.__pow(q0, t)
+	local axis, theta = q0:toAxisAngle();
+	theta = theta * t * 0.5;
+	axis = sin(theta)*axis
+	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
+end
+
+function quaternion_mt.__tostring(q0)
+	local t = {q0.w, q0.x, q0.y, q0.z};
+	return table.concat(t, ", ");
+end
+
+function quaternion.new(w, x, y, z)
+	local self = {};
+	
+	self.w = w;
+	self.x = x;
+	self.y = y;
+	self.z = z;
+	
+	self = setmetatable(self, quaternion_mt);
+	ref[self] = Vector3.new(x, y, z);
+	
+	return self;
+end
+
+function quaternion.fromCFrame(cf)
+	local axis, theta = cf:toAxisAngle();
+	theta = theta * 0.5
+	axis = sin(theta)*axis
+	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
+end
+
+function quaternion:inverse()
+	local w = self.w
+	local conjugate = w*w + ref[self]:Dot(ref[self]);
+ 
+	local nw = w / conjugate;
+	local nv = -ref[self] / conjugate;
+ 
+	return quaternion.new(nw, nv.x, nv.y, nv.z);
+end
+
+function quaternion:toAxisAngle()
+	local axis = ref[self];
+	local theta = acos(self.w) * 2;
+
+	-- if theta is equivalent to zero then pick a random axis
+	if (theta % (PI*2) == 0 and axis:Dot(axis) == 0) then
+		axis = Vector3.new(1, 0, 0);
+	end
+ 
+	return axis.unit, theta;
+end;
+ 
+function quaternion:slerp(self2, t)
+	return ((self2 * self:inverse())^t) * self;
+end
+
+function quaternion:slerpClosest(self2, t)
+	if (self.w*self2.w + self.x*self2.x + self.y*self2.y + self.z*self2.z > 0) then
+		-- choose self2
+		return self:slerp(self2, t);
+	else
+		-- choose -self2
+		self2 = quaternion.new(-self2.w, -self2.x, -self2.y, -self2.z);
+		return self:slerp(self2, t);
+	end
+end
+
+function quaternion:toCFrame()
+	return CFrame.new(0, 0, 0, self.x, self.y, self.z, self.w);
+end
+
+return quaternion;]]></ProtectedString>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">215beb21e7b382da027625aa00028974</UniqueId>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Folder" referent="RBX1EA8BD6F42F9428E888CF17A7B2A29B5">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<string name="Name">modules</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">215beb21e7b382da027625aa0002848b</UniqueId>
+					</Properties>
+					<Item class="ModuleScript" referent="RBX8F0A03402CB44663BF86F592E5158516">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<Content name="LinkedSource"><null></null></Content>
+							<string name="Name">BiVector</string>
+							<string name="ScriptGuid">{2BD46F01-102D-4240-A625-53B2CDFB0084}</string>
+							<ProtectedString name="Source"><![CDATA[local BiVector = {}
+BiVector.__Index = BiVector
+
+function BiVector.new(force: Vector3?, torque: Vector3?)
+    local new = {
+        ["force"] = force or Vector3.zero,
+        ["torque"] = torque or Vector3.zero
+    }
+    return setmetatable(new, BiVector)
+end
+
+BiVector.__add = function(self: table, value: table)
+    return BiVector.new(self.force + value.force, self.torque + value.torque)
+end
+
+BiVector.__sub = function(self: table, value: table)
+    return BiVector.new(self.force - value.force, self.torque - value.torque)
+end
+
+BiVector.__mul = function(self: (table | number), value: (table | number))
+	local calcBiVector = nil
+	
+	if typeof(self) == "table" and typeof(value) == "table" then
+		calcBiVector = BiVector.new(self.force * value.force, self.torque * value.torque)
+	elseif typeof(self) == "table" and typeof(value) == "number" then
+		calcBiVector = BiVector.new(self.force * value, self.torque * value)
+	elseif typeof(self) == "number" and typeof(value) == "table" then
+		calcBiVector = BiVector.new(self * value.force, self * value.torque)
+	end
+	
+	return calcBiVector
+end
+
+
+return BiVector]]></ProtectedString>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">215beb21e7b382da027625aa0002848c</UniqueId>
+						</Properties>
+					</Item>
+					<Item class="ModuleScript" referent="RBXB6E79F0473724438946747ACA69A4148">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<Content name="LinkedSource"><null></null></Content>
+							<string name="Name">Coefficients</string>
+							<string name="ScriptGuid">{3AD00F3F-98CC-4986-B869-ECD53729651F}</string>
+							<ProtectedString name="Source"><![CDATA[local Coefficidents = {}
+
+local engine = require(script.Parent.Parent)
+local BiVector = require(script.Parent.BiVector)
+local Quaternion = require(script.Parent.Quaternion)
+
+local flapAngle: number = 0
+
+local function lerp(a: number, b: number, t: number): number
+    return a + (b - a) * t
+end
+
+local function TorqCoefficientProportion(effectiveAngle: number): number
+    return 0.25 - 0.175 * (1 - 2 * math.abs(effectiveAngle) / math.pi)
+end
+
+local function FrictionAt90Degrees(flapAngle: number): number
+    return 1.98 - 4.26e-2 * flapAngle^2 + 2.1e-1 * flapAngle
+end
+
+local function FlapEffectivnessCorrection(flapAngle: number): number
+    return lerp(0.8, 0.4, (math.deg(math.abs(flapAngle)) - 10) / 50)
+end
+
+local function LiftCoefficientMaxFraction(flapFraction: number): number
+    return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
+end
+
+local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number): Vector3
+    local liftCoefficient: number = correctedLiftSlope * (angleOfAttack - zeroLiftAoA)
+    local inducedAngle: number = liftCoefficient / (math.pi * engine.aspectRatio)
+    local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
+
+    local tangentialCoefficient: number = engine.skinFriction * math.cos(effectiveAngle)
+
+    local normalCoefficient = (liftCoefficient +
+    math.sin(effectiveAngle) * tangentialCoefficient) / math.cos(effectiveAngle)
+    local dragCoefficient = normalCoefficient * math.sin(effectiveAngle) + tangentialCoefficient * math.cos(effectiveAngle)
+    local torqueCoefficient = -normalCoefficient * TorqCoefficientProportion(effectiveAngle)
+
+    return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
+end
+
+local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+    local liftCoefficientLowAoA: number
+    if angleOfAttack > stallAngleHigh then
+        liftCoefficientLowAoA = correctedLiftSlope * (stallAngleHigh - zeroLiftAoA)
+    else
+        liftCoefficientLowAoA = correctedLiftSlope * (stallAngleLow - zeroLiftAoA)
+    end
+
+    local inducedAngle: number = liftCoefficientLowAoA / (math.pi * engine.aspectRatio)
+
+    local lerpAlpha: number
+    if angleOfAttack > stallAngleHigh then
+        lerpAlpha = (math.pi / 2 - math.clamp(angleOfAttack, -math.pi / 2, math.pi / 2)) / (math.pi / 2 - stallAngleHigh)
+    else
+        lerpAlpha = (-math.pi / 2 - math.clamp(angleOfAttack, -math.pi / 2, math.pi / 2)) / (-math.pi / 2 - stallAngleLow)
+    end
+    inducedAngle = lerp(0, inducedAngle, lerpAlpha)
+    local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
+
+    local normalCoefficient: number = FrictionAt90Degrees(flapAngle) * math.sin(effectiveAngle) *
+    (1 / (0.56 + 0.44 * math.abs(math.sin(effectiveAngle))) -
+    0.41 * (1 - math.exp(-17 / engine.aspectRatio)))
+    local tangentialCoefficient: number = 0.5 * engine.skinFriction * math.cos(effectiveAngle)
+
+    local liftCoefficient: number = normalCoefficient * math.cos(effectiveAngle) - tangentialCoefficient * math.sin(effectiveAngle)
+    local dragCoefficient: number = normalCoefficient * math.sin(effectiveAngle) + tangentialCoefficient * math.cos(effectiveAngle)
+    local torqueCoefficient: number = -normalCoefficient * TorqCoefficientProportion(effectiveAngle)
+
+    return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
+end
+
+local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+    local aerodynamicCoefficidents: Vector3
+
+    local paddingAngleHigh: number = math.rad(lerp(15, 5, (math.deg(flapAngle) + 50) / 100))
+    local paddingAngleLow: number = math.rad(lerp(15, 5, (-math.deg(flapAngle) + 50) / 100))
+    local paddedStallAngleHigh: number = stallAngleHigh + paddingAngleHigh
+    local paddedStallAngleLow: number = stallAngleLow - paddingAngleLow
+
+    if angleOfAttack < stallAngleHigh and angleOfAttack > stallAngleLow then
+        aerodynamicCoefficidents = CalculateCoefficidentsAtLowAoA(angleOfAttack, correctedLiftSlope, zeroLiftAoA)
+    elseif angleOfAttack > paddedStallAngleHigh or angleOfAttack < paddingAngleLow then
+        aerodynamicCoefficidents = CalculateCoefficidentsAtStall(
+            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+        )
+    else
+        local aerodynamicCoefficientsLow: Vector3
+        local aerodynamicCoefficientsStall: Vector3
+        local lerpAlpha: number
+
+        if angleOfAttack > stallAngleHigh then
+            aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
+                stallAngleHigh, correctedLiftSlope, zeroLiftAoA)
+            aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
+                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+            )
+            lerpAlpha = (angleOfAttack - stallAngleHigh) / (paddedStallAngleHigh - stallAngleHigh)
+        else
+            aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
+                stallAngleLow, correctedLiftSlope, zeroLiftAoA
+            )
+            aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
+                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+            )
+            lerpAlpha = (angleOfAttack - stallAngleLow) / (paddedStallAngleLow - stallAngleLow)
+        end
+        aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
+    end
+    return aerodynamicCoefficidents
+end
+
+function Coefficidents.setFlapAngle(angle: number)
+    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+end
+
+game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
+    Coefficidents.setFlapAngle(f)
+end)
+
+function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+    local forceAndTorque = BiVector.new()
+    
+    local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
+    (engine.aspectRatio + 2 * (engine.aspectRatio + 4) / (engine.aspectRatio + 2))
+
+    local theta: number = math.acos(2 * engine.flapFraction - 1)
+    local flapEffectivness: number = 1 - (theta - math.sin(theta)) / math.pi
+    local deltaLift: number = correctedLiftSlope * flapEffectivness * FlapEffectivnessCorrection(flapAngle) * flapAngle
+
+    local zeroLiftAoABase: number = math.rad(engine.zeroLiftAoA)
+    local zeroLiftAoA: number = zeroLiftAoABase - deltaLift / correctedLiftSlope
+
+    local stallAngleHighBase: number = math.rad(engine.stallAngleHigh)
+    local stallAngleLowBase: number = math.rad(engine.stallAngleLow)
+
+    local clMaxHigh: number = correctedLiftSlope * (stallAngleHighBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+    local clMaxLow: number = correctedLiftSlope * (stallAngleLowBase - zeroLiftAoABase) + deltaLift * LiftCoefficientMaxFraction(engine.flapFraction)
+
+    local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
+    local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
+
+    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
+    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
+
+    local area: number = engine.chord * engine.span
+    local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
+    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+
+    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
+
+    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
+    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+
+    forceAndTorque.force += lift + drag
+    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
+    forceAndTorque.torque += torque
+
+    return forceAndTorque
+end
+
+return Coefficidents]]></ProtectedString>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">215beb21e7b382da027625aa0002848d</UniqueId>
+						</Properties>
+					</Item>
+					<Item class="ModuleScript" referent="RBX115759B5A5F5450A904BBFA1CF0F660C">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<Content name="LinkedSource"><null></null></Content>
+							<string name="Name">Quaternion</string>
+							<string name="ScriptGuid">{C54EB5FD-61E6-4BCC-BA58-2A7BC3C61988}</string>
+							<ProtectedString name="Source"><![CDATA[local quaternion = {__type = "quaternion"};
+local quaternion_mt = {__index = quaternion};
+local ref = setmetatable({}, {__mode = "k"});
+
+local PI = math.pi;
+local abs = math.abs;
+local cos = math.cos;
+local sin = math.sin;
+local acos = math.acos;
+local sqrt = math.sqrt;
+
+function quaternion_mt.__mul(q0, q1)
+	if (typeof(q0) == "table" and q0.__type == "quaternion") and (typeof(q1) == "table" and q1.__type == "quaternion") then
+		local w0, w1 = q0.w, q1.w;
+		local v0, v1 = ref[q0], ref[q1];
+		local nw = w0*w1 - v0:Dot(v1);
+		local nv = v0*w1 + v1*w0 + v0:Cross(v1);
+		return quaternion.new(nw, nv.x, nv.y, nv.z);
+	elseif (typeof(q0) == "table" and q0.__type == "quaternion") and typeof(q1) == "Vector3" then
+		return q0:toAxisAngle() * q1
+	elseif typeof(q0) == "Vector3" and (typeof(q1) == "table" and q1.__type == "quaternion") then
+		return q1:toAxisAngle() * q0
+	end
+end
+
+function quaternion_mt.__pow(q0, t)
+	local axis, theta = q0:toAxisAngle();
+	theta = theta * t * 0.5;
+	axis = sin(theta)*axis
+	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
+end
+
+function quaternion_mt.__tostring(q0)
+	local t = {q0.w, q0.x, q0.y, q0.z};
+	return table.concat(t, ", ");
+end
+
+function quaternion.new(w, x, y, z)
+	local self = {};
+	
+	self.w = w;
+	self.x = x;
+	self.y = y;
+	self.z = z;
+	
+	self = setmetatable(self, quaternion_mt);
+	ref[self] = Vector3.new(x, y, z);
+	
+	return self;
+end
+
+function quaternion.fromCFrame(cf)
+	local axis, theta = cf:toAxisAngle();
+	theta = theta * 0.5
+	axis = sin(theta)*axis
+	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
+end
+
+function quaternion:inverse()
+	local w = self.w
+	local conjugate = w*w + ref[self]:Dot(ref[self]);
+ 
+	local nw = w / conjugate;
+	local nv = -ref[self] / conjugate;
+ 
+	return quaternion.new(nw, nv.x, nv.y, nv.z);
+end
+
+function quaternion:toAxisAngle()
+	local axis = ref[self];
+	local theta = acos(self.w) * 2;
+
+	-- if theta is equivalent to zero then pick a random axis
+	if (theta % (PI*2) == 0 and axis:Dot(axis) == 0) then
+		axis = Vector3.new(1, 0, 0);
+	end
+ 
+	return axis.unit, theta;
+end;
+ 
+function quaternion:slerp(self2, t)
+	return ((self2 * self:inverse())^t) * self;
+end
+
+function quaternion:slerpClosest(self2, t)
+	if (self.w*self2.w + self.x*self2.x + self.y*self2.y + self.z*self2.z > 0) then
+		-- choose self2
+		return self:slerp(self2, t);
+	else
+		-- choose -self2
+		self2 = quaternion.new(-self2.w, -self2.x, -self2.y, -self2.z);
+		return self:slerp(self2, t);
+	end
+end
+
+function quaternion:toCFrame()
+	return CFrame.new(0, 0, 0, self.x, self.y, self.z, self.w);
+end
+
+return quaternion;]]></ProtectedString>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">215beb21e7b382da027625aa00028976</UniqueId>
 						</Properties>
 					</Item>
 				</Item>
@@ -544,6 +1291,58 @@ end]]></ProtectedString>
 						<Z>2</Z>
 					</Vector3>
 				</Properties>
+				<Item class="WeldConstraint" referent="RBXBF005FEEB1554BC69DFB6D2D88964D6D">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-12.25</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
+						<Ref name="Part1Internal">RBX665EC304D7CB47E1BA6A78A114221EA8</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">215beb21e7b382da027625aa0024f4c6</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX3D5EE1B903F74165914DD47B1F980636">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>12.250001</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
+						<Ref name="Part1Internal">RBX0C8F348279834DCA92C93BFE8DC9BA5C</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">215beb21e7b382da027625aa0024f4c7</UniqueId>
+					</Properties>
+				</Item>
 			</Item>
 			<Item class="Folder" referent="RBX932DBA895AE94829949BA4C486893D5D">
 				<Properties>
@@ -600,7 +1399,7 @@ end]]></ProtectedString>
 						<bool name="Massless">false</bool>
 						<token name="Material">256</token>
 						<string name="MaterialVariantSerialized"></string>
-						<string name="Name">wing1</string>
+						<string name="Name">wing</string>
 						<CoordinateFrame name="PivotOffset">
 							<X>0</X>
 							<Y>0</Y>
@@ -661,7 +1460,7 @@ end]]></ProtectedString>
 						<token name="BottomSurface">0</token>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
-							<X>3.75000119</X>
+							<X>3.75000095</X>
 							<Y>5.7000041</Y>
 							<Z>-1.79999995</Z>
 							<R00>1</R00>
@@ -744,122 +1543,6 @@ end]]></ProtectedString>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Folder" referent="RBX8215ADC9F42F418090E3923AAB42DC7B">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<string name="Name">modules</string>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-					<UniqueId name="UniqueId">0f858ea6c332bc1f027521d200029378</UniqueId>
-				</Properties>
-				<Item class="ModuleScript" referent="RBX2899DBFA03374764A03579F72EF38C63">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<Content name="LinkedSource"><null></null></Content>
-						<string name="Name">Coefficients</string>
-						<string name="ScriptGuid">{8C3A733F-E7A0-4C78-9287-0EB4503E0EEA}</string>
-						<ProtectedString name="Source"></ProtectedString>
-						<int64 name="SourceAssetId">-1</int64>
-						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">0f858ea6c332bc1f027521d2000367aa</UniqueId>
-					</Properties>
-				</Item>
-			</Item>
-		</Item>
-		<Item class="Part" referent="RBXFAB1A5CB2E674DAE99ECB780BBD6BF28">
-			<Properties>
-				<bool name="Anchored">false</bool>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<float name="BackParamA">-0.5</float>
-				<float name="BackParamB">0.5</float>
-				<token name="BackSurface">0</token>
-				<token name="BackSurfaceInput">0</token>
-				<float name="BottomParamA">-0.5</float>
-				<float name="BottomParamB">0.5</float>
-				<token name="BottomSurface">0</token>
-				<token name="BottomSurfaceInput">0</token>
-				<CoordinateFrame name="CFrame">
-					<X>47.8000031</X>
-					<Y>0.5</Y>
-					<Z>25.3000031</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>0</R02>
-					<R10>0</R10>
-					<R11>1</R11>
-					<R12>0</R12>
-					<R20>0</R20>
-					<R21>0</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<bool name="CanCollide">true</bool>
-				<bool name="CanQuery">true</bool>
-				<bool name="CanTouch">true</bool>
-				<bool name="CastShadow">true</bool>
-				<int name="CollisionGroupId">0</int>
-				<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
-				<PhysicalProperties name="CustomPhysicalProperties">
-					<CustomPhysics>false</CustomPhysics>
-				</PhysicalProperties>
-				<float name="FrontParamA">-0.5</float>
-				<float name="FrontParamB">0.5</float>
-				<token name="FrontSurface">0</token>
-				<token name="FrontSurfaceInput">0</token>
-				<float name="LeftParamA">-0.5</float>
-				<float name="LeftParamB">0.5</float>
-				<token name="LeftSurface">0</token>
-				<token name="LeftSurfaceInput">0</token>
-				<bool name="Locked">false</bool>
-				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
-				<string name="MaterialVariantSerialized"></string>
-				<string name="Name">Part</string>
-				<CoordinateFrame name="PivotOffset">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>0</R02>
-					<R10>0</R10>
-					<R11>1</R11>
-					<R12>0</R12>
-					<R20>0</R20>
-					<R21>0</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<float name="Reflectance">0</float>
-				<float name="RightParamA">-0.5</float>
-				<float name="RightParamB">0.5</float>
-				<token name="RightSurface">0</token>
-				<token name="RightSurfaceInput">0</token>
-				<int name="RootPriority">0</int>
-				<Vector3 name="RotVelocity">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<float name="TopParamA">-0.5</float>
-				<float name="TopParamB">0.5</float>
-				<token name="TopSurface">0</token>
-				<token name="TopSurfaceInput">0</token>
-				<float name="Transparency">0</float>
-				<UniqueId name="UniqueId">0f858ea6c332bc1f027521d2000296f7</UniqueId>
-				<Vector3 name="Velocity">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<token name="formFactorRaw">1</token>
-				<token name="shape">1</token>
-				<Vector3 name="size">
-					<X>4</X>
-					<Y>1</Y>
-					<Z>2</Z>
-				</Vector3>
-			</Properties>
 		</Item>
 	</Item>
 	<Item class="SoundService" referent="6">
@@ -1069,6 +1752,321 @@ end]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad79</UniqueId>
 			<token name="VirtualCursorMode">0</token>
 		</Properties>
+		<Item class="ScreenGui" referent="RBXEDBC38C657C640658CFB7877FC477B38">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="AutoLocalize">true</bool>
+				<int name="DisplayOrder">0</int>
+				<bool name="Enabled">true</bool>
+				<bool name="IgnoreGuiInset">false</bool>
+				<string name="Name">ScreenGui</string>
+				<bool name="ResetOnSpawn">true</bool>
+				<Ref name="RootLocalizationTable">null</Ref>
+				<token name="SelectionBehaviorDown">0</token>
+				<token name="SelectionBehaviorLeft">0</token>
+				<token name="SelectionBehaviorRight">0</token>
+				<token name="SelectionBehaviorUp">0</token>
+				<bool name="SelectionGroup">false</bool>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<UniqueId name="UniqueId">215beb21e7b382da027625aa00331c6e</UniqueId>
+				<token name="ZIndexBehavior">1</token>
+			</Properties>
+			<Item class="TextBox" referent="RBX21870F82D8BC4CB5A4F20FAA76FB1587">
+				<Properties>
+					<bool name="Active">true</bool>
+					<Vector2 name="AnchorPoint">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<bool name="AutoLocalize">true</bool>
+					<token name="AutomaticSize">0</token>
+					<Color3 name="BackgroundColor3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<Color3 name="BorderColor3">
+						<R>0.105882362</R>
+						<G>0.164705887</G>
+						<B>0.207843155</B>
+					</Color3>
+					<token name="BorderMode">0</token>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClearTextOnFocus">false</bool>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<token name="Font">3</token>
+					<Font name="FontFace"></Font>
+					<int name="LayoutOrder">0</int>
+					<float name="LineHeight">1</float>
+					<int name="MaxVisibleGraphemes">-1</int>
+					<bool name="MultiLine">false</bool>
+					<string name="Name">t</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<Color3 name="PlaceholderColor3">
+						<R>0.699999988</R>
+						<G>0.699999988</G>
+						<B>0.699999988</B>
+					</Color3>
+					<string name="PlaceholderText"></string>
+					<UDim2 name="Position">
+						<XS>0.850411355</XS>
+						<XO>0</XO>
+						<YS>0.927219808</YS>
+						<YO>0</YO>
+					</UDim2>
+					<bool name="RichText">false</bool>
+					<Ref name="RootLocalizationTable">null</Ref>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">true</bool>
+					<token name="SelectionBehaviorDown">0</token>
+					<token name="SelectionBehaviorLeft">0</token>
+					<token name="SelectionBehaviorRight">0</token>
+					<token name="SelectionBehaviorUp">0</token>
+					<bool name="SelectionGroup">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<bool name="ShowNativeInput">true</bool>
+					<UDim2 name="Size">
+						<XS>0</XS>
+						<XO>200</XO>
+						<YS>0</YS>
+						<YO>50</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+					<string name="Text">100</string>
+					<Color3 name="TextColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<bool name="TextEditable">true</bool>
+					<bool name="TextScaled">false</bool>
+					<float name="TextSize">14</float>
+					<Color3 name="TextStrokeColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<float name="TextStrokeTransparency">1</float>
+					<float name="TextTransparency">0</float>
+					<token name="TextTruncate">0</token>
+					<bool name="TextWrapped">false</bool>
+					<token name="TextXAlignment">2</token>
+					<token name="TextYAlignment">1</token>
+					<UniqueId name="UniqueId">215beb21e7b382da027625aa00331ca2</UniqueId>
+					<bool name="Visible">true</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+			</Item>
+			<Item class="TextButton" referent="RBXFC9468DED5FC4A8BB5BD47B822F6EFC9">
+				<Properties>
+					<bool name="Active">true</bool>
+					<Vector2 name="AnchorPoint">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<bool name="AutoButtonColor">true</bool>
+					<bool name="AutoLocalize">true</bool>
+					<token name="AutomaticSize">0</token>
+					<Color3 name="BackgroundColor3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<Color3 name="BorderColor3">
+						<R>0.105882362</R>
+						<G>0.164705887</G>
+						<B>0.207843155</B>
+					</Color3>
+					<token name="BorderMode">0</token>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<token name="Font">3</token>
+					<Font name="FontFace"></Font>
+					<int name="LayoutOrder">0</int>
+					<float name="LineHeight">1</float>
+					<int name="MaxVisibleGraphemes">-1</int>
+					<bool name="Modal">false</bool>
+					<string name="Name">TextButton</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<UDim2 name="Position">
+						<XS>0.700822711</XS>
+						<XO>0</XO>
+						<YS>0.927219808</YS>
+						<YO>0</YO>
+					</UDim2>
+					<bool name="RichText">false</bool>
+					<Ref name="RootLocalizationTable">null</Ref>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">true</bool>
+					<bool name="Selected">false</bool>
+					<token name="SelectionBehaviorDown">0</token>
+					<token name="SelectionBehaviorLeft">0</token>
+					<token name="SelectionBehaviorRight">0</token>
+					<token name="SelectionBehaviorUp">0</token>
+					<bool name="SelectionGroup">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<UDim2 name="Size">
+						<XS>0</XS>
+						<XO>200</XO>
+						<YS>0</YS>
+						<YO>50</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<int64 name="SourceAssetId">-1</int64>
+					<token name="Style">0</token>
+					<BinaryString name="Tags"></BinaryString>
+					<string name="Text">Button</string>
+					<Color3 name="TextColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<bool name="TextScaled">false</bool>
+					<float name="TextSize">14</float>
+					<Color3 name="TextStrokeColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<float name="TextStrokeTransparency">1</float>
+					<float name="TextTransparency">0</float>
+					<token name="TextTruncate">0</token>
+					<bool name="TextWrapped">false</bool>
+					<token name="TextXAlignment">2</token>
+					<token name="TextYAlignment">1</token>
+					<UniqueId name="UniqueId">215beb21e7b382da027625aa00331e0d</UniqueId>
+					<bool name="Visible">true</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+			</Item>
+			<Item class="LocalScript" referent="RBXE320149A55FD4FA8A6280342200CF970">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">LocalScript</string>
+					<string name="ScriptGuid">{96182606-DE13-4677-938B-8509D29A1D3C}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+script.Parent.TextButton.MouseButton1Click:Connect(function()
+	game.ReplicatedStorage.t:FireServer(tonumber(script.Parent.t.Text))
+	game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+end)]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+					<UniqueId name="UniqueId">215beb21e7b382da027625aa00331f12</UniqueId>
+				</Properties>
+			</Item>
+			<Item class="TextBox" referent="RBX7B62BF8D772E4E428DA7F6ED04C2DAE6">
+				<Properties>
+					<bool name="Active">true</bool>
+					<Vector2 name="AnchorPoint">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<bool name="AutoLocalize">true</bool>
+					<token name="AutomaticSize">0</token>
+					<Color3 name="BackgroundColor3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<Color3 name="BorderColor3">
+						<R>0.105882362</R>
+						<G>0.164705887</G>
+						<B>0.207843155</B>
+					</Color3>
+					<token name="BorderMode">0</token>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClearTextOnFocus">false</bool>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<token name="Font">3</token>
+					<Font name="FontFace"></Font>
+					<int name="LayoutOrder">0</int>
+					<float name="LineHeight">1</float>
+					<int name="MaxVisibleGraphemes">-1</int>
+					<bool name="MultiLine">false</bool>
+					<string name="Name">f</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<Color3 name="PlaceholderColor3">
+						<R>0.699999988</R>
+						<G>0.699999988</G>
+						<B>0.699999988</B>
+					</Color3>
+					<string name="PlaceholderText"></string>
+					<UDim2 name="Position">
+						<XS>0.551234126</XS>
+						<XO>0</XO>
+						<YS>0.927219808</YS>
+						<YO>0</YO>
+					</UDim2>
+					<bool name="RichText">false</bool>
+					<Ref name="RootLocalizationTable">null</Ref>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">true</bool>
+					<token name="SelectionBehaviorDown">0</token>
+					<token name="SelectionBehaviorLeft">0</token>
+					<token name="SelectionBehaviorRight">0</token>
+					<token name="SelectionBehaviorUp">0</token>
+					<bool name="SelectionGroup">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<bool name="ShowNativeInput">true</bool>
+					<UDim2 name="Size">
+						<XS>0</XS>
+						<XO>200</XO>
+						<YS>0</YS>
+						<YO>50</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+					<string name="Text">5</string>
+					<Color3 name="TextColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<bool name="TextEditable">true</bool>
+					<bool name="TextScaled">false</bool>
+					<float name="TextSize">14</float>
+					<Color3 name="TextStrokeColor3">
+						<R>0</R>
+						<G>0</G>
+						<B>0</B>
+					</Color3>
+					<float name="TextStrokeTransparency">1</float>
+					<float name="TextTransparency">0</float>
+					<token name="TextTruncate">0</token>
+					<bool name="TextWrapped">false</bool>
+					<token name="TextXAlignment">2</token>
+					<token name="TextYAlignment">1</token>
+					<UniqueId name="UniqueId">215beb21e7b382da027625aa004b9b1b</UniqueId>
+					<bool name="Visible">true</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+			</Item>
+		</Item>
 	</Item>
 	<Item class="LocalizationService" referent="RBXBB2601FF8481472A873FA0573FADC21E">
 		<Properties>
@@ -1255,6 +2253,24 @@ end]]></ProtectedString>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada2</UniqueId>
 		</Properties>
+		<Item class="RemoteEvent" referent="RBX4A37E3BD044D492A8D18F3E8D9C6CC60">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">t</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<UniqueId name="UniqueId">215beb21e7b382da027625aa00331c3d</UniqueId>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX3C3219815C554DD898550BDE233CC9B9">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">f</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<UniqueId name="UniqueId">215beb21e7b382da027625aa004b9ca1</UniqueId>
+			</Properties>
+		</Item>
 	</Item>
 	<Item class="LuaWebService" referent="RBX7E199C79181A4F328925891208A966BA">
 		<Properties>
