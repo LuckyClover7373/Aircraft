@@ -53,7 +53,7 @@ game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
 end)
 
 while true do
-    local delta: number = RUN_SERVICE.Stepped:Wait()
+    local delta: number = RUN_SERVICE.Heartbeat:Wait()
 
     local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 

@@ -113,7 +113,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
@@ -155,7 +155,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)

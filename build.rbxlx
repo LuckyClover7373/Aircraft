@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-11.0395803</X>
-					<Y>17.9586735</Y>
-					<Z>9.06287098</Z>
-					<R00>0.999902487</R00>
-					<R01>0.00977608096</R01>
-					<R02>-0.00998306274</R02>
+					<X>-10.6009483</X>
+					<Y>15.8987741</Y>
+					<Z>-0.251097441</Z>
+					<R00>0.978144705</R00>
+					<R01>0.158813104</R01>
+					<R02>-0.134206772</R02>
 					<R10>-0</R10>
-					<R11>0.714474857</R11>
-					<R12>0.699661255</R12>
-					<R20>0.0139725916</R20>
-					<R21>-0.699593008</R21>
-					<R22>0.71440506</R22>
+					<R11>0.645455837</R11>
+					<R12>0.76379776</R12>
+					<R20>0.207925603</R20>
+					<R21>-0.747104764</R21>
+					<R22>0.631349087</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-11.0196142</X>
-					<Y>16.559351</Y>
-					<Z>7.63406086</Z>
+					<X>-10.3325348</X>
+					<Y>14.3711786</Y>
+					<Z>-1.51379561</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -411,7 +411,7 @@ engine.flapFraction = 0.2
 engine.span = 1
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 300
+engine.thrust = 3000
 
 return engine]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
@@ -480,7 +480,7 @@ game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
 end)
 
 while true do
-    local delta: number = RUN_SERVICE.Stepped:Wait()
+    local delta: number = RUN_SERVICE.Heartbeat:Wait()
 
     local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
@@ -630,7 +630,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
@@ -672,7 +672,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
@@ -1020,7 +1020,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(math.huge), math.rad(math.huge))
+    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
@@ -1062,7 +1062,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
