@@ -63,7 +63,7 @@ while true do
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
-	
-    drive.AssemblyLinearVelocity = ((currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta).Magnitude > 0 and (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta or Vector3.zero
-    drive.AssemblyAngularVelocity = (currentForceAndTorque.torque * 60 / delta).Magnitude > 0 and currentForceAndTorque.torque * 60 / delta or Vector3.zero
+    
+    drive.AssemblyLinearVelocity += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
+    drive.AssemblyAngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque * 0.001 or Vector3.zero
 end

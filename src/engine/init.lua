@@ -34,6 +34,6 @@ engine.flapFraction = 0.2
 engine.span = 1
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 1000
+engine.thrust = 10
 
 return engine

@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-12.433651</X>
-					<Y>39.3295746</Y>
-					<Z>-10.4989939</Z>
-					<R00>-0.998026609</R00>
-					<R01>0.0521197356</R01>
-					<R02>-0.0350208245</R02>
-					<R10>-0</R10>
-					<R11>0.557721138</R11>
-					<R12>0.830028415</R12>
-					<R20>0.062792711</R20>
-					<R21>0.828390419</R21>
-					<R22>-0.556620538</R22>
+					<X>-9.76679134</X>
+					<Y>32.4412346</Y>
+					<Z>0.81834501</Z>
+					<R00>0.214727253</R00>
+					<R01>-0.949688673</R01>
+					<R02>0.227999657</R02>
+					<R10>-3.72529074e-09</R10>
+					<R11>0.233445004</R11>
+					<R12>0.972370028</R12>
+					<R20>-0.976674139</R20>
+					<R21>-0.20879434</R21>
+					<R22>0.0501269922</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-12.3636093</X>
-					<Y>37.6695175</Y>
-					<Z>-9.38575268</Z>
+					<X>-10.2227907</X>
+					<Y>30.4964943</Y>
+					<Z>0.718091011</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -355,7 +355,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				<OptionalCoordinateFrame name="WorldPivotData">
 					<CFrame>
 						<X>-8.5</X>
-						<Y>17.5000038</Y>
+						<Y>23.5000038</Y>
 						<Z>-1.79999995</Z>
 						<R00>1</R00>
 						<R01>0</R01>
@@ -411,7 +411,7 @@ engine.flapFraction = 0.2
 engine.span = 1
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 1000
+engine.thrust = 10
 
 return engine]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
@@ -490,9 +490,9 @@ while true do
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
-	
-    drive.AssemblyLinearVelocity = ((currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta).Magnitude > 0 and (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per) * 60 / delta or Vector3.zero
-    drive.AssemblyAngularVelocity = (currentForceAndTorque.torque * 60 / delta).Magnitude > 0 and currentForceAndTorque.torque * 60 / delta or Vector3.zero
+    
+    drive.AssemblyLinearVelocity += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
+    drive.AssemblyAngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque * 0.001 or Vector3.zero
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -670,7 +670,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord * math.clamp(1.5 - wing.AssemblyAngularVelocity.Magnitude / 100, 0.5, 1.5)
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
@@ -1060,7 +1060,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord * math.clamp(1.5 - wing.AssemblyAngularVelocity.Magnitude / 100, 0.5, 1.5)
+    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
@@ -1202,7 +1202,7 @@ return quaternion;]]></ProtectedString>
 					<token name="BottomSurfaceInput">0</token>
 					<CoordinateFrame name="CFrame">
 						<X>-8.5</X>
-						<Y>17.5000038</Y>
+						<Y>23.5000038</Y>
 						<Z>-1.79999995</Z>
 						<R00>1</R00>
 						<R01>0</R01>
@@ -1364,7 +1364,7 @@ return quaternion;]]></ProtectedString>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
 							<X>-20.75</X>
-							<Y>17.5000038</Y>
+							<Y>23.5000038</Y>
 							<Z>-1.79999995</Z>
 							<R00>1</R00>
 							<R01>0</R01>
@@ -1459,7 +1459,7 @@ return quaternion;]]></ProtectedString>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
 							<X>3.75000095</X>
-							<Y>17.5000038</Y>
+							<Y>23.5000038</Y>
 							<Z>-1.79999995</Z>
 							<R00>1</R00>
 							<R01>0</R01>
