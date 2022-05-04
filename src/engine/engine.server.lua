@@ -12,18 +12,7 @@ local wings: Folder = script.Parent.Parent.wings
 
 local PREDICTION_TIMESTEP_FRACTION: number = 0.5
 
-drive:SetNetworkOwner(nil)
 local per = 0
-
-local function engineFix()
-    if engine.flapFraction > 0.4 then engineFix.flapFraction = 0.4 end
-    if engine.flapFraction < 0 then engine.flapFraction = 0 end
-    if engine.stallAngleHigh < 0 then engine.stallAngleHigh = 0 end
-    if engine.stallAngleLow > 0 then engine.stallAngleLow = 0 end
-    if engine.chord < 0.001 then engine.chord = 0.001 end
-    if engine.autoAspectRatio then engine.aspectRatio = engine.span / engine.chord end
-end
-engineFix()
 
 local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3)
     local forceAndTorque = BiVector.new()
@@ -52,8 +41,29 @@ game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
 	per = rper / 100
 end)
 
+local vectorForce: VectorForce
+local torqueForce: AngularVelocity
+
+local function init()
+    drive:SetNetworkOwner(nil)
+
+    local att = Instance.new("Attachment")
+    att.Parent = drive
+
+    vectorForce = Instance.new("VectorForce")
+    vectorForce.ApplyAtCenterOfMass = true
+    vectorForce.Attachment0 = att
+    vectorForce.Parent = drive
+
+    torqueForce = Instance.new("AngularVelocity")
+    torqueForce.MaxTorque = 10000
+    torqueForce.Attachment0 = att
+    torqueForce.Parent = drive
+end
+init()
+
 while true do
-    local delta: number = RUN_SERVICE.Heartbeat:Wait()
+    local delta: number = RUN_SERVICE.Stepped:Wait()
 
     local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
@@ -64,6 +74,6 @@ while true do
 
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
     
-    drive.AssemblyLinearVelocity += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-    drive.AssemblyAngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque * 0.001 or Vector3.zero
+    vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
+    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude / drive.AssemblyMass > 0 and currentForceAndTorque.torque / drive.AssemblyMass or Vector3.zero
 end

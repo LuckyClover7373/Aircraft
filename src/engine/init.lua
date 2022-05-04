@@ -36,4 +36,14 @@ engine.autoAspectRatio = true
 engine.aspectRatio = 2
 engine.thrust = 10
 
+local function engineFix()
+    if engine.flapFraction > 0.4 then engineFix.flapFraction = 0.4 end
+    if engine.flapFraction < 0 then engine.flapFraction = 0 end
+    if engine.stallAngleHigh < 0 then engine.stallAngleHigh = 0 end
+    if engine.stallAngleLow > 0 then engine.stallAngleLow = 0 end
+    if engine.chord < 0.001 then engine.chord = 0.001 end
+    if engine.autoAspectRatio then engine.aspectRatio = engine.span / engine.chord end
+end
+engineFix()
+
 return engine
