@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-7.49915838</X>
-					<Y>33.3108444</Y>
-					<Z>-2.15152884</Z>
-					<R00>0.999122262</R00>
-					<R01>-0.0391076133</R01>
-					<R02>0.0150117856</R02>
+					<X>-1.99864221</X>
+					<Y>33.9346123</Y>
+					<Z>8.38477707</Z>
+					<R00>0.997054219</R00>
+					<R01>0.0491998605</R01>
+					<R02>-0.0588418469</R02>
 					<R10>-0</R10>
-					<R11>0.35836333</R11>
-					<R12>0.933582187</R12>
-					<R20>-0.0418898463</R20>
-					<R21>-0.932762742</R21>
-					<R22>0.358048767</R22>
+					<R11>0.767162383</R11>
+					<R12>0.641453028</R12>
+					<R20>0.0767006427</R20>
+					<R21>-0.639563441</R21>
+					<R22>0.764902413</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-7.52918196</X>
-					<Y>31.4436798</Y>
-					<Z>-2.86762643</Z>
+					<X>-1.88095856</X>
+					<Y>32.6517067</Y>
+					<Z>6.85497284</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -414,7 +414,7 @@ engine.aspectRatio = 2
 engine.thrust = 10
 
 local function engineFix()
-    if engine.flapFraction > 0.4 then engineFix.flapFraction = 0.4 end
+    if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
     if engine.flapFraction < 0 then engine.flapFraction = 0 end
     if engine.stallAngleHigh < 0 then engine.stallAngleHigh = 0 end
     if engine.stallAngleLow > 0 then engine.stallAngleLow = 0 end
@@ -512,7 +512,7 @@ while true do
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
     
     vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude / drive.AssemblyMass > 0 and currentForceAndTorque.torque / drive.AssemblyMass or Vector3.zero
+    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
