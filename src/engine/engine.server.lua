@@ -75,5 +75,5 @@ while true do
     local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
     
     vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude / drive.AssemblyMass > 0 and currentForceAndTorque.torque / drive.AssemblyMass or Vector3.zero
+    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 end
