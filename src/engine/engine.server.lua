@@ -3,7 +3,6 @@ local engine = require(script.Parent)
 local modules = script.Parent.modules
 local Coefficidents = require(modules.Coefficients)
 local BiVector = require(modules.BiVector)
-local Quaternion = require(modules.Quaternion)
 
 local RUN_SERVICE = game:GetService("RunService")
 
@@ -30,7 +29,7 @@ local function PredictVelocity(force: Vector3, delta: number)
 end
 
 local function PredictAnguVelocity(torque: Vector3, delta: number)
-    local inertiaTensorWorldRotation = Quaternion.fromCFrame(drive.CFrame) * drive.AssemblyAngularVelocity
+    local inertiaTensorWorldRotation = drive.CFrame * drive.AssemblyAngularVelocity
     local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
 	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
 

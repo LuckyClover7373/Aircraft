@@ -2,7 +2,6 @@ local Coefficidents = {}
 
 local engine = require(script.Parent.Parent)
 local BiVector = require(script.Parent.BiVector)
-local Quaternion = require(script.Parent.Quaternion)
 
 local flapAngle: number = 0
 
@@ -142,9 +141,9 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
 
-    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    local airVelocity: Vector3 = (wing.CFrame:Inverse() - wing.Position) * worldAirVelocity
     airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
-    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local dragDirection: Vector3 = wing.CFrame * airVelocity.Unit
     local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
 
     local area: number = engine.chord * engine.span
