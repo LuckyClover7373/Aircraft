@@ -18,8 +18,7 @@ local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Ve
     for i: number, wing: BasePart in pairs(wings:GetChildren()) do
         if not wing:IsA("BasePart") then return end
 
-        local relativePosition: Vector3 = wing.Position - centerOfMass
-        forceAndTorque += Coefficidents.CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition, wing)
+        forceAndTorque += Coefficidents.CalculateForces(-velocity - angularVelocity:Cross(wing.Position - centerOfMass), wing)
     end
     return forceAndTorque
 end
@@ -44,17 +43,19 @@ local vectorForce: VectorForce
 local torque: Torque
 
 local function init()
-    --drive:SetNetworkOwner(nil)
+    drive:SetNetworkOwner(nil)
 
     local att = Instance.new("Attachment")
     att.Parent = drive
 
     vectorForce = Instance.new("VectorForce")
+    vectorForce.Force = Vector3.zero
     vectorForce.ApplyAtCenterOfMass = true
     vectorForce.Attachment0 = att
     vectorForce.Parent = drive
 
     torque = Instance.new("Torque")
+    torque.Torque = Vector3.zero
     torque.Attachment0 = att
     torque.Parent = drive
 end
@@ -72,8 +73,8 @@ while true do
 
     local currentForceAndTorque = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
 
-    --vectorForce.Force += currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
     torque.Torque += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 
-    vectorForce.Force += (drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
+    vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
+
 end

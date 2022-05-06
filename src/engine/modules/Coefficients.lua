@@ -119,7 +119,7 @@ game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
     Coefficidents.setFlapAngle(f)
 end)
 
-function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+function Coefficidents.CalculateForces(worldAirVelocity: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
     local forceAndTorque = BiVector.new()
     
     local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
@@ -140,10 +140,10 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
-
-    local airVelocity: Vector3 = (wing.CFrame - wing.Position):Inverse() * worldAirVelocity
-    airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
-    local dragDirection: Vector3 = wing.CFrame * airVelocity.Unit
+    
+    local airVelocity: Vector3 = wing.CFrame.Rotation:Inverse() * worldAirVelocity
+    airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
+    local dragDirection: Vector3 = worldAirVelocity.Unit
     local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
 
     local area: number = engine.chord * engine.span
@@ -151,14 +151,15 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
 
     local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
-    print(aerodynamicCoefficidents)
+    
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
-
+    
     forceAndTorque.force += lift + drag
-    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
+    
+    print(airVelocity.Magnitude)
 
     return forceAndTorque
 end
