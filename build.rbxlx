@@ -80,27 +80,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-1.99864221</X>
-					<Y>33.9346123</Y>
-					<Z>8.38477707</Z>
-					<R00>0.997054219</R00>
-					<R01>0.0491998605</R01>
-					<R02>-0.0588418469</R02>
-					<R10>-0</R10>
-					<R11>0.767162383</R11>
-					<R12>0.641453028</R12>
-					<R20>0.0767006427</R20>
-					<R21>-0.639563441</R21>
-					<R22>0.764902413</R22>
+					<X>-3.51792693</X>
+					<Y>48.9009933</Y>
+					<Z>-9.06535912</Z>
+					<R00>-0.999609232</R00>
+					<R01>0.0222656354</R01>
+					<R02>-0.0168991089</R02>
+					<R10>9.31322575e-10</R10>
+					<R11>0.604566753</R11>
+					<R12>0.796554565</R12>
+					<R20>0.0279524289</R20>
+					<R21>0.79624331</R21>
+					<R22>-0.60433054</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-1.88095856</X>
-					<Y>32.6517067</Y>
-					<Z>6.85497284</Z>
+					<X>-3.48412871</X>
+					<Y>47.3078842</Y>
+					<Z>-7.85669804</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -440,7 +440,6 @@ return engine]]></ProtectedString>
 local modules = script.Parent.modules
 local Coefficidents = require(modules.Coefficients)
 local BiVector = require(modules.BiVector)
-local Quaternion = require(modules.Quaternion)
 
 local RUN_SERVICE = game:GetService("RunService")
 
@@ -467,7 +466,7 @@ local function PredictVelocity(force: Vector3, delta: number)
 end
 
 local function PredictAnguVelocity(torque: Vector3, delta: number)
-    local inertiaTensorWorldRotation = Quaternion.fromCFrame(drive.CFrame) * drive.AssemblyAngularVelocity
+    local inertiaTensorWorldRotation = drive.CFrame * drive.AssemblyAngularVelocity
     local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
 	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
 
@@ -479,10 +478,10 @@ game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
 end)
 
 local vectorForce: VectorForce
-local torqueForce: AngularVelocity
+local torque: Torque
 
 local function init()
-    drive:SetNetworkOwner(nil)
+    --drive:SetNetworkOwner(nil)
 
     local att = Instance.new("Attachment")
     att.Parent = drive
@@ -492,10 +491,9 @@ local function init()
     vectorForce.Attachment0 = att
     vectorForce.Parent = drive
 
-    torqueForce = Instance.new("AngularVelocity")
-    torqueForce.MaxTorque = 10000
-    torqueForce.Attachment0 = att
-    torqueForce.Parent = drive
+    torque = Instance.new("Torque")
+    torque.Attachment0 = att
+    torque.Parent = drive
 end
 init()
 
@@ -509,10 +507,12 @@ while true do
 
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
-    local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
-    
-    vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+    local currentForceAndTorque = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+
+    --vectorForce.Force += currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+    torque.Torque += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+
+    vectorForce.Force += (drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -537,7 +537,6 @@ end]]></ProtectedString>
 
 local engine = require(script.Parent.Parent)
 local BiVector = require(script.Parent.BiVector)
-local Quaternion = require(script.Parent.Quaternion)
 
 local flapAngle: number = 0
 
@@ -644,7 +643,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         end
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
-    return aerodynamicCoefficidents
+    return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
 end
 
 function Coefficidents.setFlapAngle(angle: number)
@@ -677,17 +676,17 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
 
-    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    local airVelocity: Vector3 = (wing.CFrame - wing.Position):Inverse() * worldAirVelocity
     airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
-    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local dragDirection: Vector3 = wing.CFrame * airVelocity.Unit
     local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
-    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
 
     local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
-
+    print(aerodynamicCoefficidents)
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
@@ -749,117 +748,6 @@ return BiVector]]></ProtectedString>
 							<int64 name="SourceAssetId">-1</int64>
 							<BinaryString name="Tags"></BinaryString>
 							<UniqueId name="UniqueId">4b05a47187468cf302755eb9000953cc</UniqueId>
-						</Properties>
-					</Item>
-					<Item class="ModuleScript" referent="RBX0CC8BAEE02704277A1E57DA3ADC2C230">
-						<Properties>
-							<BinaryString name="AttributesSerialize"></BinaryString>
-							<Content name="LinkedSource"><null></null></Content>
-							<string name="Name">Quaternion</string>
-							<string name="ScriptGuid">{806C2BC3-0B43-4A45-86AF-61CB8E24F004}</string>
-							<ProtectedString name="Source"><![CDATA[local quaternion = {__type = "quaternion"};
-local quaternion_mt = {__index = quaternion};
-local ref = setmetatable({}, {__mode = "k"});
-
-local PI = math.pi;
-local abs = math.abs;
-local cos = math.cos;
-local sin = math.sin;
-local acos = math.acos;
-local sqrt = math.sqrt;
-
-function quaternion_mt.__mul(q0, q1)
-	if (typeof(q0) == "table" and q0.__type == "quaternion") and (typeof(q1) == "table" and q1.__type == "quaternion") then
-		local w0, w1 = q0.w, q1.w;
-		local v0, v1 = ref[q0], ref[q1];
-		local nw = w0*w1 - v0:Dot(v1);
-		local nv = v0*w1 + v1*w0 + v0:Cross(v1);
-		return quaternion.new(nw, nv.x, nv.y, nv.z);
-	elseif (typeof(q0) == "table" and q0.__type == "quaternion") and typeof(q1) == "Vector3" then
-		return q0:toAxisAngle() * q1
-	elseif typeof(q0) == "Vector3" and (typeof(q1) == "table" and q1.__type == "quaternion") then
-		return q1:toAxisAngle() * q0
-	end
-end
-
-function quaternion_mt.__pow(q0, t)
-	local axis, theta = q0:toAxisAngle();
-	theta = theta * t * 0.5;
-	axis = sin(theta)*axis
-	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
-end
-
-function quaternion_mt.__tostring(q0)
-	local t = {q0.w, q0.x, q0.y, q0.z};
-	return table.concat(t, ", ");
-end
-
-function quaternion.new(w, x, y, z)
-	local self = {};
-	
-	self.w = w;
-	self.x = x;
-	self.y = y;
-	self.z = z;
-	
-	self = setmetatable(self, quaternion_mt);
-	ref[self] = Vector3.new(x, y, z);
-	
-	return self;
-end
-
-function quaternion.fromCFrame(cf)
-	local axis, theta = cf:toAxisAngle();
-	theta = theta * 0.5
-	axis = sin(theta)*axis
-	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
-end
-
-function quaternion:inverse()
-	local w = self.w
-	local conjugate = w*w + ref[self]:Dot(ref[self]);
- 
-	local nw = w / conjugate;
-	local nv = -ref[self] / conjugate;
- 
-	return quaternion.new(nw, nv.x, nv.y, nv.z);
-end
-
-function quaternion:toAxisAngle()
-	local axis = ref[self];
-	local theta = acos(self.w) * 2;
-
-	-- if theta is equivalent to zero then pick a random axis
-	if (theta % (PI*2) == 0 and axis:Dot(axis) == 0) then
-		axis = Vector3.new(1, 0, 0);
-	end
- 
-	return axis.unit, theta;
-end;
- 
-function quaternion:slerp(self2, t)
-	return ((self2 * self:inverse())^t) * self;
-end
-
-function quaternion:slerpClosest(self2, t)
-	if (self.w*self2.w + self.x*self2.x + self.y*self2.y + self.z*self2.z > 0) then
-		-- choose self2
-		return self:slerp(self2, t);
-	else
-		-- choose -self2
-		self2 = quaternion.new(-self2.w, -self2.x, -self2.y, -self2.z);
-		return self:slerp(self2, t);
-	end
-end
-
-function quaternion:toCFrame()
-	return CFrame.new(0, 0, 0, self.x, self.y, self.z, self.w);
-end
-
-return quaternion;]]></ProtectedString>
-							<int64 name="SourceAssetId">-1</int64>
-							<BinaryString name="Tags"></BinaryString>
-							<UniqueId name="UniqueId">215beb21e7b382da027625aa00028974</UniqueId>
 						</Properties>
 					</Item>
 				</Item>
@@ -927,7 +815,6 @@ return BiVector]]></ProtectedString>
 
 local engine = require(script.Parent.Parent)
 local BiVector = require(script.Parent.BiVector)
-local Quaternion = require(script.Parent.Quaternion)
 
 local flapAngle: number = 0
 
@@ -1034,7 +921,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         end
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
-    return aerodynamicCoefficidents
+    return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
 end
 
 function Coefficidents.setFlapAngle(angle: number)
@@ -1067,17 +954,17 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
 
-    local airVelocity: Vector3 = Quaternion.fromCFrame(wing.CFrame):inverse() * worldAirVelocity
+    local airVelocity: Vector3 = (wing.CFrame - wing.Position):Inverse() * worldAirVelocity
     airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
-    local dragDirection: Vector3 = Quaternion.fromCFrame(wing.CFrame) * airVelocity.Unit
+    local dragDirection: Vector3 = wing.CFrame * airVelocity.Unit
     local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
-    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
 
     local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
-
+    print(aerodynamicCoefficidents)
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
@@ -1093,117 +980,6 @@ return Coefficidents]]></ProtectedString>
 							<int64 name="SourceAssetId">-1</int64>
 							<BinaryString name="Tags"></BinaryString>
 							<UniqueId name="UniqueId">215beb21e7b382da027625aa0002848d</UniqueId>
-						</Properties>
-					</Item>
-					<Item class="ModuleScript" referent="RBX115759B5A5F5450A904BBFA1CF0F660C">
-						<Properties>
-							<BinaryString name="AttributesSerialize"></BinaryString>
-							<Content name="LinkedSource"><null></null></Content>
-							<string name="Name">Quaternion</string>
-							<string name="ScriptGuid">{C54EB5FD-61E6-4BCC-BA58-2A7BC3C61988}</string>
-							<ProtectedString name="Source"><![CDATA[local quaternion = {__type = "quaternion"};
-local quaternion_mt = {__index = quaternion};
-local ref = setmetatable({}, {__mode = "k"});
-
-local PI = math.pi;
-local abs = math.abs;
-local cos = math.cos;
-local sin = math.sin;
-local acos = math.acos;
-local sqrt = math.sqrt;
-
-function quaternion_mt.__mul(q0, q1)
-	if (typeof(q0) == "table" and q0.__type == "quaternion") and (typeof(q1) == "table" and q1.__type == "quaternion") then
-		local w0, w1 = q0.w, q1.w;
-		local v0, v1 = ref[q0], ref[q1];
-		local nw = w0*w1 - v0:Dot(v1);
-		local nv = v0*w1 + v1*w0 + v0:Cross(v1);
-		return quaternion.new(nw, nv.x, nv.y, nv.z);
-	elseif (typeof(q0) == "table" and q0.__type == "quaternion") and typeof(q1) == "Vector3" then
-		return q0:toAxisAngle() * q1
-	elseif typeof(q0) == "Vector3" and (typeof(q1) == "table" and q1.__type == "quaternion") then
-		return q1:toAxisAngle() * q0
-	end
-end
-
-function quaternion_mt.__pow(q0, t)
-	local axis, theta = q0:toAxisAngle();
-	theta = theta * t * 0.5;
-	axis = sin(theta)*axis
-	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
-end
-
-function quaternion_mt.__tostring(q0)
-	local t = {q0.w, q0.x, q0.y, q0.z};
-	return table.concat(t, ", ");
-end
-
-function quaternion.new(w, x, y, z)
-	local self = {};
-	
-	self.w = w;
-	self.x = x;
-	self.y = y;
-	self.z = z;
-	
-	self = setmetatable(self, quaternion_mt);
-	ref[self] = Vector3.new(x, y, z);
-	
-	return self;
-end
-
-function quaternion.fromCFrame(cf)
-	local axis, theta = cf:toAxisAngle();
-	theta = theta * 0.5
-	axis = sin(theta)*axis
-	return quaternion.new(cos(theta), axis.x, axis.y, axis.z);
-end
-
-function quaternion:inverse()
-	local w = self.w
-	local conjugate = w*w + ref[self]:Dot(ref[self]);
- 
-	local nw = w / conjugate;
-	local nv = -ref[self] / conjugate;
- 
-	return quaternion.new(nw, nv.x, nv.y, nv.z);
-end
-
-function quaternion:toAxisAngle()
-	local axis = ref[self];
-	local theta = acos(self.w) * 2;
-
-	-- if theta is equivalent to zero then pick a random axis
-	if (theta % (PI*2) == 0 and axis:Dot(axis) == 0) then
-		axis = Vector3.new(1, 0, 0);
-	end
- 
-	return axis.unit, theta;
-end;
- 
-function quaternion:slerp(self2, t)
-	return ((self2 * self:inverse())^t) * self;
-end
-
-function quaternion:slerpClosest(self2, t)
-	if (self.w*self2.w + self.x*self2.x + self.y*self2.y + self.z*self2.z > 0) then
-		-- choose self2
-		return self:slerp(self2, t);
-	else
-		-- choose -self2
-		self2 = quaternion.new(-self2.w, -self2.x, -self2.y, -self2.z);
-		return self:slerp(self2, t);
-	end
-end
-
-function quaternion:toCFrame()
-	return CFrame.new(0, 0, 0, self.x, self.y, self.z, self.w);
-end
-
-return quaternion;]]></ProtectedString>
-							<int64 name="SourceAssetId">-1</int64>
-							<BinaryString name="Tags"></BinaryString>
-							<UniqueId name="UniqueId">215beb21e7b382da027625aa00028976</UniqueId>
 						</Properties>
 					</Item>
 				</Item>

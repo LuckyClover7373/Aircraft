@@ -108,7 +108,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         end
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
-    return aerodynamicCoefficidents
+    return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
 end
 
 function Coefficidents.setFlapAngle(angle: number)
@@ -141,17 +141,17 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
 
-    local airVelocity: Vector3 = (wing.CFrame:Inverse() - wing.Position) * worldAirVelocity
+    local airVelocity: Vector3 = (wing.CFrame - wing.Position):Inverse() * worldAirVelocity
     airVelocity = Vector3.new(airVelocity.X, airVelocity.Y)
     local dragDirection: Vector3 = wing.CFrame * airVelocity.Unit
     local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
-    local angleOfAttack: number = math.atan2(airVelocity.Y, -airVelocity.X)
+    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
 
     local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
-
+    print(aerodynamicCoefficidents)
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord

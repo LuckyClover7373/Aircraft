@@ -41,10 +41,10 @@ game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
 end)
 
 local vectorForce: VectorForce
-local torqueForce: AngularVelocity
+local torque: Torque
 
 local function init()
-    drive:SetNetworkOwner(nil)
+    --drive:SetNetworkOwner(nil)
 
     local att = Instance.new("Attachment")
     att.Parent = drive
@@ -54,10 +54,9 @@ local function init()
     vectorForce.Attachment0 = att
     vectorForce.Parent = drive
 
-    torqueForce = Instance.new("AngularVelocity")
-    torqueForce.MaxTorque = 10000
-    torqueForce.Attachment0 = att
-    torqueForce.Parent = drive
+    torque = Instance.new("Torque")
+    torque.Attachment0 = att
+    torque.Parent = drive
 end
 init()
 
@@ -71,8 +70,10 @@ while true do
 
     local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
-    local currentForceAndTorque = forceAndTorqueThisFrame + forceAndTorquePrediction * 0.5
-    
-    vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-    torqueForce.AngularVelocity += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+    local currentForceAndTorque = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+
+    --vectorForce.Force += currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+    torque.Torque += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+
+    vectorForce.Force += (drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
 end
