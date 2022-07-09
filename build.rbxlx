@@ -81,27 +81,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-4.38361263</X>
-					<Y>12.2937412</Y>
-					<Z>-12.8272076</Z>
-					<R00>0.367855549</R00>
-					<R01>-0.914312363</R01>
-					<R02>0.16945599</R02>
-					<R10>3.7252903e-09</R10>
-					<R11>0.182233691</R11>
-					<R12>0.983255267</R12>
-					<R20>-0.929883003</R20>
-					<R21>-0.361695915</R21>
-					<R22>0.0670356676</R22>
+					<X>-6.70854378</X>
+					<Y>19.8786716</Y>
+					<Z>-7.73545551</Z>
+					<R00>0.961183131</R00>
+					<R01>-0.229814082</R01>
+					<R02>0.152684718</R02>
+					<R10>-7.4505806e-09</R10>
+					<R11>0.553383112</R11>
+					<R12>0.832926929</R12>
+					<R20>-0.27591145</R20>
+					<R21>-0.800595284</R21>
+					<R22>0.531902432</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-4.72252464</X>
-					<Y>10.3272305</Y>
-					<Z>-12.9612789</Z>
+					<X>-7.01391315</X>
+					<Y>18.2128181</Y>
+					<Z>-8.79926014</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -412,7 +412,7 @@ engine.flapFraction = 0.2
 engine.span = 3
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 3000
+engine.thrust = 300
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
@@ -447,30 +447,25 @@ local RUN_SERVICE = game:GetService("RunService")
 local drive: VehicleSeat = script.Parent.Parent:FindFirstChildWhichIsA("VehicleSeat")
 local wings: Folder = script.Parent.Parent.wings
 
+local areoSurfaces = {}
+
 local PREDICTION_TIMESTEP_FRACTION: number = 0.5
 local FIXED_DELTA_TIME: number = 0.02
 
-local v = Vector3.zero
-local t = Vector3.zero
-
-local per = 0
-
-local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3)
+local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3): any
     local forceAndTorque = BiVector.new()
-    for i: number, wing: BasePart in pairs(wings:GetChildren()) do
-        if not wing:IsA("BasePart") then return end
-
-        local relativePosition: Vector3 = wing.Position - centerOfMass
-        forceAndTorque += Coefficidents.CalculateForces(-velocity -angularVelocity:Cross(relativePosition), relativePosition, wing)
+    for i: number, aeroSurface in pairs(areoSurfaces) do
+        local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
+        forceAndTorque += aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
     end
     return forceAndTorque
 end
 
-local function PredictVelocity(force: Vector3, delta: number)
+local function PredictVelocity(force: Vector3, delta: number): Vector3
     return drive.AssemblyLinearVelocity + delta * PREDICTION_TIMESTEP_FRACTION * force / drive.Mass
 end
 
-local function PredictAnguVelocity(torque: Vector3, delta: number)
+local function PredictAnguVelocity(torque: Vector3, delta: number) : Vector3
     local inertiaTensorWorldRotation = drive.CFrame * drive.AssemblyAngularVelocity
     local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
 	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
@@ -478,15 +473,17 @@ local function PredictAnguVelocity(torque: Vector3, delta: number)
     return drive.AssemblyAngularVelocity + delta * PREDICTION_TIMESTEP_FRACTION * (inertiaTensorWorldRotation * angularVelocityChangeInDiagonalSpace)
 end
 
-game.ReplicatedStorage.t.OnServerEvent:Connect(function(plr, rper)
-	per = rper / 100
-end)
-
 local vectorForce: VectorForce
 local torque: Torque
 
 local function init()
-    drive:SetNetworkOwner(nil)
+    if drive:CanSetNetworkOwnership() then drive:SetNetworkOwner(nil) end
+
+    for i: number, wing: BasePart in pairs(wings:GetChildren()) do
+        if not wing:IsA("BasePart") then return end
+
+        table.insert(areoSurfaces, Coefficidents.new(wing))
+    end
 
     local att = Instance.new("Attachment")
     att.Parent = drive
@@ -495,31 +492,52 @@ local function init()
     vectorForce.Force = Vector3.zero
     vectorForce.ApplyAtCenterOfMass = true
     vectorForce.Attachment0 = att
-    --vectorForce.Parent = drive
+    vectorForce.Parent = drive
 
     torque = Instance.new("Torque")
     torque.Torque = Vector3.zero
     torque.Attachment0 = att
-    --torque.Parent = drive
+    torque.Parent = drive
 end
 init()
+
+game.ReplicatedStorage.s.OnServerEvent:Connect(function(player, setting)
+    for i: number, aeroSurface in pairs(areoSurfaces) do
+        if aeroSurface.wing:GetAttribute("SurfaceType") == "Pitch" then
+            aeroSurface:setFlapAngle(setting.pitch or 0)
+        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Roll" then
+            aeroSurface:setFlapAngle(setting.roll or 0)
+        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Yaw" then
+            aeroSurface:setFlapAngle(setting.surface or 0)
+        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Flap" then
+            aeroSurface:setFlapAngle(setting.yaw or 0)
+        end
+    end
+end)
+
+task.wait(5)
 
 while true do
     local delta: number = RUN_SERVICE.Stepped:Wait()
 
-    local forceAndTorqueThisFrame = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
+    local forceAndTorqueThisFrame: Vector3 = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
     local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
-    local angularVelocityPrediction = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
+    local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
     
     --local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
     
-    local currentForceAndTorque = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+    local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+    currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+    currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 
-    drive:ApplyImpulse(currentForceAndTorque.force * FIXED_DELTA_TIME)
-    drive:ApplyAngularImpulse(currentForceAndTorque.torque * FIXED_DELTA_TIME)
+    vectorForce.Force = drive.AssemblyLinearVelocity
+    torque.Torque = drive.AssemblyAngularVelocity
 
-    drive:ApplyImpulse(drive.CFrame.LookVector * engine.thrust * per * FIXED_DELTA_TIME)
+    vectorForce.Force += (currentForceAndTorque.force)
+    torque.Torque += (currentForceAndTorque.torque)
+
+    vectorForce.Force += (drive.CFrame.LookVector * engine.thrust)
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -541,25 +559,24 @@ end]]></ProtectedString>
 							<string name="Name">BiVector</string>
 							<string name="ScriptGuid">{A1C17164-B04D-4786-9F07-993D5B0DC6F3}</string>
 							<ProtectedString name="Source"><![CDATA[local BiVector = {}
-BiVector.__Index = BiVector
+BiVector.__index = BiVector
 
-function BiVector.new(force: Vector3?, torque: Vector3?)
-    local new = {
+function BiVector.new(force: Vector3?, torque: Vector3?): any
+    return setmetatable({
         ["force"] = force or Vector3.zero,
         ["torque"] = torque or Vector3.zero
-    }
-    return setmetatable(new, BiVector)
+    }, BiVector)
 end
 
-BiVector.__add = function(self: table, value: table)
+BiVector.__add = function(self: any, value: any): any
     return BiVector.new(self.force + value.force, self.torque + value.torque)
 end
 
-BiVector.__sub = function(self: table, value: table)
+BiVector.__sub = function(self: any, value: any): any
     return BiVector.new(self.force - value.force, self.torque - value.torque)
 end
 
-BiVector.__mul = function(self: (table | number), value: (table | number))
+BiVector.__mul = function(self: (any | number), value: (any | number)): any
 	local calcBiVector = nil
 	
 	if typeof(self) == "table" and typeof(value) == "table" then
@@ -587,11 +604,10 @@ return BiVector]]></ProtectedString>
 							<string name="Name">Coefficients</string>
 							<string name="ScriptGuid">{8E492D6F-0B38-4997-92B8-9F929CF94CFC}</string>
 							<ProtectedString name="Source"><![CDATA[local Coefficidents = {}
+Coefficidents.__index = Coefficidents
 
 local engine = require(script.Parent.Parent)
 local BiVector = require(script.Parent.BiVector)
-
-local flapAngle: number = 0
 
 local function lerp(a: number, b: number, t: number): number
     return a + (b - a) * t
@@ -628,7 +644,7 @@ local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLi
     return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
 end
 
-local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number): Vector3
     local liftCoefficientLowAoA: number
     if angleOfAttack > stallAngleHigh then
         liftCoefficientLowAoA = correctedLiftSlope * (stallAngleHigh - zeroLiftAoA)
@@ -659,7 +675,7 @@ local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLif
     return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
 end
 
-local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number): Vector3
+local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number): Vector3
     local aerodynamicCoefficidents: Vector3
 
     local paddingAngleHigh: number = math.rad(lerp(15, 5, (math.deg(flapAngle) + 50) / 100))
@@ -671,7 +687,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         aerodynamicCoefficidents = CalculateCoefficidentsAtLowAoA(angleOfAttack, correctedLiftSlope, zeroLiftAoA)
     elseif angleOfAttack > paddedStallAngleHigh or angleOfAttack < paddingAngleLow then
         aerodynamicCoefficidents = CalculateCoefficidentsAtStall(
-            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
         )
     else
         local aerodynamicCoefficientsLow: Vector3
@@ -682,7 +698,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
             aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
                 stallAngleHigh, correctedLiftSlope, zeroLiftAoA)
             aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
-                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
             )
             lerpAlpha = (angleOfAttack - stallAngleHigh) / (paddedStallAngleHigh - stallAngleHigh)
         else
@@ -690,7 +706,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
                 stallAngleLow, correctedLiftSlope, zeroLiftAoA
             )
             aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
-                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow
+                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
             )
             lerpAlpha = (angleOfAttack - stallAngleLow) / (paddedStallAngleLow - stallAngleLow)
         end
@@ -699,16 +715,18 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
     return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
 end
 
-function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
-    print(flapAngle)
+function Coefficidents.new(wing: BasePart)
+    return setmetatable({
+        ["flapAngle"] = 0,
+        ["wing"] = wing
+    }, Coefficidents)
 end
 
-game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
-    Coefficidents.setFlapAngle(f)
-end)
+function Coefficidents:setFlapAngle(angle: number)
+    self.flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+end
 
-function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3)
     local forceAndTorque = BiVector.new()
     
     local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
@@ -716,7 +734,7 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local theta: number = math.acos(2 * engine.flapFraction - 1)
     local flapEffectivness: number = 1 - (theta - math.sin(theta)) / math.pi
-    local deltaLift: number = correctedLiftSlope * flapEffectivness * FlapEffectivnessCorrection(flapAngle) * flapAngle
+    local deltaLift: number = correctedLiftSlope * flapEffectivness * FlapEffectivnessCorrection(self.flapAngle) * self.flapAngle
 
     local zeroLiftAoABase: number = math.rad(engine.zeroLiftAoA)
     local zeroLiftAoA: number = zeroLiftAoABase - deltaLift / correctedLiftSlope
@@ -730,26 +748,24 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
-    local airVelocity: Vector3 = wing.CFrame.Rotation:Inverse() * worldAirVelocity
+    local airVelocity: Vector3 = self.wing.CFrame.Rotation:Inverse() * worldAirVelocity
     ---airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
-    local dragDirection: Vector3 = wing.Rotation * airVelocity.Unit
-    local liftDirection: Vector3 = wing.CFrame.UpVector
+    local dragDirection: Vector3 = self.wing.Rotation * airVelocity.Unit
+    local liftDirection: Vector3 = self.wing.CFrame.UpVector
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
     local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
 
-    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
+    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle)
     
-    local lift: Vector3 = liftDirection * (aerodynamicCoefficidents.X <= 0 and 0.1 or aerodynamicCoefficidents.X) * dynamicPressure * area * 100
+    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
     
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
-    
-    --print(airVelocity.Magnitude)
 
     return forceAndTorque
 end
@@ -808,7 +824,7 @@ return Coefficidents]]></ProtectedString>
 					<token name="LeftSurface">0</token>
 					<token name="LeftSurfaceInput">0</token>
 					<bool name="Locked">false</bool>
-					<bool name="Massless">false</bool>
+					<bool name="Massless">true</bool>
 					<token name="Material">256</token>
 					<string name="MaterialVariantSerialized"></string>
 					<float name="MaxSpeed">25</float>
@@ -853,9 +869,9 @@ return Coefficidents]]></ProtectedString>
 					<float name="TurnSpeed">1</float>
 					<UniqueId name="UniqueId">08b1746d6c9ea536023decaf00138227</UniqueId>
 					<Vector3 name="Velocity">
-						<X>1</X>
-						<Y>1</Y>
-						<Z>1</Z>
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
 					</Vector3>
 					<Vector3 name="size">
 						<X>4</X>
@@ -863,7 +879,7 @@ return Coefficidents]]></ProtectedString>
 						<Z>2</Z>
 					</Vector3>
 				</Properties>
-				<Item class="WeldConstraint" referent="RBXBF005FEEB1554BC69DFB6D2D88964D6D">
+				<Item class="WeldConstraint" referent="RBX54DD32C59E4A4E619409F19F748EEBB9">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -886,10 +902,10 @@ return Coefficidents]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">215beb21e7b382da027625aa0024f4c6</UniqueId>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c5</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="WeldConstraint" referent="RBX3D5EE1B903F74165914DD47B1F980636">
+				<Item class="WeldConstraint" referent="RBX23432D7ED0374E0D9E04735612C75434">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -912,7 +928,59 @@ return Coefficidents]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">215beb21e7b382da027625aa0024f4c7</UniqueId>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c6</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX618FDAA2F9D842898EE089E7CA1FBCF4">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-4.76837158e-07</X>
+							<Y>0</Y>
+							<Z>24.5</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
+						<Ref name="Part1Internal">RBX71C156FBEE6140A3A2F435B3BF875ABC</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c7</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX66B65CD32CDB41E89D8BB7EDD38504FF">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-4.76837158e-07</X>
+							<Y>5</Y>
+							<Z>24.5</Z>
+							<R00>0</R00>
+							<R01>-1</R01>
+							<R02>0</R02>
+							<R10>1</R10>
+							<R11>0</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
+						<Ref name="Part1Internal">RBXE4229ADEF2A44D759F7B5CC3A23F0750</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c8</UniqueId>
 					</Properties>
 				</Item>
 			</Item>
@@ -927,7 +995,7 @@ return Coefficidents]]></ProtectedString>
 				<Item class="Part" referent="RBX665EC304D7CB47E1BA6A78A114221EA8">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"></BinaryString>
+						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -968,7 +1036,7 @@ return Coefficidents]]></ProtectedString>
 						<token name="LeftSurface">0</token>
 						<token name="LeftSurfaceInput">0</token>
 						<bool name="Locked">false</bool>
-						<bool name="Massless">false</bool>
+						<bool name="Massless">true</bool>
 						<token name="Material">256</token>
 						<string name="MaterialVariantSerialized"></string>
 						<string name="Name">wing</string>
@@ -1006,9 +1074,9 @@ return Coefficidents]]></ProtectedString>
 						<float name="Transparency">0</float>
 						<UniqueId name="UniqueId">2dbf0b6cf61c7126026d6fc600027bb1</UniqueId>
 						<Vector3 name="Velocity">
-							<X>1</X>
-							<Y>1</Y>
-							<Z>1</Z>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
 						</Vector3>
 						<token name="formFactorRaw">1</token>
 						<token name="shape">1</token>
@@ -1022,7 +1090,7 @@ return Coefficidents]]></ProtectedString>
 				<Item class="Part" referent="RBX0C8F348279834DCA92C93BFE8DC9BA5C">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"></BinaryString>
+						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1063,7 +1131,7 @@ return Coefficidents]]></ProtectedString>
 						<token name="LeftSurface">0</token>
 						<token name="LeftSurfaceInput">0</token>
 						<bool name="Locked">false</bool>
-						<bool name="Massless">false</bool>
+						<bool name="Massless">true</bool>
 						<token name="Material">256</token>
 						<string name="MaterialVariantSerialized"></string>
 						<string name="Name">wing</string>
@@ -1101,14 +1169,204 @@ return Coefficidents]]></ProtectedString>
 						<float name="Transparency">0</float>
 						<UniqueId name="UniqueId">2dbf0b6cf61c7126026d6fc600028467</UniqueId>
 						<Vector3 name="Velocity">
-							<X>1</X>
-							<Y>1</Y>
-							<Z>1</Z>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
 						</Vector3>
 						<token name="formFactorRaw">1</token>
 						<token name="shape">1</token>
 						<Vector3 name="size">
 							<X>20.2999992</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX71C156FBEE6140A3A2F435B3BF875ABC">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2g=</BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>-7</X>
+							<Y>0.499976158</Y>
+							<Z>10.6999969</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">true</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19000bac17</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>20.2999992</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXE4229ADEF2A44D759F7B5CC3A23F0750">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIDAAAAWWF3</BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>-7</X>
+							<Y>5.49997616</Y>
+							<Z>10.6999969</Z>
+							<R00>0</R00>
+							<R01>-1</R01>
+							<R02>0</R02>
+							<R10>1</R10>
+							<R11>0</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">true</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">5a6820a17568807b02db0f19003dc0c3</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>10.2999992</X>
 							<Y>0.399999976</Y>
 							<Z>3.5999999</Z>
 						</Vector3>
@@ -1198,6 +1456,48 @@ return Coefficidents]]></ProtectedString>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad6e</UniqueId>
+		</Properties>
+	</Item>
+	<Item class="MaterialService" referent="RBXFF3A846FCE0E468BAB76395F716B1F46">
+		<Properties>
+			<string name="AsphaltName">Asphalt</string>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<string name="BasaltName">Basalt</string>
+			<string name="BrickName">Brick</string>
+			<string name="CobblestoneName">Cobblestone</string>
+			<string name="ConcreteName">Concrete</string>
+			<string name="CorrodedMetalName">CorrodedMetal</string>
+			<string name="CrackedLavaName">CrackedLava</string>
+			<string name="DiamondPlateName">DiamondPlate</string>
+			<string name="FabricName">Fabric</string>
+			<string name="FoilName">Foil</string>
+			<string name="GlacierName">Glacier</string>
+			<string name="GraniteName">Granite</string>
+			<string name="GrassName">Grass</string>
+			<string name="GroundName">Ground</string>
+			<string name="IceName">Ice</string>
+			<string name="LeafyGrassName">LeafyGrass</string>
+			<string name="LimestoneName">Limestone</string>
+			<string name="MarbleName">Marble</string>
+			<string name="MetalName">Metal</string>
+			<string name="MudName">Mud</string>
+			<string name="Name">MaterialService</string>
+			<string name="PavementName">Pavement</string>
+			<string name="PebbleName">Pebble</string>
+			<string name="PlasticName">Plastic</string>
+			<string name="RockName">Rock</string>
+			<string name="SaltName">Salt</string>
+			<string name="SandName">Sand</string>
+			<string name="SandstoneName">Sandstone</string>
+			<string name="SlateName">Slate</string>
+			<string name="SmoothPlasticName">SmoothPlastic</string>
+			<string name="SnowName">Snow</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<UniqueId name="UniqueId">5a6820a17568807b02db0f190001f23d</UniqueId>
+			<bool name="Use2022MaterialsXml">false</bool>
+			<string name="WoodName">Wood</string>
+			<string name="WoodPlanksName">WoodPlanks</string>
 		</Properties>
 	</Item>
 	<Item class="PermissionsService" referent="RBXA6E6BD6C8C9E445CAC7600245C6AA492">
@@ -1371,7 +1671,12 @@ return Coefficidents]]></ProtectedString>
 					<bool name="ClipsDescendants">false</bool>
 					<bool name="Draggable">false</bool>
 					<token name="Font">3</token>
-					<Font name="FontFace"></Font>
+					<Font name="FontFace">
+						<Family><url>rbxasset://fonts/families/SourceSansPro.json</url></Family>
+						<Weight>400</Weight>
+						<Style>Normal</Style>
+						<CachedFaceId><url>rbxasset://fonts/SourceSansPro-Regular.ttf</url></CachedFaceId>
+					</Font>
 					<int name="LayoutOrder">0</int>
 					<float name="LineHeight">1</float>
 					<int name="MaxVisibleGraphemes">-1</int>
@@ -1466,7 +1771,12 @@ return Coefficidents]]></ProtectedString>
 					<bool name="ClipsDescendants">false</bool>
 					<bool name="Draggable">false</bool>
 					<token name="Font">3</token>
-					<Font name="FontFace"></Font>
+					<Font name="FontFace">
+						<Family><url>rbxasset://fonts/families/SourceSansPro.json</url></Family>
+						<Weight>400</Weight>
+						<Style>Normal</Style>
+						<CachedFaceId><url>rbxasset://fonts/SourceSansPro-Regular.ttf</url></CachedFaceId>
+					</Font>
 					<int name="LayoutOrder">0</int>
 					<float name="LineHeight">1</float>
 					<int name="MaxVisibleGraphemes">-1</int>
@@ -1535,45 +1845,66 @@ return Coefficidents]]></ProtectedString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">LocalScript</string>
 					<string name="ScriptGuid">{96182606-DE13-4677-938B-8509D29A1D3C}</string>
-					<ProtectedString name="Source"><![CDATA[--!strict
+					<ProtectedString name="Source"><![CDATA[local set = {
+	p = 0,
+	r = 0,
+	y = 0,
+	f = 0
+}
 
-local f = 0
 local w
 local s
+local a
+local d
 
-script.Parent.TextButton.MouseButton1Click:Connect(function()
-	game.ReplicatedStorage.t:FireServer(tonumber(script.Parent.t.Text))
-	game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
-end)
-
-game:GetService("UserInputService").InputBegan:Connect(function(a)
-	if a.KeyCode == Enum.KeyCode.W then
+game:GetService("UserInputService").InputBegan:Connect(function(i)
+	if i.KeyCode == Enum.KeyCode.W then
 		w = task.spawn(function()
 			while true do
-				f += 0.025
-				script.Parent.f.Text = f
-				game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+				set.r += 0.1
 				task.wait()
 			end
 		end)
-	elseif a.KeyCode == Enum.KeyCode.S then
+	elseif i.KeyCode == Enum.KeyCode.S then
 		s = task.spawn(function()
 			while true do
-				f -= 0.025
-				script.Parent.f.Text = f
-				game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+				set.r -= 0.025
+				task.wait()
+			end
+		end)
+		
+	elseif i.KeyCode == Enum.KeyCode.A then
+		a = task.spawn(function()
+			while true do
+				set.p += 0.025
+				task.wait()
+			end
+		end)
+		
+	elseif i.KeyCode == Enum.KeyCode.D then
+		d = task.spawn(function()
+			while true do
+				set.p -= 0.025
 				task.wait()
 			end
 		end)
 	end
 end)
 
-game:GetService("UserInputService").InputEnded:Connect(function(a, b)
-	if a.KeyCode == Enum.KeyCode.W then
+game:GetService("UserInputService").InputEnded:Connect(function(i, b)
+	if i.KeyCode == Enum.KeyCode.W then
 		if w then task.cancel(w) end
-	elseif a.KeyCode == Enum.KeyCode.S then
+	elseif i.KeyCode == Enum.KeyCode.S then
 		if s then task.cancel(s) end
+	elseif i.KeyCode == Enum.KeyCode.A then
+		if a then task.cancel(a) end
+	elseif i.KeyCode == Enum.KeyCode.D then
+		if d then task.cancel(d) end
 	end
+end)
+
+game["Run Service"].Heartbeat:Connect(function()
+	game.ReplicatedStorage.s:FireServer(set)
 end)]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
@@ -1607,7 +1938,12 @@ end)]]></ProtectedString>
 					<bool name="ClipsDescendants">false</bool>
 					<bool name="Draggable">false</bool>
 					<token name="Font">3</token>
-					<Font name="FontFace"></Font>
+					<Font name="FontFace">
+						<Family><url>rbxasset://fonts/families/SourceSansPro.json</url></Family>
+						<Weight>400</Weight>
+						<Style>Normal</Style>
+						<CachedFaceId><url>rbxasset://fonts/SourceSansPro-Regular.ttf</url></CachedFaceId>
+					</Font>
 					<int name="LayoutOrder">0</int>
 					<float name="LineHeight">1</float>
 					<int name="MaxVisibleGraphemes">-1</int>
@@ -1865,19 +2201,10 @@ end)]]></ProtectedString>
 		<Item class="RemoteEvent" referent="RBX4A37E3BD044D492A8D18F3E8D9C6CC60">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
-				<string name="Name">t</string>
+				<string name="Name">s</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 				<UniqueId name="UniqueId">215beb21e7b382da027625aa00331c3d</UniqueId>
-			</Properties>
-		</Item>
-		<Item class="RemoteEvent" referent="RBX3C3219815C554DD898550BDE233CC9B9">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<string name="Name">f</string>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<UniqueId name="UniqueId">215beb21e7b382da027625aa004b9ca1</UniqueId>
 			</Properties>
 		</Item>
 	</Item>
