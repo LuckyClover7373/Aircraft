@@ -44,6 +44,7 @@
 			</Vector3>
 			<string name="Name">Workspace</string>
 			<bool name="NeedsPivotMigration">false</bool>
+			<token name="PhysicsInertiaAndVolumeFix">0</token>
 			<token name="PhysicsSteppingMethod">0</token>
 			<Ref name="PrimaryPart">null</Ref>
 			<token name="ReplicateInstanceDestroySetting">0</token>
@@ -80,27 +81,27 @@
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>4.15914679</X>
-					<Y>29.3519249</Y>
-					<Z>-26.2533569</Z>
-					<R00>-0.160269395</R00>
-					<R01>-0.872343957</R01>
-					<R02>0.461876512</R02>
-					<R10>-0</R10>
-					<R11>0.467925251</R11>
-					<R12>0.883768082</R12>
-					<R20>-0.987073362</R20>
-					<R21>0.141640976</R21>
-					<R22>-0.0749940872</R22>
+					<X>-4.38361263</X>
+					<Y>12.2937412</Y>
+					<Z>-12.8272076</Z>
+					<R00>0.367855549</R00>
+					<R01>-0.914312363</R01>
+					<R02>0.16945599</R02>
+					<R10>3.7252903e-09</R10>
+					<R11>0.182233691</R11>
+					<R12>0.983255267</R12>
+					<R20>-0.929883003</R20>
+					<R21>-0.361695915</R21>
+					<R22>0.0670356676</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>3.23539376</X>
-					<Y>27.5843887</Y>
-					<Z>-26.1033688</Z>
+					<X>-4.72252464</X>
+					<Y>10.3272305</Y>
+					<Z>-12.9612789</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -406,12 +407,12 @@ engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
 engine.stallAngleHigh = 15
 engine.stallAngleLow = -15
-engine.chord = 1
+engine.chord = 3
 engine.flapFraction = 0.2
-engine.span = 1
+engine.span = 3
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 10
+engine.thrust = 3000
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
@@ -447,6 +448,10 @@ local drive: VehicleSeat = script.Parent.Parent:FindFirstChildWhichIsA("VehicleS
 local wings: Folder = script.Parent.Parent.wings
 
 local PREDICTION_TIMESTEP_FRACTION: number = 0.5
+local FIXED_DELTA_TIME: number = 0.02
+
+local v = Vector3.zero
+local t = Vector3.zero
 
 local per = 0
 
@@ -455,7 +460,8 @@ local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Ve
     for i: number, wing: BasePart in pairs(wings:GetChildren()) do
         if not wing:IsA("BasePart") then return end
 
-        forceAndTorque += Coefficidents.CalculateForces(-velocity - angularVelocity:Cross(wing.Position - centerOfMass), wing)
+        local relativePosition: Vector3 = wing.Position - centerOfMass
+        forceAndTorque += Coefficidents.CalculateForces(-velocity -angularVelocity:Cross(relativePosition), relativePosition, wing)
     end
     return forceAndTorque
 end
@@ -489,12 +495,12 @@ local function init()
     vectorForce.Force = Vector3.zero
     vectorForce.ApplyAtCenterOfMass = true
     vectorForce.Attachment0 = att
-    vectorForce.Parent = drive
+    --vectorForce.Parent = drive
 
     torque = Instance.new("Torque")
     torque.Torque = Vector3.zero
     torque.Attachment0 = att
-    torque.Parent = drive
+    --torque.Parent = drive
 end
 init()
 
@@ -505,15 +511,15 @@ while true do
 
     local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
     local angularVelocityPrediction = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
-
-    local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
-
+    
+    --local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
+    
     local currentForceAndTorque = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
 
-    torque.Torque += currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+    drive:ApplyImpulse(currentForceAndTorque.force * FIXED_DELTA_TIME)
+    drive:ApplyAngularImpulse(currentForceAndTorque.torque * FIXED_DELTA_TIME)
 
-    vectorForce.Force += (currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per).Magnitude > 0 and currentForceAndTorque.force + drive.CFrame.LookVector * engine.thrust * per or Vector3.zero
-
+    drive:ApplyImpulse(drive.CFrame.LookVector * engine.thrust * per * FIXED_DELTA_TIME)
 end]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -694,14 +700,15 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 end
 
 function Coefficidents.setFlapAngle(angle: number)
-    flapAngle = math.clamp(angle, -math.rad(90), math.rad(90))
+    flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+    print(flapAngle)
 end
 
 game.ReplicatedStorage.f.OnServerEvent:Connect(function(plr, f)
     Coefficidents.setFlapAngle(f)
 end)
 
-function Coefficidents.CalculateForces(worldAirVelocity: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
+function Coefficidents.CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3, wing: BasePart) -- It returns BiVector. However, I can't typecast custom class
     local forceAndTorque = BiVector.new()
     
     local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
@@ -724,9 +731,9 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, wing: BasePart
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
     local airVelocity: Vector3 = wing.CFrame.Rotation:Inverse() * worldAirVelocity
-    airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
-    local dragDirection: Vector3 = worldAirVelocity.Unit
-    local liftDirection: Vector3 = dragDirection:Cross(wing.CFrame.LookVector)
+    ---airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
+    local dragDirection: Vector3 = wing.Rotation * airVelocity.Unit
+    local liftDirection: Vector3 = wing.CFrame.UpVector
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
@@ -734,14 +741,15 @@ function Coefficidents.CalculateForces(worldAirVelocity: Vector3, wing: BasePart
 
     local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow)
     
-    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local lift: Vector3 = liftDirection * (aerodynamicCoefficidents.X <= 0 and 0.1 or aerodynamicCoefficidents.X) * dynamicPressure * area * 100
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
     
     forceAndTorque.force += lift + drag
+    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
     
-    print(airVelocity.Magnitude)
+    --print(airVelocity.Magnitude)
 
     return forceAndTorque
 end
@@ -1529,9 +1537,43 @@ return Coefficidents]]></ProtectedString>
 					<string name="ScriptGuid">{96182606-DE13-4677-938B-8509D29A1D3C}</string>
 					<ProtectedString name="Source"><![CDATA[--!strict
 
+local f = 0
+local w
+local s
+
 script.Parent.TextButton.MouseButton1Click:Connect(function()
 	game.ReplicatedStorage.t:FireServer(tonumber(script.Parent.t.Text))
 	game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+end)
+
+game:GetService("UserInputService").InputBegan:Connect(function(a)
+	if a.KeyCode == Enum.KeyCode.W then
+		w = task.spawn(function()
+			while true do
+				f += 0.025
+				script.Parent.f.Text = f
+				game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+				task.wait()
+			end
+		end)
+	elseif a.KeyCode == Enum.KeyCode.S then
+		s = task.spawn(function()
+			while true do
+				f -= 0.025
+				script.Parent.f.Text = f
+				game.ReplicatedStorage.f:FireServer(tonumber(script.Parent.f.Text))
+				task.wait()
+			end
+		end)
+	end
+end)
+
+game:GetService("UserInputService").InputEnded:Connect(function(a, b)
+	if a.KeyCode == Enum.KeyCode.W then
+		if w then task.cancel(w) end
+	elseif a.KeyCode == Enum.KeyCode.S then
+		if s then task.cancel(s) end
+	end
 end)]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>

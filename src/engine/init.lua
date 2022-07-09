@@ -29,12 +29,12 @@ engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
 engine.stallAngleHigh = 15
 engine.stallAngleLow = -15
-engine.chord = 1
+engine.chord = 3
 engine.flapFraction = 0.2
-engine.span = 1
+engine.span = 3
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 10
+engine.thrust = 300
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end

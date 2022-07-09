@@ -1,23 +1,22 @@
 local BiVector = {}
-BiVector.__Index = BiVector
+BiVector.__index = BiVector
 
-function BiVector.new(force: Vector3?, torque: Vector3?)
-    local new = {
+function BiVector.new(force: Vector3?, torque: Vector3?): any
+    return setmetatable({
         ["force"] = force or Vector3.zero,
         ["torque"] = torque or Vector3.zero
-    }
-    return setmetatable(new, BiVector)
+    }, BiVector)
 end
 
-BiVector.__add = function(self: table, value: table)
+BiVector.__add = function(self: any, value: any): any
     return BiVector.new(self.force + value.force, self.torque + value.torque)
 end
 
-BiVector.__sub = function(self: table, value: table)
+BiVector.__sub = function(self: any, value: any): any
     return BiVector.new(self.force - value.force, self.torque - value.torque)
 end
 
-BiVector.__mul = function(self: (table | number), value: (table | number))
+BiVector.__mul = function(self: (any | number), value: (any | number)): any
 	local calcBiVector = nil
 	
 	if typeof(self) == "table" and typeof(value) == "table" then
