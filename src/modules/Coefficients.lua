@@ -150,18 +150,18 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
-    local airVelocity: Vector3 = Vector3.new(0, 0, -self.wing.AssemblyLinearVelocity.Magnitude) ---self.wing.CFrame.LookVector + worldAirVelocity
-    ---airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
-    local dragDirection: Vector3 = -self.wing.CFrame.LookVector
-    local liftDirection: Vector3 = self.wing.CFrame.UpVector
+    local airVelocity: Vector3 = self.wing.CFrame:Inverse() * worldAirVelocity
+    airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
+    local dragDirection: Vector3 = worldAirVelocity.Unit ---self.wing.CFrame.LookVector
+    local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
     local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
-    local lift: Vector3 = liftDirection * dynamicPressure * area
-    local drag: Vector3 = dragDirection * dynamicPressure * area
+    local lift: Vector3 = liftDirection * dynamicPressure * area * 5
+    local drag: Vector3 = dragDirection * dynamicPressure * area * 5
     local torque: Vector3 = self.wing.CFrame.RightVector * dynamicPressure * area * self.chord
 
     forceAndTorque.force += lift + drag

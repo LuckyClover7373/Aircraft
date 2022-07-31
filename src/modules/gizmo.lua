@@ -355,17 +355,23 @@ local function disableGizmos()
 	end
 end
 
-workspace:GetAttributeChangedSignal("GizmosEnabled"):Connect(function ()
+--[[
+	workspace:GetAttributeChangedSignal("GizmosEnabled"):Connect(function ()
 	if workspace:GetAttribute("GizmosEnabled") then
 		enableGizmos()
 	else
 		disableGizmos()
 	end
-end)
+	end)
+
+	if workspace:GetAttribute("GizmosEnabled") then
+		enableGizmos()
+	end
+]]
 
 disableGizmos()
 
-if workspace:GetAttribute("GizmosEnabled") then
+if RunService:IsStudio() then
 	enableGizmos()
 end
 
