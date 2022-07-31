@@ -111,7 +111,7 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         end
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
-    return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
+    return aerodynamicCoefficidents
 end
 
 function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number)
@@ -157,12 +157,12 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
+    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
+    local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
 
     forceAndTorque.force += lift + drag
     --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)

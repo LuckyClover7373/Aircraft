@@ -29,6 +29,7 @@ end
 init()
 
 RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
+    if true then return end
     for i, v in pairs(areoSurfaces) do
         local alt = v.wing:GetAttribute("SurfaceType")
         if alt == "Pitch" then
@@ -49,8 +50,6 @@ RUN_SERVICE.Heartbeat:Connect(function(delta)
         
         local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
         local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
-
-        print(forceAndTorque)
 
         aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * delta)
         aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * delta)
