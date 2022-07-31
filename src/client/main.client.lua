@@ -16,12 +16,14 @@ local PREDICTION_TIMESTEP_FRACTION: number = 0.5
 local FIXED_DELTA_TIME: number = 0.02
 
 local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3): any
-    local forceAndTorque = BiVector.new()
     for i: number, aeroSurface in pairs(areoSurfaces) do
         local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
-        forceAndTorque += aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+
+        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
+        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * FIXED_DELTA_TIME)
     end
-    return forceAndTorque
+    --return forceAndTorque
 end
 
 local function PredictVelocity(force: Vector3, delta: number): Vector3
@@ -40,7 +42,13 @@ local function init()
     for i: number, wing: BasePart in pairs(wings:GetChildren()) do
         if not wing:IsA("BasePart") then return end
 
-        local new = Coefficidents.new(wing)
+        local span = wing:GetAttribute("span")
+        local chord = wing:GetAttribute("chord")
+        local aspectRatio = wing:GetAttribute("aspectRatio")
+        if chord < 0.001 then chord = 0.001 end
+        if engine.autoAspectRatio then aspectRatio = span / chord end
+
+        local new = Coefficidents.new(wing, span, chord, aspectRatio)
         table.insert(areoSurfaces, new)
     end
 end
@@ -65,15 +73,15 @@ RUN_SERVICE.Stepped:Connect(function(delta)
     --if true then return end
 	local forceAndTorqueThisFrame: Vector3 = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
-	local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
-	local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
+	--local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
+	--local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
 
 	--local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
-	local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
-	currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
-	currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+	--local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+	--currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+	--currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 
-    drive:ApplyImpulse(((currentForceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
+    --drive:ApplyImpulse(((currentForceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
     --drive:ApplyAngularImpulse((currentForceAndTorque.torque) * FIXED_DELTA_TIME)
 end)
