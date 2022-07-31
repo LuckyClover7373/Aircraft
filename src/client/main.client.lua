@@ -19,7 +19,7 @@ local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Ve
     for i: number, aeroSurface in pairs(areoSurfaces) do
         local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
         -- - angularVelocity:Cross(relativePosition)
-        local forceAndTorque = aeroSurface:CalculateForces(-velocity, relativePosition)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
 
         aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
         aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * FIXED_DELTA_TIME)

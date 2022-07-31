@@ -151,29 +151,29 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
     local airVelocity: Vector3 = self.wing.CFrame:Inverse().LookVector * worldAirVelocity
-    airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
+    --airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
     local dragDirection: Vector3 = worldAirVelocity.Unit ---self.wing.CFrame.LookVector
     local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
 
     local area: number = self.chord * self.span
-    local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude^2
+    local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude
     local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
+    local torque: Vector3 = -self.wing.CFrame.RightVector * dynamicPressure * area * self.chord
 
     forceAndTorque.force += lift + drag
     --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
-    forceAndTorque.torque += torque
+    forceAndTorque.torque += torque * 0.01
 
     if RUN_SERVICE:IsStudio() then
         gizmo.setScale(1)
         gizmo.setColor(Color3.fromRGB(199, 2, 2))
-        gizmo.drawRay(self.wing.Position, lift)
+        gizmo.drawRay(self.wing.Position, forceAndTorque.force)
         gizmo.setColor(Color3.fromRGB(13, 2, 167))
-        gizmo.drawRay(self.wing.Position, drag)
+        gizmo.drawRay(self.wing.Position, forceAndTorque.torque)
         gizmo.setColor(Color3.fromRGB(255, 255, 255))
         gizmo.drawRay(self.wing.Position, worldAirVelocity)
         gizmo.setScale(5)

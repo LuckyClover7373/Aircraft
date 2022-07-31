@@ -352,7 +352,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
 
 Aircraft Engine
-Made by LuckyClover7373 (A huge helped by wjoh0315, I'm so appreciate to him)
+Made by LuckyClover7373 (A huge help by wjoh0315, I'm so appreciate to him)
 
 ]]--
 
@@ -365,20 +365,15 @@ engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
 engine.stallAngleHigh = 15
 engine.stallAngleLow = -15
-engine.chord = 3
 engine.flapFraction = 0.2
-engine.span = 3
 engine.autoAspectRatio = true
-engine.aspectRatio = 2
-engine.thrust = 100
+engine.thrust = 500
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
     if engine.flapFraction < 0 then engine.flapFraction = 0 end
     if engine.stallAngleHigh < 0 then engine.stallAngleHigh = 0 end
     if engine.stallAngleLow > 0 then engine.stallAngleLow = 0 end
-    if engine.chord < 0.001 then engine.chord = 0.001 end
-    if engine.autoAspectRatio then engine.aspectRatio = engine.span / engine.chord end
 end
 engineFix()
 
@@ -595,9 +590,9 @@ local function LiftCoefficientMaxFraction(flapFraction: number): number
     return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
 end
 
-local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number): Vector3
+local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, aspectRatio: number): Vector3
     local liftCoefficient: number = correctedLiftSlope * (angleOfAttack - zeroLiftAoA)
-    local inducedAngle: number = liftCoefficient / (math.pi * engine.aspectRatio)
+    local inducedAngle: number = liftCoefficient / (math.pi * aspectRatio)
     local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
 
     local tangentialCoefficient: number = engine.skinFriction * math.cos(effectiveAngle)
@@ -610,7 +605,7 @@ local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLi
     return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
 end
 
-local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number): Vector3
+local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number, aspectRatio: number): Vector3
     local liftCoefficientLowAoA: number
     if angleOfAttack > stallAngleHigh then
         liftCoefficientLowAoA = correctedLiftSlope * (stallAngleHigh - zeroLiftAoA)
@@ -618,7 +613,7 @@ local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLif
         liftCoefficientLowAoA = correctedLiftSlope * (stallAngleLow - zeroLiftAoA)
     end
 
-    local inducedAngle: number = liftCoefficientLowAoA / (math.pi * engine.aspectRatio)
+    local inducedAngle: number = liftCoefficientLowAoA / (math.pi * aspectRatio)
 
     local lerpAlpha: number
     if angleOfAttack > stallAngleHigh then
@@ -631,7 +626,7 @@ local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLif
 
     local normalCoefficient: number = FrictionAt90Degrees(flapAngle) * math.sin(effectiveAngle) *
     (1 / (0.56 + 0.44 * math.abs(math.sin(effectiveAngle))) -
-    0.41 * (1 - math.exp(-17 / engine.aspectRatio)))
+    0.41 * (1 - math.exp(-17 / aspectRatio)))
     local tangentialCoefficient: number = 0.5 * engine.skinFriction * math.cos(effectiveAngle)
 
     local liftCoefficient: number = normalCoefficient * math.cos(effectiveAngle) - tangentialCoefficient * math.sin(effectiveAngle)
@@ -641,7 +636,7 @@ local function CalculateCoefficidentsAtStall(angleOfAttack: number, correctedLif
     return Vector3.new(liftCoefficient, dragCoefficient, torqueCoefficient)
 end
 
-local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number): Vector3
+local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, stallAngleHigh: number, stallAngleLow: number, flapAngle: number, aspectRatio: number): Vector3
     local aerodynamicCoefficidents: Vector3
 
     local paddingAngleHigh: number = math.rad(lerp(15, 5, (math.deg(flapAngle) + 50) / 100))
@@ -650,10 +645,10 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
     local paddedStallAngleLow: number = stallAngleLow - paddingAngleLow
 
     if angleOfAttack < stallAngleHigh and angleOfAttack > stallAngleLow then
-        aerodynamicCoefficidents = CalculateCoefficidentsAtLowAoA(angleOfAttack, correctedLiftSlope, zeroLiftAoA)
+        aerodynamicCoefficidents = CalculateCoefficidentsAtLowAoA(angleOfAttack, correctedLiftSlope, zeroLiftAoA, aspectRatio)
     elseif angleOfAttack > paddedStallAngleHigh or angleOfAttack < paddingAngleLow then
         aerodynamicCoefficidents = CalculateCoefficidentsAtStall(
-            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
+            angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle, aspectRatio
         )
     else
         local aerodynamicCoefficientsLow: Vector3
@@ -662,17 +657,17 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
 
         if angleOfAttack > stallAngleHigh then
             aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
-                stallAngleHigh, correctedLiftSlope, zeroLiftAoA)
+                stallAngleHigh, correctedLiftSlope, zeroLiftAoA, aspectRatio)
             aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
-                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
+                paddedStallAngleHigh, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle, aspectRatio
             )
             lerpAlpha = (angleOfAttack - stallAngleHigh) / (paddedStallAngleHigh - stallAngleHigh)
         else
             aerodynamicCoefficientsLow = CalculateCoefficidentsAtLowAoA(
-                stallAngleLow, correctedLiftSlope, zeroLiftAoA
+                stallAngleLow, correctedLiftSlope, zeroLiftAoA, aspectRatio
             )
             aerodynamicCoefficientsStall = CalculateCoefficidentsAtStall(
-                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle
+                paddedStallAngleLow, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, flapAngle, aspectRatio
             )
             lerpAlpha = (angleOfAttack - stallAngleLow) / (paddedStallAngleLow - stallAngleLow)
         end
@@ -681,9 +676,12 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
     return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
 end
 
-function Coefficidents.new(wing: BasePart)
+function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number)
     return setmetatable({
         ["flapAngle"] = 0,
+        ["span"] = span,
+        ["chord"] = chord,
+        ["aspectRatio"] = aspectRatio,
         ["wing"] = wing
     }, Coefficidents)
 end
@@ -695,8 +693,8 @@ end
 function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3)
     local forceAndTorque = BiVector.new()
     
-    local correctedLiftSlope: number = engine.liftSlope * engine.aspectRatio /
-    (engine.aspectRatio + 2 * (engine.aspectRatio + 4) / (engine.aspectRatio + 2))
+    local correctedLiftSlope: number = engine.liftSlope * self.aspectRatio /
+    (self.aspectRatio + 2 * (self.aspectRatio + 4) / (self.aspectRatio + 2))
 
     local theta: number = math.acos(2 * engine.flapFraction - 1)
     local flapEffectivness: number = 1 - (theta - math.sin(theta)) / math.pi
@@ -714,32 +712,35 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
-    local airVelocity: Vector3 = -self.wing.Rotation * worldAirVelocity
-    ---airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
-    local dragDirection: Vector3 = -self.wing.CFrame.LookVector --* airVelocity.Unit
-    local liftDirection: Vector3 = -self.wing.CFrame.UpVector
+    local airVelocity: Vector3 = self.wing.CFrame:Inverse().LookVector * worldAirVelocity
+    --airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
+    local dragDirection: Vector3 = worldAirVelocity.Unit ---self.wing.CFrame.LookVector
+    local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
 
-    local area: number = engine.chord * engine.span
-    local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
+    local area: number = self.chord * self.span
+    local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude
     local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
-
-    local aerodynamicCoefficidents = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle)
+    local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -self.wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+    local torque: Vector3 = -self.wing.CFrame.RightVector * dynamicPressure * area * self.chord
 
     forceAndTorque.force += lift + drag
     --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
-    forceAndTorque.torque += torque
+    forceAndTorque.torque += torque * 0.01
 
-    if RUN_SERVICE:IsStudio() and gizmo then
+    if RUN_SERVICE:IsStudio() then
+        gizmo.setScale(1)
         gizmo.setColor(Color3.fromRGB(199, 2, 2))
         gizmo.drawRay(self.wing.Position, forceAndTorque.force)
         gizmo.setColor(Color3.fromRGB(13, 2, 167))
         gizmo.drawRay(self.wing.Position, forceAndTorque.torque)
         gizmo.setColor(Color3.fromRGB(255, 255, 255))
-        gizmo.drawRay(self.wing.Position, airVelocity)
+        gizmo.drawRay(self.wing.Position, worldAirVelocity)
+        gizmo.setScale(5)
+        gizmo.setColor(Color3.fromRGB(22, 189, 0))
+        gizmo.drawText(self.wing.Position, math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z))
     end
 
     return forceAndTorque
@@ -751,14 +752,12 @@ return Coefficidents]]></ProtectedString>
 								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e2ad</UniqueId>
 							</Properties>
 						</Item>
-						<Item class="ModuleScript" referent="RBX0288CCB1C8D74AB38CD5DB7DF596E560">
+						<Item class="ModuleScript" referent="RBX5AA106D06B064E888859DEC188B57BA6">
 							<Properties>
-								<BinaryString name="AttributesSerialize"><![CDATA[BgAAAAwAAABEZWZhdWx0Q29sb3IPAACAPwAAgD8AAIA/DAAAAERlZmF1bHRTY2FsZQYAAAAA
-AADwPxAAAABEZWZhdWx0VGhpY2tuZXNzBpqZmZmZmak/BwAAAF9BdXRob3ICCgAAAEJyYWQg
-U2hhcnAIAAAAX0xpY2Vuc2UCAwAAAE1JVAgAAABfVmVyc2lvbgIDAAAAMS4z]]></BinaryString>
+								<BinaryString name="AttributesSerialize"></BinaryString>
 								<Content name="LinkedSource"><null></null></Content>
 								<string name="Name">gizmo</string>
-								<string name="ScriptGuid">{3F30C85F-25DE-4248-A749-0FE4A08285D5}</string>
+								<string name="ScriptGuid">{0668695B-1162-4159-8259-D5B538225DF3}</string>
 								<ProtectedString name="Source"><![CDATA[------------------------------------------------------------------------------------------------------------------------
 -- Name:		gizmo.lua
 -- Version:		1.3 (2/2/2021)
@@ -783,8 +782,8 @@ local RunService = game:GetService("RunService")
 local Event = RunService:IsServer() and RunService.Heartbeat or RunService.RenderStepped
 local Gizmos = Instance.new("Folder", workspace)
 
-local thickness = script:GetAttribute("DefaultThickness")
-local globalScale = script:GetAttribute("DefaultScale")
+local thickness = 0.05
+local globalScale = 1
 local globalOrigin = CFrame.new(0, 0, 0)
 local onRender = nil
 local cache = {}
@@ -796,7 +795,7 @@ local properties = {
 	Adornee = workspace,
 	AlwaysOnTop = true,
 	AdornCullingMode = Enum.AdornCullingMode.Automatic,
-	Color3 = script:GetAttribute("DefaultColor"),
+	Color3 = Color3.fromRGB(255, 255, 255),
 	Visible = false,
 	ZIndex = 1,
 }
@@ -1116,17 +1115,23 @@ local function disableGizmos()
 	end
 end
 
-workspace:GetAttributeChangedSignal("GizmosEnabled"):Connect(function ()
+--[[
+	workspace:GetAttributeChangedSignal("GizmosEnabled"):Connect(function ()
 	if workspace:GetAttribute("GizmosEnabled") then
 		enableGizmos()
 	else
 		disableGizmos()
 	end
-end)
+	end)
+
+	if workspace:GetAttribute("GizmosEnabled") then
+		enableGizmos()
+	end
+]]
 
 disableGizmos()
 
-if workspace:GetAttribute("GizmosEnabled") then
+if RunService:IsStudio() then
 	enableGizmos()
 end
 
@@ -1134,8 +1139,8 @@ end
 
 return gizmo]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
-								<BinaryString name="Tags">R2l6bW9Nb2R1bGU=</BinaryString>
-								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d600344745</UniqueId>
+								<BinaryString name="Tags"></BinaryString>
+								<UniqueId name="UniqueId">6bdb4f01f148ba7702f772e5001ff6e7</UniqueId>
 							</Properties>
 						</Item>
 					</Item>
@@ -1173,12 +1178,15 @@ local PREDICTION_TIMESTEP_FRACTION: number = 0.5
 local FIXED_DELTA_TIME: number = 0.02
 
 local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3): any
-    local forceAndTorque = BiVector.new()
     for i: number, aeroSurface in pairs(areoSurfaces) do
         local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
-        forceAndTorque += aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+        -- - angularVelocity:Cross(relativePosition)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+
+        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
+        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * FIXED_DELTA_TIME)
     end
-    return forceAndTorque
+    --return forceAndTorque
 end
 
 local function PredictVelocity(force: Vector3, delta: number): Vector3
@@ -1197,7 +1205,13 @@ local function init()
     for i: number, wing: BasePart in pairs(wings:GetChildren()) do
         if not wing:IsA("BasePart") then return end
 
-        local new = Coefficidents.new(wing)
+        local span = wing:GetAttribute("span")
+        local chord = wing:GetAttribute("chord")
+        local aspectRatio = wing:GetAttribute("aspectRatio")
+        if chord < 0.001 then chord = 0.001 end
+        if engine.autoAspectRatio then aspectRatio = span / chord end
+
+        local new = Coefficidents.new(wing, span, chord, aspectRatio)
         table.insert(areoSurfaces, new)
     end
 end
@@ -1207,13 +1221,13 @@ RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
     for i, v in pairs(areoSurfaces) do
         local alt = v.wing:GetAttribute("SurfaceType")
         if alt == "Pitch" then
-            v.flapAngle = _G.set.pitch
+            v:setFlapAngle(_G.set.pitch)
         elseif alt == "Roll" then
-            v.flapAngle = _G.set.roll
+            v:setFlapAngle(_G.set.roll)
         elseif alt == "Yaw" then
-            v.flapAngle = _G.set.yaw
+            v:setFlapAngle(_G.set.yaw)
         elseif alt == "Flap" then
-            v.flapAngle = _G.set.flap
+            v:setFlapAngle(_G.set.flap)
         end
     end
 end)
@@ -1222,17 +1236,17 @@ RUN_SERVICE.Stepped:Connect(function(delta)
     --if true then return end
 	local forceAndTorqueThisFrame: Vector3 = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
 
-	local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
-	local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
+	--local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
+	--local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
 
 	--local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
 
-	local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
-	currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
-	currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+	--local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+	--currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+	--currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
 
-    drive:ApplyImpulse(((currentForceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
-    drive:ApplyAngularImpulse((currentForceAndTorque.torque) * FIXED_DELTA_TIME)
+    --drive:ApplyImpulse(((currentForceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
+    --drive:ApplyAngularImpulse((currentForceAndTorque.torque) * FIXED_DELTA_TIME)
 end)]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
@@ -1469,7 +1483,8 @@ end)]]></ProtectedString>
 				<Item class="Part" referent="RBXB4C17BF9C7C8473EA87C570B052A3AA4">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUA
+AABjaG9yZAYAAAAAAAAUQAQAAABzcGFuBgAAAAAAABRA]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1564,7 +1579,8 @@ end)]]></ProtectedString>
 				<Item class="Part" referent="RBX02A631CC2A374AB794A7709E86949E5F">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUA
+AABjaG9yZAYAAAAAAAAUQAQAAABzcGFuBgAAAAAAABRA]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1659,7 +1675,8 @@ end)]]></ProtectedString>
 				<Item class="Part" referent="RBX123D02DC21054BBCAC7303C97485D66F">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2g=</BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2gLAAAAYXNwZWN0UmF0aW8GAAAAAAAA8D8F
+AAAAY2hvcmQGAAAAAAAACEAEAAAAc3BhbgYAAAAAAAAIQA==]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1754,7 +1771,8 @@ end)]]></ProtectedString>
 				<Item class="Part" referent="RBX2C71C579DC6341A7AEF2CE38656D155E">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIDAAAAWWF3</BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIDAAAAWWF3CwAAAGFzcGVjdFJhdGlvBgAAAAAAAPA/BQAA
+AGNob3JkBgAAAAAAAPA/BAAAAHNwYW4GAAAAAAAA8D8=]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1852,27 +1870,27 @@ end)]]></ProtectedString>
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-7.84204245</X>
-					<Y>9.88837147</Y>
-					<Z>-13.6211929</Z>
-					<R00>0.937394261</R00>
-					<R01>0.267191589</R01>
-					<R02>-0.223384693</R02>
-					<R10>-0</R10>
-					<R11>0.641412258</R11>
-					<R12>0.767196476</R12>
-					<R20>0.348270088</R20>
-					<R21>-0.719165564</R21>
-					<R22>0.601256132</R22>
+					<X>-5.99820518</X>
+					<Y>7.77902174</Y>
+					<Z>-10.3235826</Z>
+					<R00>0.999601603</R00>
+					<R01>-0.0144967781</R01>
+					<R02>0.0242185686</R02>
+					<R10>9.31322575e-10</R10>
+					<R11>0.858029664</R11>
+					<R12>0.51360029</R12>
+					<R20>-0.0282257963</R20>
+					<R21>-0.513395667</R21>
+					<R22>0.857687771</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-7.39527321</X>
-					<Y>8.35397911</Y>
-					<Z>-14.8237047</Z>
+					<X>-6.0466423</X>
+					<Y>6.75182152</Y>
+					<Z>-12.0389576</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2380,7 +2398,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 	if i.KeyCode == Enum.KeyCode.W then
 		w = task.spawn(function()
 			while true do
-				_G.set.roll += 0.1
+				_G.set.roll += 0.025
+				_G.set.roll = math.clamp(_G.set.roll, -math.rad(50), math.rad(50))
 				task.wait()
 			end
 		end)
@@ -2388,6 +2407,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 		s = task.spawn(function()
 			while true do
 				_G.set.roll -= 0.025
+				_G.set.roll = math.clamp(_G.set.roll, -math.rad(50), math.rad(50))
 				task.wait()
 			end
 		end)
@@ -2396,6 +2416,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 		a = task.spawn(function()
 			while true do
 				_G.set.pitch += 0.025
+				_G.set.pitch = math.clamp(_G.set.pitch, -math.rad(50), math.rad(50))
 				task.wait()
 			end
 		end)
@@ -2404,6 +2425,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 		d = task.spawn(function()
 			while true do
 				_G.set.pitch -= 0.025
+				_G.set.pitch = math.clamp(_G.set.pitch, -math.rad(50), math.rad(50))
 				task.wait()
 			end
 		end)
