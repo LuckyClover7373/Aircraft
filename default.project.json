@@ -34,7 +34,19 @@
         "$className": "Model",
         
         "Aircraft_Engine": {
-          "$path": "src/engine"
+          "$path": "src/engine",
+
+          "Aircraft_Engine_Client": {
+            "$className": "ScreenGui",
+            
+            "client": {
+              "$path": "src/client"
+            },
+
+            "modules": {
+              "$path": "src/modules"
+            }
+          }
         }
       }
     }

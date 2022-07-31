@@ -1,14 +1,14 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Workspace" referent="10">
+	<Item class="Workspace" referent="RBX2D4854D7A4BE48A3A8F1FC93309037FE">
 		<Properties>
 			<bool name="AllowThirdPartySales">false</bool>
 			<token name="AnimationWeightedBlendFix">0</token>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<token name="ClientAnimatorThrottling">0</token>
-			<string name="CollisionGroups">Default^0^-1</string>
-			<Ref name="CurrentCamera">RBX7CCF695D9BEA4A85856A1C269EA52FD6</Ref>
+			<string name="CollisionGroups">Default^0^-3\Plugin_Unselectable_Group^1^-2</string>
+			<Ref name="CurrentCamera">RBX198C2F56FB4E489ABD8E449625A2C7A6</Ref>
 			<double name="DistributedGameTime">0</double>
 			<bool name="ExplicitAutoJoints">true</bool>
 			<float name="FallenPartsDestroyHeight">-500</float>
@@ -45,7 +45,7 @@
 			<string name="Name">Workspace</string>
 			<bool name="NeedsPivotMigration">false</bool>
 			<token name="PhysicsInertiaAndVolumeFix">0</token>
-			<token name="PhysicsSteppingMethod">0</token>
+			<token name="PhysicsSteppingMethod">1</token>
 			<Ref name="PrimaryPart">null</Ref>
 			<token name="ReplicateInstanceDestroySetting">0</token>
 			<token name="Retargeting">0</token>
@@ -59,6 +59,7 @@
 			<BinaryString name="Tags"></BinaryString>
 			<bool name="TerrainWeldsFixed">true</bool>
 			<bool name="TouchesUseCollisionGroups">false</bool>
+			<token name="UnionsScaleNonuniformly">0</token>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001977c</UniqueId>
 			<OptionalCoordinateFrame name="WorldPivotData">
 				<CFrame>
@@ -77,50 +78,7 @@
 				</CFrame>
 			</OptionalCoordinateFrame>
 		</Properties>
-		<Item class="Camera" referent="RBX7CCF695D9BEA4A85856A1C269EA52FD6">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<CoordinateFrame name="CFrame">
-					<X>-6.70854378</X>
-					<Y>19.8786716</Y>
-					<Z>-7.73545551</Z>
-					<R00>0.961183131</R00>
-					<R01>-0.229814082</R01>
-					<R02>0.152684718</R02>
-					<R10>-7.4505806e-09</R10>
-					<R11>0.553383112</R11>
-					<R12>0.832926929</R12>
-					<R20>-0.27591145</R20>
-					<R21>-0.800595284</R21>
-					<R22>0.531902432</R22>
-				</CoordinateFrame>
-				<Ref name="CameraSubject">null</Ref>
-				<token name="CameraType">0</token>
-				<float name="FieldOfView">70</float>
-				<token name="FieldOfViewMode">0</token>
-				<CoordinateFrame name="Focus">
-					<X>-7.01391315</X>
-					<Y>18.2128181</Y>
-					<Z>-8.79926014</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>0</R02>
-					<R10>0</R10>
-					<R11>1</R11>
-					<R12>0</R12>
-					<R20>0</R20>
-					<R21>0</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<bool name="HeadLocked">true</bool>
-				<float name="HeadScale">1</float>
-				<string name="Name">Camera</string>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad9c</UniqueId>
-			</Properties>
-		</Item>
-		<Item class="Part" referent="11">
+		<Item class="Part" referent="RBXD0BD01BE752C4B47BD5006D86F0708DA">
 			<Properties>
 				<bool name="Anchored">true</bool>
 				<BinaryString name="AttributesSerialize"></BinaryString>
@@ -215,7 +173,7 @@
 				</Vector3>
 			</Properties>
 		</Item>
-		<Item class="Terrain" referent="RBX4EB9DAD3AEF84E2DAD9750C23A508DDE">
+		<Item class="Terrain" referent="RBX8590DB8C215B49A4901DAF7F805EFC08">
 			<Properties>
 				<token name="AcquisitionMethod">0</token>
 				<bool name="Anchored">true</bool>
@@ -323,7 +281,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				</Vector3>
 			</Properties>
 		</Item>
-		<Item class="Model" referent="RBX458D498EC59940FE82CED3847A86330C">
+		<Item class="Model" referent="RBX2DBDD8A42DFD4BB5A2FDAFA01EAD7345">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<token name="LevelOfDetail">0</token>
@@ -349,7 +307,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				</Vector3>
 				<string name="Name">Plane</string>
 				<bool name="NeedsPivotMigration">false</bool>
-				<Ref name="PrimaryPart">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
+				<Ref name="PrimaryPart">RBX8F57B880EC7844118C923151356D87EF</Ref>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 				<UniqueId name="UniqueId">08b1746d6c9ea536023decaf000b37ef</UniqueId>
@@ -370,7 +328,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 					</CFrame>
 				</OptionalCoordinateFrame>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX5F32A2FA65F14110A7A4B66641E2B40D">
+			<Item class="ModuleScript" referent="RBX5CB3A1AD48E541889E7C98AA8D4DE345">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
@@ -394,7 +352,7 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
 
 Aircraft Engine
-Made by LuckyClover7373 (Thanks for wjoh0315)
+Made by LuckyClover7373 (A huge helped by wjoh0315, I'm so appreciate to him)
 
 ]]--
 
@@ -412,7 +370,7 @@ engine.flapFraction = 0.2
 engine.span = 3
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 300
+engine.thrust = 100
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
@@ -429,136 +387,140 @@ return engine]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 					<UniqueId name="UniqueId">08b1746d6c9ea536023decaf001380bf</UniqueId>
 				</Properties>
-				<Item class="Script" referent="RBXE41AF99F75EA472DA52D00C67839A28E">
+				<Item class="Script" referent="RBX6E99E0E9F8BD4B5B92B1DF91BFFE34D4">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<bool name="Disabled">false</bool>
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">engine</string>
+						<token name="RunContext">0</token>
 						<string name="ScriptGuid">{9A293911-6DCE-41EB-B2AD-E724460FB905}</string>
-						<ProtectedString name="Source"><![CDATA[local engine = require(script.Parent)
-
-local modules = script.Parent.modules
-local Coefficidents = require(modules.Coefficients)
-local BiVector = require(modules.BiVector)
-
-local RUN_SERVICE = game:GetService("RunService")
+						<ProtectedString name="Source"><![CDATA[local PLAYERS = game:GetService("Players")
 
 local drive: VehicleSeat = script.Parent.Parent:FindFirstChildWhichIsA("VehicleSeat")
-local wings: Folder = script.Parent.Parent.wings
+local client: ScreenGui = script.Parent.Aircraft_Engine_Client
 
-local areoSurfaces = {}
+if drive:CanSetNetworkOwnership() then drive:SetNetworkOwner(nil) end
+client.setting.Value = script.Parent
 
-local PREDICTION_TIMESTEP_FRACTION: number = 0.5
-local FIXED_DELTA_TIME: number = 0.02
-
-local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3): any
-    local forceAndTorque = BiVector.new()
-    for i: number, aeroSurface in pairs(areoSurfaces) do
-        local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
-        forceAndTorque += aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
-    end
-    return forceAndTorque
-end
-
-local function PredictVelocity(force: Vector3, delta: number): Vector3
-    return drive.AssemblyLinearVelocity + delta * PREDICTION_TIMESTEP_FRACTION * force / drive.Mass
-end
-
-local function PredictAnguVelocity(torque: Vector3, delta: number) : Vector3
-    local inertiaTensorWorldRotation = drive.CFrame * drive.AssemblyAngularVelocity
-    local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
-	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
-
-    return drive.AssemblyAngularVelocity + delta * PREDICTION_TIMESTEP_FRACTION * (inertiaTensorWorldRotation * angularVelocityChangeInDiagonalSpace)
-end
-
-local vectorForce: VectorForce
-local torque: Torque
-
-local function init()
-    if drive:CanSetNetworkOwnership() then drive:SetNetworkOwner(nil) end
-
-    for i: number, wing: BasePart in pairs(wings:GetChildren()) do
-        if not wing:IsA("BasePart") then return end
-
-        table.insert(areoSurfaces, Coefficidents.new(wing))
+local prev = nil
+drive:GetPropertyChangedSignal("Occupant"):Connect(function()
+    if prev then
+        prev:Destroy()
+        prev = nil
     end
 
-    local att = Instance.new("Attachment")
-    att.Parent = drive
+    local player = drive.Occupant and PLAYERS:GetPlayerFromCharacter(drive.Occupant.Parent)
+    if player then
+        if drive:CanSetNetworkOwnership() then drive:SetNetworkOwner(player) end
 
-    vectorForce = Instance.new("VectorForce")
-    vectorForce.Force = Vector3.zero
-    vectorForce.ApplyAtCenterOfMass = true
-    vectorForce.Attachment0 = att
-    vectorForce.Parent = drive
-
-    torque = Instance.new("Torque")
-    torque.Torque = Vector3.zero
-    torque.Attachment0 = att
-    torque.Parent = drive
-end
-init()
-
-game.ReplicatedStorage.s.OnServerEvent:Connect(function(player, setting)
-    for i: number, aeroSurface in pairs(areoSurfaces) do
-        if aeroSurface.wing:GetAttribute("SurfaceType") == "Pitch" then
-            aeroSurface:setFlapAngle(setting.pitch or 0)
-        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Roll" then
-            aeroSurface:setFlapAngle(setting.roll or 0)
-        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Yaw" then
-            aeroSurface:setFlapAngle(setting.surface or 0)
-        elseif aeroSurface.wing:GetAttribute("SurfaceType") == "Flap" then
-            aeroSurface:setFlapAngle(setting.yaw or 0)
-        end
+        local newClient = client:Clone()
+        newClient.Parent = player.PlayerGui
+        prev = newClient
     end
-end)
-
-task.wait(5)
-
-while true do
-    local delta: number = RUN_SERVICE.Stepped:Wait()
-
-    local forceAndTorqueThisFrame: Vector3 = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
-
-    local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
-    local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
-    
-    --local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
-    
-    local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
-    currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
-    currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
-
-    vectorForce.Force = drive.AssemblyLinearVelocity
-    torque.Torque = drive.AssemblyAngularVelocity
-
-    vectorForce.Force += (currentForceAndTorque.force)
-    torque.Torque += (currentForceAndTorque.torque)
-
-    vectorForce.Force += (drive.CFrame.LookVector * engine.thrust)
-end]]></ProtectedString>
+end)]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 						<UniqueId name="UniqueId">5d53ac8dbc5b898002862544002bb802</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="Folder" referent="RBX293FA03E8A9C4AA783E4993036451362">
+				<Item class="ScreenGui" referent="RBX77F1AC90BCBF4F7FA1BEB6595C08A964">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
-						<string name="Name">modules</string>
+						<bool name="AutoLocalize">true</bool>
+						<int name="DisplayOrder">0</int>
+						<bool name="Enabled">true</bool>
+						<bool name="IgnoreGuiInset">false</bool>
+						<string name="Name">Aircraft_Engine_Client</string>
+						<bool name="ResetOnSpawn">true</bool>
+						<Ref name="RootLocalizationTable">null</Ref>
+						<token name="SelectionBehaviorDown">0</token>
+						<token name="SelectionBehaviorLeft">0</token>
+						<token name="SelectionBehaviorRight">0</token>
+						<token name="SelectionBehaviorUp">0</token>
+						<bool name="SelectionGroup">false</bool>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">3481dfd49b0dec7802869cce0065f3ed</UniqueId>
+						<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110dc58</UniqueId>
+						<token name="ZIndexBehavior">0</token>
 					</Properties>
-					<Item class="ModuleScript" referent="RBX9A2167A36DEF4F99BD747FD948B96829">
+					<Item class="Frame" referent="RBX186795F7FB1B4B2EBD02CA421B65C78E">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Vector2 name="AnchorPoint">
+								<X>0</X>
+								<Y>0</Y>
+							</Vector2>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<bool name="AutoLocalize">true</bool>
+							<token name="AutomaticSize">0</token>
+							<Color3 name="BackgroundColor3">
+								<R>1</R>
+								<G>1</G>
+								<B>1</B>
+							</Color3>
+							<float name="BackgroundTransparency">0</float>
+							<Color3 name="BorderColor3">
+								<R>0.105882362</R>
+								<G>0.164705887</G>
+								<B>0.207843155</B>
+							</Color3>
+							<token name="BorderMode">0</token>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<int name="LayoutOrder">0</int>
+							<string name="Name">Frame</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0</XS>
+								<XO>0</XO>
+								<YS>0</YS>
+								<YO>0</YO>
+							</UDim2>
+							<Ref name="RootLocalizationTable">null</Ref>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<token name="SelectionBehaviorDown">0</token>
+							<token name="SelectionBehaviorLeft">0</token>
+							<token name="SelectionBehaviorRight">0</token>
+							<token name="SelectionBehaviorUp">0</token>
+							<bool name="SelectionGroup">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<int name="SelectionOrder">0</int>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>100</XO>
+								<YS>0</YS>
+								<YO>100</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<int64 name="SourceAssetId">-1</int64>
+							<token name="Style">0</token>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110dc9e</UniqueId>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+					</Item>
+					<Item class="Folder" referent="RBX7D806AB5750B45A3AAF4577F1990D3AC">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
-							<Content name="LinkedSource"><null></null></Content>
-							<string name="Name">BiVector</string>
-							<string name="ScriptGuid">{A1C17164-B04D-4786-9F07-993D5B0DC6F3}</string>
-							<ProtectedString name="Source"><![CDATA[local BiVector = {}
+							<string name="Name">modules</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e2ab</UniqueId>
+						</Properties>
+						<Item class="ModuleScript" referent="RBX6DF82926BBAC45B482F8BA6A981E951B">
+							<Properties>
+								<BinaryString name="AttributesSerialize"></BinaryString>
+								<Content name="LinkedSource"><null></null></Content>
+								<string name="Name">BiVector</string>
+								<string name="ScriptGuid">{87090569-650D-46DF-9A98-7D7643CB72F5}</string>
+								<ProtectedString name="Source"><![CDATA[local BiVector = {}
 BiVector.__index = BiVector
 
 function BiVector.new(force: Vector3?, torque: Vector3?): any
@@ -592,21 +554,25 @@ end
 
 
 return BiVector]]></ProtectedString>
-							<int64 name="SourceAssetId">-1</int64>
-							<BinaryString name="Tags"></BinaryString>
-							<UniqueId name="UniqueId">3481dfd49b0dec7802869cce0065f3ee</UniqueId>
-						</Properties>
-					</Item>
-					<Item class="ModuleScript" referent="RBXFBC546CE6BEF4885A42CD3903A1C807A">
-						<Properties>
-							<BinaryString name="AttributesSerialize"></BinaryString>
-							<Content name="LinkedSource"><null></null></Content>
-							<string name="Name">Coefficients</string>
-							<string name="ScriptGuid">{8E492D6F-0B38-4997-92B8-9F929CF94CFC}</string>
-							<ProtectedString name="Source"><![CDATA[local Coefficidents = {}
+								<int64 name="SourceAssetId">-1</int64>
+								<BinaryString name="Tags"></BinaryString>
+								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e2ac</UniqueId>
+							</Properties>
+						</Item>
+						<Item class="ModuleScript" referent="RBX79C35384125740DE8A6BBF11B72BFD16">
+							<Properties>
+								<BinaryString name="AttributesSerialize"></BinaryString>
+								<Content name="LinkedSource"><null></null></Content>
+								<string name="Name">Coefficients</string>
+								<string name="ScriptGuid">{5D20980D-6FA0-4E82-A611-9F3D5C3F7A7B}</string>
+								<ProtectedString name="Source"><![CDATA[local Coefficidents = {}
 Coefficidents.__index = Coefficidents
 
-local engine = require(script.Parent.Parent)
+local REPLICATED_STORAGE = game:GetService("ReplicatedStorage")
+local RUN_SERVICE = game:GetService("RunService")
+
+local engine = require(script.Parent.Parent.setting.Value)
+local gizmo = require(script.Parent.gizmo)
 local BiVector = require(script.Parent.BiVector)
 
 local function lerp(a: number, b: number, t: number): number
@@ -748,10 +714,10 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local stallAngleHigh: number = zeroLiftAoA + clMaxHigh / correctedLiftSlope
     local stallAngleLow: number = zeroLiftAoA + clMaxLow / correctedLiftSlope
     
-    local airVelocity: Vector3 = self.wing.CFrame.Rotation:Inverse() * worldAirVelocity
+    local airVelocity: Vector3 = -self.wing.Rotation * worldAirVelocity
     ---airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
-    local dragDirection: Vector3 = self.wing.Rotation * airVelocity.Unit
-    local liftDirection: Vector3 = self.wing.CFrame.UpVector
+    local dragDirection: Vector3 = -self.wing.CFrame.LookVector --* airVelocity.Unit
+    local liftDirection: Vector3 = -self.wing.CFrame.UpVector
 
     local area: number = engine.chord * engine.span
     local dynamicPressure: number = 0.5 * engine.airDensity * math.sqrt(airVelocity.Magnitude)
@@ -761,24 +727,532 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
-    
+    local torque: Vector3 = -self.wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * engine.chord
+
     forceAndTorque.force += lift + drag
-    forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
+    --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
+
+    if RUN_SERVICE:IsStudio() and gizmo then
+        gizmo.setColor(Color3.fromRGB(199, 2, 2))
+        gizmo.drawRay(self.wing.Position, forceAndTorque.force)
+        gizmo.setColor(Color3.fromRGB(13, 2, 167))
+        gizmo.drawRay(self.wing.Position, forceAndTorque.torque)
+        gizmo.setColor(Color3.fromRGB(255, 255, 255))
+        gizmo.drawRay(self.wing.Position, airVelocity)
+    end
 
     return forceAndTorque
 end
 
 return Coefficidents]]></ProtectedString>
+								<int64 name="SourceAssetId">-1</int64>
+								<BinaryString name="Tags"></BinaryString>
+								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e2ad</UniqueId>
+							</Properties>
+						</Item>
+						<Item class="ModuleScript" referent="RBX0288CCB1C8D74AB38CD5DB7DF596E560">
+							<Properties>
+								<BinaryString name="AttributesSerialize"><![CDATA[BgAAAAwAAABEZWZhdWx0Q29sb3IPAACAPwAAgD8AAIA/DAAAAERlZmF1bHRTY2FsZQYAAAAA
+AADwPxAAAABEZWZhdWx0VGhpY2tuZXNzBpqZmZmZmak/BwAAAF9BdXRob3ICCgAAAEJyYWQg
+U2hhcnAIAAAAX0xpY2Vuc2UCAwAAAE1JVAgAAABfVmVyc2lvbgIDAAAAMS4z]]></BinaryString>
+								<Content name="LinkedSource"><null></null></Content>
+								<string name="Name">gizmo</string>
+								<string name="ScriptGuid">{3F30C85F-25DE-4248-A749-0FE4A08285D5}</string>
+								<ProtectedString name="Source"><![CDATA[------------------------------------------------------------------------------------------------------------------------
+-- Name:		gizmo.lua
+-- Version:		1.3 (2/2/2021)
+-- Author:		Brad Sharp
+--
+-- Repository:	https://github.com/BradSharp/Roblox-Miscellaneous/tree/master/Gizmo
+-- License:		MIT
+--
+-- Copyright (c) 2021 Brad Sharp
+------------------------------------------------------------------------------------------------------------------------
+
+local gizmo = {}
+
+------------------------------------------------------------------------------------------------------------------------
+-- Variables
+------------------------------------------------------------------------------------------------------------------------
+
+local ENABLED_ATTRIBUTE = "GizmosEnabled"
+local POINT_SCALE = 5
+
+local RunService = game:GetService("RunService")
+local Event = RunService:IsServer() and RunService.Heartbeat or RunService.RenderStepped
+local Gizmos = Instance.new("Folder", workspace)
+
+local thickness = script:GetAttribute("DefaultThickness")
+local globalScale = script:GetAttribute("DefaultScale")
+local globalOrigin = CFrame.new(0, 0, 0)
+local onRender = nil
+local cache = {}
+local queue = {}
+local textQueue = {}
+local lib = {}
+
+local properties = {
+	Adornee = workspace,
+	AlwaysOnTop = true,
+	AdornCullingMode = Enum.AdornCullingMode.Automatic,
+	Color3 = script:GetAttribute("DefaultColor"),
+	Visible = false,
+	ZIndex = 1,
+}
+
+Gizmos.Name = "Gizmos"
+Gizmos.Archivable = false
+
+------------------------------------------------------------------------------------------------------------------------
+-- Utility
+------------------------------------------------------------------------------------------------------------------------
+
+local function style(adornment)
+	for property, value in pairs(properties) do
+		adornment[property] = value
+	end
+end
+
+local function get(class)
+	local classCache = cache[class]
+	if not classCache then
+		classCache = {}
+		cache[class] = classCache
+	end
+	return table.remove(classCache) or Instance.new(class, Gizmos)
+end
+
+local function release(instance)
+	local class = instance.ClassName
+	local classCache = cache[class]
+	if not classCache then
+		classCache = {}
+		cache[class] = classCache
+	end
+	table.insert(classCache, instance)
+end
+
+local function empty()
+	-- at some point I'll switch each method out with empty so there's no overhead when gizmos are disabled
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- Exports
+------------------------------------------------------------------------------------------------------------------------
+
+-- Sets the color of drawn gizmos
+function gizmo.setColor(color)
+	properties.Color3 = BrickColor.new(color).Color
+end
+
+-- Sets the color of drawn gizmos
+function gizmo.setColor3(color3)
+	properties.Color3 = color3
+end
+
+function gizmo.setOrigin(origin)
+	globalOrigin = origin
+end
+
+-- Sets the transparency of drawn gizmos
+function gizmo.setTransparency(transparency)
+	properties.Transparency = transparency
+end
+
+-- Sets the ZIndex of drawn gizmos
+function gizmo.setLayer(index)
+	properties.ZIndex = index
+end
+
+function gizmo.setScale(scale)
+	globalScale = scale
+end
+
+-- Resets all custom styling to default values
+function gizmo.reset()
+	properties.Transparency = 0
+	properties.ZIndex = 1
+	properties.Color3 = script:GetAttribute("DefaultColor")
+	thickness = script:GetAttribute("DefaultThickness")
+	globalScale = script:GetAttribute("DefaultScale")
+	globalOrigin = CFrame.new(0, 0, 0)
+end
+
+-- Draws a box at a coordine frame with a given size
+function gizmo.drawBox(orientation, size)
+	local adornment = get("BoxHandleAdornment")
+	style(adornment)
+	adornment.Size = size
+	adornment.CFrame = globalOrigin * orientation
+	table.insert(queue, adornment)
+end
+
+-- Draws a wire-box at a coordine frame with a given size
+function gizmo.drawWireBox(orientation, size)
+	-- If anyone has a better way to do this which is just as performant please let me know
+	local x, y, z = size.X / 2, size.Y / 2, size.Z / 2
+	local lineWidth = thickness * globalScale
+	local sizeX = Vector3.new(size.X + lineWidth, lineWidth, lineWidth)
+	local sizeY = Vector3.new(lineWidth, size.Y + lineWidth, lineWidth)
+	local sizeZ = Vector3.new(lineWidth, lineWidth, size.Z + lineWidth)
+	local relativeOrientation = globalOrigin * orientation
+	local adornmentX1 = get("BoxHandleAdornment")
+	local adornmentX2 = get("BoxHandleAdornment")
+	local adornmentX3 = get("BoxHandleAdornment")
+	local adornmentX4 = get("BoxHandleAdornment")
+	local adornmentY1 = get("BoxHandleAdornment")
+	local adornmentY2 = get("BoxHandleAdornment")
+	local adornmentY3 = get("BoxHandleAdornment")
+	local adornmentY4 = get("BoxHandleAdornment")
+	local adornmentZ1 = get("BoxHandleAdornment")
+	local adornmentZ2 = get("BoxHandleAdornment")
+	local adornmentZ3 = get("BoxHandleAdornment")
+	local adornmentZ4 = get("BoxHandleAdornment")
+	style(adornmentX1)
+	style(adornmentX2)
+	style(adornmentX3)
+	style(adornmentX4)
+	adornmentX1.Size = sizeX
+	adornmentX1.CFrame = relativeOrientation * CFrame.new(0, y, z)
+	adornmentX2.Size = sizeX
+	adornmentX2.CFrame = relativeOrientation * CFrame.new(0, -y, z)
+	adornmentX3.Size = sizeX
+	adornmentX3.CFrame = relativeOrientation * CFrame.new(0, y, -z)
+	adornmentX4.Size = sizeX
+	adornmentX4.CFrame = relativeOrientation * CFrame.new(0, -y, -z)
+	style(adornmentY1)
+	style(adornmentY2)
+	style(adornmentY3)
+	style(adornmentY4)
+	adornmentY1.Size = sizeY
+	adornmentY1.CFrame = relativeOrientation * CFrame.new(x, 0, z)
+	adornmentY2.Size = sizeY
+	adornmentY2.CFrame = relativeOrientation * CFrame.new(-x, 0, z)
+	adornmentY3.Size = sizeY
+	adornmentY3.CFrame = relativeOrientation * CFrame.new(x, 0, -z)
+	adornmentY4.Size = sizeY
+	adornmentY4.CFrame = relativeOrientation * CFrame.new(-x, 0, -z)
+	style(adornmentZ1)
+	style(adornmentZ2)
+	style(adornmentZ3)
+	style(adornmentZ4)
+	adornmentZ1.Size = sizeZ
+	adornmentZ1.CFrame = relativeOrientation * CFrame.new(x, y, 0)
+	adornmentZ2.Size = sizeZ
+	adornmentZ2.CFrame = relativeOrientation * CFrame.new(-x, y, 0)
+	adornmentZ3.Size = sizeZ
+	adornmentZ3.CFrame = relativeOrientation * CFrame.new(x, -y, 0)
+	adornmentZ4.Size = sizeZ
+	adornmentZ4.CFrame = relativeOrientation * CFrame.new(-x, -y, 0)
+	table.insert(queue, adornmentX1)
+	table.insert(queue, adornmentX2)
+	table.insert(queue, adornmentX3)
+	table.insert(queue, adornmentX4)
+	table.insert(queue, adornmentY1)
+	table.insert(queue, adornmentY2)
+	table.insert(queue, adornmentY3)
+	table.insert(queue, adornmentY4)
+	table.insert(queue, adornmentZ1)
+	table.insert(queue, adornmentZ2)
+	table.insert(queue, adornmentZ3)
+	table.insert(queue, adornmentZ4)
+end
+
+-- Draws a sphere at a position with a given radius
+function gizmo.drawSphere(orientation, radius)
+	local adornment = get("SphereHandleAdornment")
+	style(adornment)
+	adornment.Radius = radius
+	adornment.CFrame = globalOrigin * orientation
+	table.insert(queue, adornment)
+end
+
+-- Draws a wire-sphere at a position with a given radius
+function gizmo.drawWireSphere(orientation, radius)
+	local offset = globalScale * thickness * 0.5
+	local outerRadius, innerRadius = radius + offset, radius - offset
+	local relativeOrientation = globalOrigin * orientation
+	local adornmentX = get("CylinderHandleAdornment")
+	local adornmentY = get("CylinderHandleAdornment")
+	local adornmentZ = get("CylinderHandleAdornment")
+	style(adornmentX)
+	adornmentX.Radius = outerRadius
+	adornmentX.InnerRadius = innerRadius
+	adornmentX.Height = thickness
+	adornmentX.CFrame = relativeOrientation
+	style(adornmentY)
+	adornmentY.Radius = outerRadius
+	adornmentY.InnerRadius = innerRadius
+	adornmentY.Height = thickness
+	adornmentY.CFrame = relativeOrientation * CFrame.Angles(math.pi * 0.5, 0, 0)
+	style(adornmentZ)
+	adornmentZ.Radius = outerRadius
+	adornmentZ.InnerRadius = innerRadius
+	adornmentZ.Height = thickness
+	adornmentZ.CFrame = relativeOrientation * CFrame.Angles(0, math.pi * 0.5, 0)
+	table.insert(queue, adornmentX)
+	table.insert(queue, adornmentY)
+	table.insert(queue, adornmentZ)
+end
+
+-- Draws a point at a position
+function gizmo.drawPoint(position)
+	local adornment = get("SphereHandleAdornment")
+	style(adornment)
+	adornment.Radius = globalScale * thickness * POINT_SCALE * 0.5
+	adornment.CFrame = globalOrigin * CFrame.new(position)
+	table.insert(queue, adornment)
+end
+
+-- Draws a line between two positions
+function gizmo.drawLine(from, to)
+	local distance = (to - from).magnitude
+	local adornment = get("CylinderHandleAdornment")
+	style(adornment)
+	adornment.Radius = globalScale * thickness * 0.5
+	adornment.InnerRadius = 0
+	adornment.Height = distance
+	adornment.CFrame = globalOrigin * CFrame.lookAt(from, to) * CFrame.new(0, 0, -distance * 0.5)
+	table.insert(queue, adornment)
+end
+
+-- Draws an arrow between two positions
+function gizmo.drawArrow(from, to)
+	local coneHeight = thickness * POINT_SCALE * globalScale
+	local distance = math.abs((to - from).magnitude - coneHeight)
+	local orientation = globalOrigin * CFrame.lookAt(from, to)
+	local adornmentLine = get("CylinderHandleAdornment")
+	local adornmentCone = get("ConeHandleAdornment")
+	style(adornmentLine)
+	adornmentLine.Radius = globalScale * thickness * 0.5
+	adornmentLine.InnerRadius = 0
+	adornmentLine.Height = distance
+	adornmentLine.CFrame = orientation * CFrame.new(0, 0, -distance * 0.5)
+	style(adornmentCone)
+	adornmentCone.Height = coneHeight
+	adornmentCone.Radius = coneHeight * 0.5
+	adornmentCone.CFrame = orientation * CFrame.new(0, 0, -distance)
+	table.insert(queue, adornmentLine)
+	table.insert(queue, adornmentCone)
+end
+
+-- Draws an arrow at a position in a given direction
+function gizmo.drawRay(from, direction)
+	gizmo.drawArrow(from, from + direction)
+end
+
+-- Draws text on the screen at the given location
+function gizmo.drawText(position, text, ...)
+	local safeText = tostring(text):format(...)
+	local billboard = get("BillboardGui")
+	local label = get("TextLabel")
+	local textScale = globalScale * 0.25
+	billboard.AlwaysOnTop = true
+	billboard.StudsOffsetWorldSpace = position
+	billboard.Size = UDim2.fromScale(safeText:len() * 0.5 * textScale, textScale)
+	billboard.LightInfluence = 0
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.Font = Enum.Font.RobotoMono
+	label.TextColor3 = properties.Color3
+	label.TextTransparency = properties.Transparency
+	label.TextScaled = true
+	label.Text = safeText
+	label.Parent = billboard
+	table.insert(queue, label)
+	table.insert(textQueue, billboard)
+end
+
+-- Clears all gizmos that are currently being rendered
+function gizmo.clear()
+	for _, adornment in ipairs(queue) do
+		adornment.Visible = false
+		release(adornment)
+	end
+	queue = {}
+end
+
+------------------------------------------------------------------------------------------------------------------------
+-- Render
+------------------------------------------------------------------------------------------------------------------------
+
+for key, value in pairs(gizmo) do
+	lib[key] = value
+end
+
+local function enableGizmos()
+	onRender = Event:Connect(function ()
+		local frame, textFrame = queue, textQueue
+		queue, textQueue = {}, {}
+		for _, adornment in ipairs(frame) do
+			adornment.Visible = true
+		end
+		for _, adornment in ipairs(textFrame) do
+			adornment.Enabled = true
+		end
+		Event:Wait()
+		for _, adornment in ipairs(frame) do
+			adornment.Visible = false
+			release(adornment)
+		end
+		for _, adornment in ipairs(textFrame) do
+			adornment.Enabled = false
+			release(adornment)
+		end
+	end)
+	for key, value in pairs(lib) do
+		gizmo[key] = value
+	end
+end
+
+local function disableGizmos()
+	if onRender then
+		onRender:Disconnect()
+		onRender = nil
+	end
+	for key, value in pairs(lib) do
+		gizmo[key] = empty
+	end
+end
+
+workspace:GetAttributeChangedSignal("GizmosEnabled"):Connect(function ()
+	if workspace:GetAttribute("GizmosEnabled") then
+		enableGizmos()
+	else
+		disableGizmos()
+	end
+end)
+
+disableGizmos()
+
+if workspace:GetAttribute("GizmosEnabled") then
+	enableGizmos()
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+return gizmo]]></ProtectedString>
+								<int64 name="SourceAssetId">-1</int64>
+								<BinaryString name="Tags">R2l6bW9Nb2R1bGU=</BinaryString>
+								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d600344745</UniqueId>
+							</Properties>
+						</Item>
+					</Item>
+					<Item class="Folder" referent="RBXDDAE128469E54DE4B82B340D6EC98D92">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<string name="Name">client</string>
 							<int64 name="SourceAssetId">-1</int64>
 							<BinaryString name="Tags"></BinaryString>
-							<UniqueId name="UniqueId">3481dfd49b0dec7802869cce0065f3ef</UniqueId>
+							<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e2b8</UniqueId>
+						</Properties>
+						<Item class="LocalScript" referent="RBXC4C80CB2AF6442FDBFC2F100BE507BFC">
+							<Properties>
+								<BinaryString name="AttributesSerialize"></BinaryString>
+								<bool name="Disabled">false</bool>
+								<Content name="LinkedSource"><null></null></Content>
+								<string name="Name">main</string>
+								<token name="RunContext">0</token>
+								<string name="ScriptGuid">{9EC611D4-2375-489D-BDA9-4F980269992E}</string>
+								<ProtectedString name="Source"><![CDATA[local settingObj = script.Parent.Parent.setting.Value
+local engine = require(settingObj)
+
+local modules = script.Parent.Parent.modules
+local Coefficidents = require(modules.Coefficients)
+local BiVector = require(modules.BiVector)
+
+local RUN_SERVICE = game:GetService("RunService")
+
+local drive: VehicleSeat = settingObj.Parent:FindFirstChildWhichIsA("VehicleSeat")
+local wings: Folder = settingObj.Parent.wings
+
+local areoSurfaces = {}
+
+local PREDICTION_TIMESTEP_FRACTION: number = 0.5
+local FIXED_DELTA_TIME: number = 0.02
+
+local function CalculateAerodynamicForces(velocity: Vector3, angularVelocity: Vector3, centerOfMass: Vector3): any
+    local forceAndTorque = BiVector.new()
+    for i: number, aeroSurface in pairs(areoSurfaces) do
+        local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
+        forceAndTorque += aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+    end
+    return forceAndTorque
+end
+
+local function PredictVelocity(force: Vector3, delta: number): Vector3
+    return drive.AssemblyLinearVelocity + delta * PREDICTION_TIMESTEP_FRACTION * force / drive.Mass
+end
+
+local function PredictAnguVelocity(torque: Vector3, delta: number) : Vector3
+    local inertiaTensorWorldRotation = drive.CFrame * drive.AssemblyAngularVelocity
+    local torqueInDiagonalSpace: Vector3 = inertiaTensorWorldRotation - torque
+	local angularVelocityChangeInDiagonalSpace: Vector3 = Vector3.new(torqueInDiagonalSpace.X / drive.AssemblyLinearVelocity.X, torqueInDiagonalSpace.Y / drive.AssemblyLinearVelocity.Y, torqueInDiagonalSpace.Z / drive.AssemblyLinearVelocity.Z)
+
+    return drive.AssemblyAngularVelocity + delta * PREDICTION_TIMESTEP_FRACTION * (inertiaTensorWorldRotation * angularVelocityChangeInDiagonalSpace)
+end
+
+local function init()
+    for i: number, wing: BasePart in pairs(wings:GetChildren()) do
+        if not wing:IsA("BasePart") then return end
+
+        local new = Coefficidents.new(wing)
+        table.insert(areoSurfaces, new)
+    end
+end
+init()
+
+RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
+    for i, v in pairs(areoSurfaces) do
+        local alt = v.wing:GetAttribute("SurfaceType")
+        if alt == "Pitch" then
+            v.flapAngle = _G.set.pitch
+        elseif alt == "Roll" then
+            v.flapAngle = _G.set.roll
+        elseif alt == "Yaw" then
+            v.flapAngle = _G.set.yaw
+        elseif alt == "Flap" then
+            v.flapAngle = _G.set.flap
+        end
+    end
+end)
+
+RUN_SERVICE.Stepped:Connect(function(delta)
+    --if true then return end
+	local forceAndTorqueThisFrame: Vector3 = CalculateAerodynamicForces(drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass)
+
+	local velocityPrediction: Vector3 = PredictVelocity(forceAndTorqueThisFrame.force + drive.CFrame.LookVector + Vector3.new(0, -workspace.Gravity / 10, 0) * drive.Mass, delta)
+	local angularVelocityPrediction: Vector3 = PredictAnguVelocity(forceAndTorqueThisFrame.torque, delta)
+
+	--local forceAndTorquePrediction = CalculateAerodynamicForces(velocityPrediction, angularVelocityPrediction, drive.AssemblyCenterOfMass)
+
+	local currentForceAndTorque: any = forceAndTorqueThisFrame --+ forceAndTorquePrediction * 0.5
+	currentForceAndTorque.force = currentForceAndTorque.force.Magnitude > 0 and currentForceAndTorque.force or Vector3.zero
+	currentForceAndTorque.torque = currentForceAndTorque.torque.Magnitude > 0 and currentForceAndTorque.torque or Vector3.zero
+
+    drive:ApplyImpulse(((currentForceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * FIXED_DELTA_TIME)
+    drive:ApplyAngularImpulse((currentForceAndTorque.torque) * FIXED_DELTA_TIME)
+end)]]></ProtectedString>
+								<int64 name="SourceAssetId">-1</int64>
+								<BinaryString name="Tags"></BinaryString>
+								<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60119131e</UniqueId>
+							</Properties>
+						</Item>
+					</Item>
+					<Item class="ObjectValue" referent="RBX1003857433884162A21EAC516021589F">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<string name="Name">setting</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60110e37f</UniqueId>
+							<Ref name="Value">null</Ref>
 						</Properties>
 					</Item>
 				</Item>
 			</Item>
-			<Item class="VehicleSeat" referent="RBX63D55E9813AC4624B7859CA3F4B0137F">
+			<Item class="VehicleSeat" referent="RBX8F57B880EC7844118C923151356D87EF">
 				<Properties>
 					<bool name="Anchored">false</bool>
 					<BinaryString name="AttributesSerialize"></BinaryString>
@@ -879,7 +1353,7 @@ return Coefficidents]]></ProtectedString>
 						<Z>2</Z>
 					</Vector3>
 				</Properties>
-				<Item class="WeldConstraint" referent="RBX54DD32C59E4A4E619409F19F748EEBB9">
+				<Item class="WeldConstraint" referent="RBX24FE886E8DF546A4B68D80607BCD8CEC">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -897,15 +1371,15 @@ return Coefficidents]]></ProtectedString>
 							<R22>1</R22>
 						</CoordinateFrame>
 						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
-						<Ref name="Part1Internal">RBX665EC304D7CB47E1BA6A78A114221EA8</Ref>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBXB4C17BF9C7C8473EA87C570B052A3AA4</Ref>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
 						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c5</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="WeldConstraint" referent="RBX23432D7ED0374E0D9E04735612C75434">
+				<Item class="WeldConstraint" referent="RBX0FDFD5D207604D1D894D2165294D8D32">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -923,15 +1397,15 @@ return Coefficidents]]></ProtectedString>
 							<R22>1</R22>
 						</CoordinateFrame>
 						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
-						<Ref name="Part1Internal">RBX0C8F348279834DCA92C93BFE8DC9BA5C</Ref>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX02A631CC2A374AB794A7709E86949E5F</Ref>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
 						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c6</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="WeldConstraint" referent="RBX618FDAA2F9D842898EE089E7CA1FBCF4">
+				<Item class="WeldConstraint" referent="RBX2EC0422857CA4DC9A4303C2F734CE99B">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -949,42 +1423,42 @@ return Coefficidents]]></ProtectedString>
 							<R22>1</R22>
 						</CoordinateFrame>
 						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
-						<Ref name="Part1Internal">RBX71C156FBEE6140A3A2F435B3BF875ABC</Ref>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX123D02DC21054BBCAC7303C97485D66F</Ref>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
 						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c7</UniqueId>
 					</Properties>
 				</Item>
-				<Item class="WeldConstraint" referent="RBX66B65CD32CDB41E89D8BB7EDD38504FF">
+				<Item class="WeldConstraint" referent="RBXF882E302D4A049B8B3795FCB29B608EC">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
 							<X>-4.76837158e-07</X>
-							<Y>5</Y>
+							<Y>4.44999886</Y>
 							<Z>24.5</Z>
-							<R00>0</R00>
-							<R01>-1</R01>
+							<R00>1</R00>
+							<R01>0</R01>
 							<R02>0</R02>
-							<R10>1</R10>
-							<R11>0</R11>
+							<R10>0</R10>
+							<R11>1</R11>
 							<R12>0</R12>
 							<R20>0</R20>
 							<R21>0</R21>
 							<R22>1</R22>
 						</CoordinateFrame>
 						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX63D55E9813AC4624B7859CA3F4B0137F</Ref>
-						<Ref name="Part1Internal">RBXE4229ADEF2A44D759F7B5CC3A23F0750</Ref>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX2C71C579DC6341A7AEF2CE38656D155E</Ref>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c8</UniqueId>
+						<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d602377eb5</UniqueId>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Folder" referent="RBX932DBA895AE94829949BA4C486893D5D">
+			<Item class="Folder" referent="RBX74B9BC3EB9F6465494C344B19FEF1D63">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">wings</string>
@@ -992,7 +1466,7 @@ return Coefficidents]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 					<UniqueId name="UniqueId">2dbf0b6cf61c7126026d6fc600027d9b</UniqueId>
 				</Properties>
-				<Item class="Part" referent="RBX665EC304D7CB47E1BA6A78A114221EA8">
+				<Item class="Part" referent="RBXB4C17BF9C7C8473EA87C570B052A3AA4">
 					<Properties>
 						<bool name="Anchored">false</bool>
 						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
@@ -1087,7 +1561,7 @@ return Coefficidents]]></ProtectedString>
 						</Vector3>
 					</Properties>
 				</Item>
-				<Item class="Part" referent="RBX0C8F348279834DCA92C93BFE8DC9BA5C">
+				<Item class="Part" referent="RBX02A631CC2A374AB794A7709E86949E5F">
 					<Properties>
 						<bool name="Anchored">false</bool>
 						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbA==</BinaryString>
@@ -1182,7 +1656,7 @@ return Coefficidents]]></ProtectedString>
 						</Vector3>
 					</Properties>
 				</Item>
-				<Item class="Part" referent="RBX71C156FBEE6140A3A2F435B3BF875ABC">
+				<Item class="Part" referent="RBX123D02DC21054BBCAC7303C97485D66F">
 					<Properties>
 						<bool name="Anchored">false</bool>
 						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2g=</BinaryString>
@@ -1277,7 +1751,7 @@ return Coefficidents]]></ProtectedString>
 						</Vector3>
 					</Properties>
 				</Item>
-				<Item class="Part" referent="RBXE4229ADEF2A44D759F7B5CC3A23F0750">
+				<Item class="Part" referent="RBX2C71C579DC6341A7AEF2CE38656D155E">
 					<Properties>
 						<bool name="Anchored">false</bool>
 						<BinaryString name="AttributesSerialize">AQAAAAsAAABTdXJmYWNlVHlwZQIDAAAAWWF3</BinaryString>
@@ -1291,13 +1765,13 @@ return Coefficidents]]></ProtectedString>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
 							<X>-7</X>
-							<Y>5.49997616</Y>
+							<Y>4.94997501</Y>
 							<Z>10.6999969</Z>
-							<R00>0</R00>
-							<R01>-1</R01>
+							<R00>1</R00>
+							<R01>0</R01>
 							<R02>0</R02>
-							<R10>1</R10>
-							<R11>0</R11>
+							<R10>0</R10>
+							<R11>1</R11>
 							<R12>0</R12>
 							<R20>0</R20>
 							<R21>0</R21>
@@ -1357,7 +1831,7 @@ return Coefficidents]]></ProtectedString>
 						<token name="TopSurface">0</token>
 						<token name="TopSurfaceInput">0</token>
 						<float name="Transparency">0</float>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19003dc0c3</UniqueId>
+						<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6022f4888</UniqueId>
 						<Vector3 name="Velocity">
 							<X>0</X>
 							<Y>0</Y>
@@ -1366,16 +1840,59 @@ return Coefficidents]]></ProtectedString>
 						<token name="formFactorRaw">1</token>
 						<token name="shape">1</token>
 						<Vector3 name="size">
-							<X>10.2999992</X>
-							<Y>0.399999976</Y>
+							<X>0.499999225</X>
+							<Y>9.30000019</Y>
 							<Z>3.5999999</Z>
 						</Vector3>
 					</Properties>
 				</Item>
 			</Item>
 		</Item>
+		<Item class="Camera" referent="RBX198C2F56FB4E489ABD8E449625A2C7A6">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<CoordinateFrame name="CFrame">
+					<X>-7.84204245</X>
+					<Y>9.88837147</Y>
+					<Z>-13.6211929</Z>
+					<R00>0.937394261</R00>
+					<R01>0.267191589</R01>
+					<R02>-0.223384693</R02>
+					<R10>-0</R10>
+					<R11>0.641412258</R11>
+					<R12>0.767196476</R12>
+					<R20>0.348270088</R20>
+					<R21>-0.719165564</R21>
+					<R22>0.601256132</R22>
+				</CoordinateFrame>
+				<Ref name="CameraSubject">null</Ref>
+				<token name="CameraType">0</token>
+				<float name="FieldOfView">70</float>
+				<token name="FieldOfViewMode">0</token>
+				<CoordinateFrame name="Focus">
+					<X>-7.39527321</X>
+					<Y>8.35397911</Y>
+					<Z>-14.8237047</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="HeadLocked">true</bool>
+				<float name="HeadScale">1</float>
+				<string name="Name">Camera</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000bab0b</UniqueId>
+			</Properties>
+		</Item>
 	</Item>
-	<Item class="SoundService" referent="6">
+	<Item class="SoundService" referent="RBXFD61EFA37B6440BEA34429A8CDBCC8AD">
 		<Properties>
 			<token name="AmbientReverb">0</token>
 			<BinaryString name="AttributesSerialize"></BinaryString>
@@ -1387,27 +1904,28 @@ return Coefficidents]]></ProtectedString>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad53</UniqueId>
+			<token name="VolumetricAudio">1</token>
 		</Properties>
 	</Item>
-	<Item class="NonReplicatedCSGDictionaryService" referent="RBXCA18011F3C844BC59BE8C200AA45A66D">
+	<Item class="NonReplicatedCSGDictionaryService" referent="RBX5020BFD22B9A42BEA0CCE8045C00840F">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">NonReplicatedCSGDictionaryService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad5f</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60002069d</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="CSGDictionaryService" referent="RBX238EA496ED334D4DB9F988C81A519F3C">
+	<Item class="CSGDictionaryService" referent="RBX262FF53B9719485B8C3AD494316C9BD7">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">CSGDictionaryService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad60</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d60002069e</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Chat" referent="RBXD164EE6209C148CA89453942BFDAE88D">
+	<Item class="Chat" referent="RBXA87BF7B23D4D4241B3C3E153A84D963B">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="BubbleChatEnabled">false</bool>
@@ -1418,47 +1936,47 @@ return Coefficidents]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad65</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="TimerService" referent="RBX326016E9BC644669913CEB6AC2A3259F">
+	<Item class="TimerService" referent="RBX809A94389BA1499EB63CC256D5EF4EA6">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Instance</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad66</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206a4</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Players" referent="RBXCADA2E64D8344F73B592DCA092F9F8D0">
+	<Item class="Players" referent="RBX2D1C5BB181364FEEA68FFA10747E6358">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="CharacterAutoLoads">true</bool>
-			<int name="MaxPlayersInternal">12</int>
+			<int name="MaxPlayersInternal">60</int>
 			<string name="Name">Players</string>
-			<int name="PreferredPlayersInternal">0</int>
+			<int name="PreferredPlayersInternal">60</int>
 			<float name="RespawnTime">5</float>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad68</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ReplicatedFirst" referent="RBXC33DA1FDF83C40489C0B13E1DA048882">
+	<Item class="ReplicatedFirst" referent="RBX526F8E9E95964BE9994D4918627633A9">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">ReplicatedFirst</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad6c</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206aa</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="TweenService" referent="RBX89E06AFC63AF4976A5747C5249974D3C">
+	<Item class="TweenService" referent="RBX11B8A59E09F842C1A4035C060571A276">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">TweenService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad6e</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206ac</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="MaterialService" referent="RBXFF3A846FCE0E468BAB76395F716B1F46">
+	<Item class="MaterialService" referent="RBXB64B9DC8A47F4C03AD5BA15A8764A656">
 		<Properties>
 			<string name="AsphaltName">Asphalt</string>
 			<BinaryString name="AttributesSerialize"></BinaryString>
@@ -1500,16 +2018,16 @@ return Coefficidents]]></ProtectedString>
 			<string name="WoodPlanksName">WoodPlanks</string>
 		</Properties>
 	</Item>
-	<Item class="PermissionsService" referent="RBXA6E6BD6C8C9E445CAC7600245C6AA492">
+	<Item class="PermissionsService" referent="RBXA0720C627C2045B2B2FCAED383A66028">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">PermissionsService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad72</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206b1</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="PlayerEmulatorService" referent="RBXFC409A295E114792AEF0714B76792F4C">
+	<Item class="PlayerEmulatorService" referent="RBXAB5280B4139945F2B208443D80E4A635">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="CustomPoliciesEnabled">false</bool>
@@ -1520,10 +2038,10 @@ return Coefficidents]]></ProtectedString>
 			<BinaryString name="SerializedEmulatedPolicyInfo"></BinaryString>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad74</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206b3</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="StudioData" referent="RBX2FED811C694C4416BE1A7E5342905AF6">
+	<Item class="StudioData" referent="RBX7F9274750A92435B8D9AAAC9374D112C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<int64 name="CommitInflightAuthorId">0</int64>
@@ -1532,13 +2050,13 @@ return Coefficidents]]></ProtectedString>
 			<bool name="EnableScriptCollabByDefaultOnLoad">false</bool>
 			<string name="Name">StudioData</string>
 			<int64 name="SourceAssetId">-1</int64>
-			<int64 name="SrcPlaceId">0</int64>
-			<int64 name="SrcUniverseId">0</int64>
+			<int64 name="SrcPlaceId">10413806842</int64>
+			<int64 name="SrcUniverseId">3798349799</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad76</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="StarterPlayer" referent="7">
+	<Item class="StarterPlayer" referent="RBX8A91778680D044159452FF082A37E873">
 		<Properties>
 			<bool name="AllowCustomAnimations">true</bool>
 			<BinaryString name="AttributesSerialize"></BinaryString>
@@ -1584,7 +2102,7 @@ return Coefficidents]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad77</UniqueId>
 			<bool name="UserEmotesEnabled">true</bool>
 		</Properties>
-		<Item class="StarterPlayerScripts" referent="8">
+		<Item class="StarterPlayerScripts" referent="RBX8E1EB657FF2E4751833B786B01FD4602">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">StarterPlayerScripts</string>
@@ -1593,7 +2111,7 @@ return Coefficidents]]></ProtectedString>
 				<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ae11</UniqueId>
 			</Properties>
 		</Item>
-		<Item class="StarterCharacterScripts" referent="RBX438A591920634FA3835BE61C471DAEB2">
+		<Item class="StarterCharacterScripts" referent="RBX5B34A99AC21541E0BAC2F664F7DFEF7E">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">StarterCharacterScripts</string>
@@ -1603,7 +2121,7 @@ return Coefficidents]]></ProtectedString>
 			</Properties>
 		</Item>
 	</Item>
-	<Item class="StarterPack" referent="RBX29C9DE22C76D40BD8688AE1F15C705C9">
+	<Item class="StarterPack" referent="RBX58C4C844D6FE4EE4B4556EC7CC82284C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">StarterPack</string>
@@ -1612,7 +2130,7 @@ return Coefficidents]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad78</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="StarterGui" referent="RBXEB14AF5405354F62A751271EBC0C2481">
+	<Item class="StarterGui" referent="RBX50A39AFAA0C6485EB389367231540B3F">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">StarterGui</string>
@@ -1624,7 +2142,7 @@ return Coefficidents]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad79</UniqueId>
 			<token name="VirtualCursorMode">0</token>
 		</Properties>
-		<Item class="ScreenGui" referent="RBXEDBC38C657C640658CFB7877FC477B38">
+		<Item class="ScreenGui" referent="RBX908CA90BD6B74DF5976E8B7DADD4A965">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<bool name="AutoLocalize">true</bool>
@@ -1644,7 +2162,7 @@ return Coefficidents]]></ProtectedString>
 				<UniqueId name="UniqueId">215beb21e7b382da027625aa00331c6e</UniqueId>
 				<token name="ZIndexBehavior">1</token>
 			</Properties>
-			<Item class="TextBox" referent="RBX21870F82D8BC4CB5A4F20FAA76FB1587">
+			<Item class="TextBox" referent="RBXFD3F39CCF773489894605E62679BD6C8">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -1744,7 +2262,7 @@ return Coefficidents]]></ProtectedString>
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="TextButton" referent="RBXFC9468DED5FC4A8BB5BD47B822F6EFC9">
+			<Item class="TextButton" referent="RBX8B4A790B7FCE47A88AC63F865B5CCF52">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -1838,18 +2356,19 @@ return Coefficidents]]></ProtectedString>
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="LocalScript" referent="RBXE320149A55FD4FA8A6280342200CF970">
+			<Item class="LocalScript" referent="RBXE931F8DEC1984FDE8842A6BBCB9822B7">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<bool name="Disabled">false</bool>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">LocalScript</string>
+					<token name="RunContext">0</token>
 					<string name="ScriptGuid">{96182606-DE13-4677-938B-8509D29A1D3C}</string>
-					<ProtectedString name="Source"><![CDATA[local set = {
-	p = 0,
-	r = 0,
-	y = 0,
-	f = 0
+					<ProtectedString name="Source"><![CDATA[_G.set = {
+	pitch = 0,
+	roll = 0,
+	yaw = 0,
+	flap = 0
 }
 
 local w
@@ -1861,14 +2380,14 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 	if i.KeyCode == Enum.KeyCode.W then
 		w = task.spawn(function()
 			while true do
-				set.r += 0.1
+				_G.set.roll += 0.1
 				task.wait()
 			end
 		end)
 	elseif i.KeyCode == Enum.KeyCode.S then
 		s = task.spawn(function()
 			while true do
-				set.r -= 0.025
+				_G.set.roll -= 0.025
 				task.wait()
 			end
 		end)
@@ -1876,7 +2395,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 	elseif i.KeyCode == Enum.KeyCode.A then
 		a = task.spawn(function()
 			while true do
-				set.p += 0.025
+				_G.set.pitch += 0.025
 				task.wait()
 			end
 		end)
@@ -1884,7 +2403,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 	elseif i.KeyCode == Enum.KeyCode.D then
 		d = task.spawn(function()
 			while true do
-				set.p -= 0.025
+				_G.set.pitch -= 0.025
 				task.wait()
 			end
 		end)
@@ -1903,15 +2422,13 @@ game:GetService("UserInputService").InputEnded:Connect(function(i, b)
 	end
 end)
 
-game["Run Service"].Heartbeat:Connect(function()
-	game.ReplicatedStorage.s:FireServer(set)
-end)]]></ProtectedString>
+]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 					<UniqueId name="UniqueId">215beb21e7b382da027625aa00331f12</UniqueId>
 				</Properties>
 			</Item>
-			<Item class="TextBox" referent="RBX7B62BF8D772E4E428DA7F6ED04C2DAE6">
+			<Item class="TextBox" referent="RBXF52E755753114D04899BB677131AD9D1">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -2013,7 +2530,7 @@ end)]]></ProtectedString>
 			</Item>
 		</Item>
 	</Item>
-	<Item class="LocalizationService" referent="RBXBB2601FF8481472A873FA0573FADC21E">
+	<Item class="LocalizationService" referent="RBXA62AB508876B4BE7BE38FAE2A8696C79">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">LocalizationService</string>
@@ -2022,7 +2539,7 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad7b</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="TeleportService" referent="RBX02FCBE3B43D34925B2D07FA7F02B2DA8">
+	<Item class="TeleportService" referent="RBXED85EBB9BE1D49F1B0E75DD0E95EFC09">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Teleport Service</string>
@@ -2031,34 +2548,34 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad7f</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="CollectionService" referent="RBX194BB20B3EDC494A9547005F7CFC60D1">
+	<Item class="CollectionService" referent="RBX07735B89FDEE4012BB86B8CC69A7BECB">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">CollectionService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad81</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c1</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="PhysicsService" referent="RBX1750FD3499064F5DA97FD08081E4E85B">
+	<Item class="PhysicsService" referent="RBX601BA94A4FB54DAF86BE04074D80B33E">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">PhysicsService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad82</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c2</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Geometry" referent="RBX7C1520ABE70843F792852351EF9EE6B5">
+	<Item class="Geometry" referent="RBX1254D09A536040A3B6713D460CA5819F">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Geometry</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad84</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c4</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="InsertService" referent="RBX9163A9EBB9494F91AB97757839BD25D9">
+	<Item class="InsertService" referent="RBX681074033D95413CB4516373AC69B160">
 		<Properties>
 			<bool name="AllowClientInsertModels">false</bool>
 			<bool name="AllowInsertFreeModels">false</bool>
@@ -2068,7 +2585,7 @@ end)]]></ProtectedString>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad86</UniqueId>
 		</Properties>
-		<Item class="StringValue" referent="RBX66BD8CDC25634E48B5718180F379833C">
+		<Item class="StringValue" referent="RBX1456EC83391244FE9E734BB8BBFA0E11">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">InsertionHash</string>
@@ -2079,80 +2596,80 @@ end)]]></ProtectedString>
 			</Properties>
 		</Item>
 	</Item>
-	<Item class="GamePassService" referent="RBX00BC5DAB2FC34B29B75BB097F887735E">
+	<Item class="GamePassService" referent="RBX2301C7DBBCA7447C9421EC0C22C6D230">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">GamePassService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad87</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c7</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Debris" referent="RBX2B692B80D73449F287D579114F59E73B">
+	<Item class="Debris" referent="RBX2D7CFA13581249148C2034589BC74B26">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<int name="MaxItems">1000</int>
 			<string name="Name">Debris</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad88</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c8</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="CookiesService" referent="RBX103D5E593CDC484EBC709B378CDA2A40">
+	<Item class="CookiesService" referent="RBXBD1F65F666D147A89D889B75ECA90BB3">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">CookiesService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad89</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206c9</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="VRService" referent="RBX8E62A92DD16B47A68CDBBB7A2D352693">
+	<Item class="VRService" referent="RBX64AC3C8C829147D4B921422897084E95">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">VRService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad93</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206d3</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ContextActionService" referent="RBXCBCAA5094037451EA18F41499F98A6BC">
+	<Item class="ContextActionService" referent="RBX6BF5ACD1A71B40329725241AA579F37C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">ContextActionService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad94</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206d5</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ScriptService" referent="RBXCAAC53D39E604745AD0006B4E2C7EE1D">
+	<Item class="ScriptService" referent="RBX002A26E3316242738DF45EBEB6E997FC">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Instance</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad96</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206d7</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="AssetService" referent="RBX98823C6D379241EA9D8304F74BAA659C">
+	<Item class="AssetService" referent="RBXFB419F8EFAE64DADB2CDA93B1DB870A8">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">AssetService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad97</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206d8</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="TouchInputService" referent="RBXB0DC0390F1B74E738A74438F978B0D26">
+	<Item class="TouchInputService" referent="RBX044FA02F24F34DE39450B90ABD723884">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">TouchInputService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad98</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206d9</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="AnalyticsService" referent="RBXACC1078AA91E49F88F4FAEEC4CD7DFAC">
+	<Item class="AnalyticsService" referent="RBX109521A2F1414C51B2ABD61C9FD739AB">
 		<Properties>
 			<string name="ApiKey"></string>
 			<BinaryString name="AttributesSerialize"></BinaryString>
@@ -2162,16 +2679,16 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad9b</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Selection" referent="RBX5DA5BBED5835491398D62388CFDF3F52">
+	<Item class="Selection" referent="RBXB5C782D1BECE4B8890A5A495BF022507">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Selection</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ad9e</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206df</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ServerScriptService" referent="4">
+	<Item class="ServerScriptService" referent="RBX206B157BB049485CABC037B9653B85B6">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="LoadStringEnabled">false</bool>
@@ -2181,16 +2698,16 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada0</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ServerStorage" referent="RBXB919C38811654D7C95837CA3C8FCC793">
+	<Item class="ServerStorage" referent="RBX783254BEBC6D4F4C800CB179C599F076">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">ServerStorage</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada1</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206e1</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ReplicatedStorage" referent="1">
+	<Item class="ReplicatedStorage" referent="RBX13BD600739DA41139A2C61E507AE6577">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">ReplicatedStorage</string>
@@ -2198,7 +2715,7 @@ end)]]></ProtectedString>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001ada2</UniqueId>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX4A37E3BD044D492A8D18F3E8D9C6CC60">
+		<Item class="RemoteEvent" referent="RBX845D1A6B382D49C5994F79A93E7170EE">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">s</string>
@@ -2208,25 +2725,25 @@ end)]]></ProtectedString>
 			</Properties>
 		</Item>
 	</Item>
-	<Item class="LuaWebService" referent="RBX7E199C79181A4F328925891208A966BA">
+	<Item class="LuaWebService" referent="RBX9D4AE38C48184547ADE1922E1C843D8B">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Instance</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001adad</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206e9</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ProcessInstancePhysicsService" referent="RBX32E676A829D44683937C7057435F6D9E">
+	<Item class="ProcessInstancePhysicsService" referent="RBX0CC2873E020C4557AA847398948CD938">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">ProcessInstancePhysicsService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001adb0</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d6000206ea</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="Lighting" referent="0">
+	<Item class="Lighting" referent="RBX3A2810204B0848AE9CF55EEFE8AEA141">
 		<Properties>
 			<Color3 name="Ambient">
 				<R>0</R>
@@ -2272,7 +2789,7 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001add6</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="LodDataService" referent="RBXD1F3D943BFAC4AF7A47D175D85BCB8A0">
+	<Item class="LodDataService" referent="RBX508CDECC34B14F8B8F07050E06EB00DF">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Instance</string>
@@ -2281,26 +2798,16 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001add9</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="LanguageService" referent="RBX1BD081CC93574C92BB47329FD332A42A">
+	<Item class="LanguageService" referent="RBX48455EE0E35B49459C0F63570BCC220C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">LanguageService</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b0001adb4</UniqueId>
+			<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d600020734</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="HttpService" referent="RBX79842D12C279493B8046035AE84FFFDA">
-		<Properties>
-			<BinaryString name="AttributesSerialize"></BinaryString>
-			<bool name="HttpEnabled">false</bool>
-			<string name="Name">HttpService</string>
-			<int64 name="SourceAssetId">-1</int64>
-			<BinaryString name="Tags"></BinaryString>
-			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b000247ea</UniqueId>
-		</Properties>
-	</Item>
-	<Item class="Teams" referent="RBX0C0C16DD67CC468BB9EA0DAEECD802C7">
+	<Item class="Teams" referent="RBX2CEB23AD16F64F0EB0876A3686CD533C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Teams</string>
@@ -2309,7 +2816,58 @@ end)]]></ProtectedString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b00024805</UniqueId>
 		</Properties>
 	</Item>
-	<Item class="ProximityPromptService" referent="RBX8173893E0282487D9F7DD91D8603BF55">
+	<Item class="TestService" referent="RBX478759D613BD4F0BA946AD7E2E523798">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<bool name="AutoRuns">true</bool>
+			<string name="Description"></string>
+			<bool name="ExecuteWithStudioRun">false</bool>
+			<bool name="Is30FpsThrottleEnabled">true</bool>
+			<bool name="IsPhysicsEnvironmentalThrottled">true</bool>
+			<bool name="IsSleepAllowed">true</bool>
+			<string name="Name">TestService</string>
+			<int name="NumberOfPlayers">0</int>
+			<double name="SimulateSecondsLag">0</double>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<double name="Timeout">10</double>
+			<UniqueId name="UniqueId">4ab9d8776007eea902f6a07a00001b26</UniqueId>
+		</Properties>
+	</Item>
+	<Item class="TextChatService" referent="RBXC595DE0A6D4E411CBD9CB1F1149C35C5">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<token name="ChatVersion">0</token>
+			<bool name="CreateDefaultCommands">true</bool>
+			<bool name="CreateDefaultTextChannels">true</bool>
+			<string name="Name">TextChatService</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<UniqueId name="UniqueId">4ab9d8776007eea902f6a07a00001b28</UniqueId>
+		</Properties>
+		<Item class="ChatWindowConfiguration" referent="RBX1336EA84B25E4A96AE2FB0E4CA8B8997">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="Enabled">true</bool>
+				<string name="Name">ChatWindowConfiguration</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<UniqueId name="UniqueId">4ab9d8776007eea902f6a07a00001b29</UniqueId>
+			</Properties>
+		</Item>
+		<Item class="ChatInputBarConfiguration" referent="RBX13FDD34165394B5784ADD7656941D498">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="Enabled">true</bool>
+				<string name="Name">ChatInputBarConfiguration</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="TargetTextChannel">null</Ref>
+				<UniqueId name="UniqueId">4ab9d8776007eea902f6a07a00001b2a</UniqueId>
+			</Properties>
+		</Item>
+	</Item>
+	<Item class="ProximityPromptService" referent="RBX00968EAE3E0F4CE3B06690C6382D383A">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="Enabled">true</bool>
@@ -2318,6 +2876,26 @@ end)]]></ProtectedString>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b00024a5b</UniqueId>
+		</Properties>
+	</Item>
+	<Item class="VoiceChatService" referent="RBXE00102D9F58E41DA840105AFD7DBA826">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<bool name="EnableDefaultVoice">true</bool>
+			<string name="Name">VoiceChatService</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<UniqueId name="UniqueId">4ab9d8776007eea902f6a07a00001b23</UniqueId>
+		</Properties>
+	</Item>
+	<Item class="HttpService" referent="RBXFB961A7955554C409BB23C63907A41DA">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<bool name="HttpEnabled">false</bool>
+			<string name="Name">HttpService</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+			<UniqueId name="UniqueId">38489d5f4d17b73e023b983b000247ea</UniqueId>
 		</Properties>
 	</Item>
 	<SharedStrings>

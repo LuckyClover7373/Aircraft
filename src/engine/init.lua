@@ -16,7 +16,7 @@
 ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
 
 Aircraft Engine
-Made by LuckyClover7373 (Thanks for wjoh0315)
+Made by LuckyClover7373 (A huge help by wjoh0315, I'm so appreciate to him)
 
 ]]--
 
@@ -34,7 +34,7 @@ engine.flapFraction = 0.2
 engine.span = 3
 engine.autoAspectRatio = true
 engine.aspectRatio = 2
-engine.thrust = 300
+engine.thrust = 1000
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
