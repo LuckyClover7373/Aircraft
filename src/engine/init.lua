@@ -31,7 +31,7 @@ engine.stallAngleHigh = 15
 engine.stallAngleLow = -15
 engine.flapFraction = 0.2
 engine.autoAspectRatio = true
-engine.thrust = 3000
+engine.thrust = 4000
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
