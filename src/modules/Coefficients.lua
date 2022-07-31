@@ -156,17 +156,17 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
 
     local area: number = self.chord * self.span
-    local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude
-    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
+    local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
+    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -self.wing.CFrame.RightVector * dynamicPressure * area * self.chord
+    local torque: Vector3 = self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
 
     forceAndTorque.force += lift + drag
     --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
-    forceAndTorque.torque += torque * 0.01
+    forceAndTorque.torque += torque
 
     if RUN_SERVICE:IsStudio() then
         gizmo.setScale(1)
@@ -178,7 +178,7 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
         gizmo.drawRay(self.wing.Position, worldAirVelocity)
         gizmo.setScale(5)
         gizmo.setColor(Color3.fromRGB(22, 189, 0))
-        gizmo.drawText(self.wing.Position, math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z))
+        gizmo.drawText(self.wing.Position, angleOfAttack)
     end
 
     return forceAndTorque
