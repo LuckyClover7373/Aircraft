@@ -19,26 +19,32 @@ local function init()
         local span = wing:GetAttribute("span")
         local chord = wing:GetAttribute("chord")
         local aspectRatio = wing:GetAttribute("aspectRatio")
+        local surfaceType = wing:GetAttribute("surfaceType")
         if chord < 0.001 then chord = 0.001 end
         if engine.autoAspectRatio then aspectRatio = span / chord end
 
-        local new = Coefficidents.new(wing, span, chord, aspectRatio)
+        print(surfaceType)
+
+        local new = Coefficidents.new(wing, span, chord, aspectRatio, surfaceType)
         table.insert(areoSurfaces, new)
     end
 end
 init()
 
 RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
-    if true then return end
+    --if true then return end
+    --print(_G.set.pitch)
+    --print(_G.set.roll)
     for i, v in pairs(areoSurfaces) do
-        local alt = v.wing:GetAttribute("SurfaceType")
-        if alt == "Pitch" then
+        if v.surfaceType == "Elevator" then
             v:setFlapAngle(_G.set.pitch)
-        elseif alt == "Roll" then
+        elseif v.surfaceType == "AileronL" then
+            v:setFlapAngle(-_G.set.roll)
+        elseif v.surfaceType == "AileronR" then
             v:setFlapAngle(_G.set.roll)
-        elseif alt == "Yaw" then
+        elseif v.surfaceType == "Rudder" then
             v:setFlapAngle(_G.set.yaw)
-        elseif alt == "Flap" then
+        elseif v.surfaceType == "Flap" then
             v:setFlapAngle(_G.set.flap)
         end
     end
@@ -46,12 +52,11 @@ end)
 
 RUN_SERVICE.Heartbeat:Connect(function(delta)
     for i: number, aeroSurface in pairs(areoSurfaces) do
-        local velocity, angularVelocity, centerOfMass = drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass
+        local velocity, angularVelocity = aeroSurface.wing.AssemblyLinearVelocity, aeroSurface.wing.AssemblyAngularVelocity
         
-        local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
-        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity)
 
-        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * delta)
-        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * delta)
+        aeroSurface.wing:ApplyImpulse((Vector3.new(0, 0, velocity.Z):Lerp((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust), 0.5)) * delta)
+        aeroSurface.wing:ApplyAngularImpulse((Vector3.zero:Lerp(forceAndTorque.torque, 0.5)) * delta)
     end
 end)

@@ -25,7 +25,7 @@ local function FlapEffectivnessCorrection(flapAngle: number): number
 end
 
 local function LiftCoefficientMaxFraction(flapFraction: number): number
-    return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
+    return math.clamp(1 - 0.5 * (flapFraction - 0.1) / 0.3, 0, 1)
 end
 
 local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, aspectRatio: number): Vector3
@@ -114,13 +114,17 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
     return aerodynamicCoefficidents
 end
 
-function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number)
+function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number, surfaceType: string)
     return setmetatable({
         ["flapAngle"] = 0,
         ["span"] = span,
         ["chord"] = chord,
         ["aspectRatio"] = aspectRatio,
-        ["wing"] = wing
+        ["surfaceType"] = surfaceType,
+        ["wing"] = wing,
+        ["liftPredict"] = Vector3.zero,
+        ["dragPredict"] = Vector3.zero,
+        ["torquePredict"] = Vector3.zero
     }, Coefficidents)
 end
 
@@ -128,7 +132,7 @@ function Coefficidents:setFlapAngle(angle: number)
     self.flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
 end
 
-function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3)
+function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
     local forceAndTorque = BiVector.new()
     
     local correctedLiftSlope: number = engine.liftSlope * self.aspectRatio /
@@ -153,32 +157,39 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local airVelocity: Vector3 = self.wing.CFrame:Inverse().LookVector * worldAirVelocity
     --airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
     local dragDirection: Vector3 = worldAirVelocity.Unit ---self.wing.CFrame.LookVector
-    local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
+    local liftDirection: Vector3 = dragDirection:Cross(self.wing.CFrame.RightVector).Unit
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
+    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
-    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local lift: Vector3 = liftDirection * (aerodynamicCoefficidents.X * 0.01) * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
 
+    lift = self.liftPredict:Lerp(lift, 0.7)
+    drag = self.dragPredict:Lerp(lift, 0.7)
+    torque = self.torquePredict:Lerp(lift, 0.7)
+
+    self.liftPredict = lift
+    self.dragPredict = drag
+    self.torquePredict = torque
+
     forceAndTorque.force += lift + drag
-    --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
 
     if RUN_SERVICE:IsStudio() then
-        gizmo.setScale(1)
-        gizmo.setColor(Color3.fromRGB(199, 2, 2))
-        gizmo.drawRay(self.wing.Position, forceAndTorque.force)
-        gizmo.setColor(Color3.fromRGB(13, 2, 167))
-        gizmo.drawRay(self.wing.Position, forceAndTorque.torque)
-        gizmo.setColor(Color3.fromRGB(255, 255, 255))
-        gizmo.drawRay(self.wing.Position, worldAirVelocity)
         gizmo.setScale(5)
-        gizmo.setColor(Color3.fromRGB(22, 189, 0))
-        gizmo.drawText(self.wing.Position, angleOfAttack)
+        --gizmo.setColor(Color3.fromRGB(199, 2, 2))
+        --gizmo.drawText(self.wing.Position, lift.Magnitude)
+        gizmo.setColor(Color3.fromRGB(13, 2, 167))
+        gizmo.drawText(self.wing.Position, "")
+        gizmo.setColor(Color3.fromRGB(255, 255, 255))
+        gizmo.drawRay(self.wing.Position, lift, self.wing)
+        --gizmo.setScale(5)
+        --gizmo.setColor(Color3.fromRGB(22, 189, 0))
+        --gizmo.drawText(self.wing.Position, angleOfAttack)
     end
 
     return forceAndTorque

@@ -11,7 +11,7 @@
 			<Ref name="CurrentCamera">RBX198C2F56FB4E489ABD8E449625A2C7A6</Ref>
 			<double name="DistributedGameTime">0</double>
 			<bool name="ExplicitAutoJoints">true</bool>
-			<float name="FallenPartsDestroyHeight">-500</float>
+			<float name="FallenPartsDestroyHeight">-50000</float>
 			<Vector3 name="GlobalWind">
 				<X>0</X>
 				<Y>0</Y>
@@ -358,16 +358,16 @@ Made by LuckyClover7373 (A huge help by wjoh0315, I'm so appreciate to him)
 
 local engine = {}
 
-engine.airDensity = 1.3
+engine.airDensity = 1
 
 engine.liftSlope = 6.28
 engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
-engine.stallAngleHigh = 15
-engine.stallAngleLow = -15
+engine.stallAngleHigh = 50
+engine.stallAngleLow = -50
 engine.flapFraction = 0.2
 engine.autoAspectRatio = true
-engine.thrust = 4000
+engine.thrust = 3000
 
 local function engineFix()
     if engine.flapFraction > 0.4 then engine.flapFraction = 0.4 end
@@ -587,7 +587,7 @@ local function FlapEffectivnessCorrection(flapAngle: number): number
 end
 
 local function LiftCoefficientMaxFraction(flapFraction: number): number
-    return math.clamp(1 - 0.4 * (flapFraction - 0.1) / 0.3, 0, 1)
+    return math.clamp(1 - 0.5 * (flapFraction - 0.1) / 0.3, 0, 1)
 end
 
 local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, aspectRatio: number): Vector3
@@ -673,16 +673,20 @@ local function CalculateCoefficidents(angleOfAttack: number, correctedLiftSlope:
         end
         aerodynamicCoefficidents = aerodynamicCoefficientsLow:Lerp(aerodynamicCoefficientsStall, lerpAlpha)
     end
-    return aerodynamicCoefficidents.Magnitude > 0 and aerodynamicCoefficidents or Vector3.zero
+    return aerodynamicCoefficidents
 end
 
-function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number)
+function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRatio: number, surfaceType: string)
     return setmetatable({
         ["flapAngle"] = 0,
         ["span"] = span,
         ["chord"] = chord,
         ["aspectRatio"] = aspectRatio,
-        ["wing"] = wing
+        ["surfaceType"] = surfaceType,
+        ["wing"] = wing,
+        ["liftPredict"] = Vector3.zero,
+        ["dragPredict"] = Vector3.zero,
+        ["torquePredict"] = Vector3.zero
     }, Coefficidents)
 end
 
@@ -690,7 +694,7 @@ function Coefficidents:setFlapAngle(angle: number)
     self.flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
 end
 
-function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePosition: Vector3)
+function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
     local forceAndTorque = BiVector.new()
     
     local correctedLiftSlope: number = engine.liftSlope * self.aspectRatio /
@@ -715,32 +719,39 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3, relativePositi
     local airVelocity: Vector3 = self.wing.CFrame:Inverse().LookVector * worldAirVelocity
     --airVelocity = Vector3.new(0, airVelocity.Y, airVelocity.Z)
     local dragDirection: Vector3 = worldAirVelocity.Unit ---self.wing.CFrame.LookVector
-    local liftDirection: Vector3 = worldAirVelocity.Unit:Cross(self.wing.CFrame.RightVector)
+    local liftDirection: Vector3 = dragDirection:Cross(self.wing.CFrame.RightVector).Unit
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = math.atan2(airVelocity.Unit.Y, airVelocity.Unit.Z)
+    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
-    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
+    local lift: Vector3 = liftDirection * (aerodynamicCoefficidents.X * 0.01) * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
+    local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
+
+    lift = self.liftPredict:Lerp(lift, 0.7)
+    drag = self.dragPredict:Lerp(lift, 0.7)
+    torque = self.torquePredict:Lerp(lift, 0.7)
+
+    self.liftPredict = lift
+    self.dragPredict = drag
+    self.torquePredict = torque
 
     forceAndTorque.force += lift + drag
-    --forceAndTorque.torque += relativePosition:Cross(forceAndTorque.force)
     forceAndTorque.torque += torque
 
     if RUN_SERVICE:IsStudio() then
-        gizmo.setScale(1)
-        gizmo.setColor(Color3.fromRGB(199, 2, 2))
-        gizmo.drawRay(self.wing.Position, forceAndTorque.force)
-        gizmo.setColor(Color3.fromRGB(13, 2, 167))
-        gizmo.drawRay(self.wing.Position, forceAndTorque.torque)
-        gizmo.setColor(Color3.fromRGB(255, 255, 255))
-        gizmo.drawRay(self.wing.Position, worldAirVelocity)
         gizmo.setScale(5)
-        gizmo.setColor(Color3.fromRGB(22, 189, 0))
-        gizmo.drawText(self.wing.Position, angleOfAttack)
+        --gizmo.setColor(Color3.fromRGB(199, 2, 2))
+        --gizmo.drawText(self.wing.Position, lift.Magnitude)
+        gizmo.setColor(Color3.fromRGB(13, 2, 167))
+        gizmo.drawText(self.wing.Position, "")
+        gizmo.setColor(Color3.fromRGB(255, 255, 255))
+        gizmo.drawRay(self.wing.Position, lift, self.wing)
+        --gizmo.setScale(5)
+        --gizmo.setColor(Color3.fromRGB(22, 189, 0))
+        --gizmo.drawText(self.wing.Position, angleOfAttack)
     end
 
     return forceAndTorque
@@ -996,39 +1007,43 @@ function gizmo.drawWireSphere(orientation, radius)
 end
 
 -- Draws a point at a position
-function gizmo.drawPoint(position)
+function gizmo.drawPoint(position, adornee)
 	local adornment = get("SphereHandleAdornment")
 	style(adornment)
+	adornment.Adornee = adornee or adornment.Adornee
 	adornment.Radius = globalScale * thickness * POINT_SCALE * 0.5
-	adornment.CFrame = globalOrigin * CFrame.new(position)
+	adornment.CFrame = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.new(position)
 	table.insert(queue, adornment)
 end
 
 -- Draws a line between two positions
-function gizmo.drawLine(from, to)
+function gizmo.drawLine(from, to, adornee)
 	local distance = (to - from).magnitude
 	local adornment = get("CylinderHandleAdornment")
 	style(adornment)
+	adornment.Adornee = adornee or adornment.Adornee
 	adornment.Radius = globalScale * thickness * 0.5
 	adornment.InnerRadius = 0
 	adornment.Height = distance
-	adornment.CFrame = globalOrigin * CFrame.lookAt(from, to) * CFrame.new(0, 0, -distance * 0.5)
+	adornment.CFrame = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.lookAt(from, to) * CFrame.new(0, 0, -distance * 0.5)
 	table.insert(queue, adornment)
 end
 
 -- Draws an arrow between two positions
-function gizmo.drawArrow(from, to)
+function gizmo.drawArrow(from, to, adornee)
 	local coneHeight = thickness * POINT_SCALE * globalScale
 	local distance = math.abs((to - from).magnitude - coneHeight)
-	local orientation = globalOrigin * CFrame.lookAt(from, to)
+	local orientation = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.lookAt(from, to)
 	local adornmentLine = get("CylinderHandleAdornment")
 	local adornmentCone = get("ConeHandleAdornment")
 	style(adornmentLine)
+	adornmentLine.Adornee = adornee or adornmentLine.Adornee
 	adornmentLine.Radius = globalScale * thickness * 0.5
 	adornmentLine.InnerRadius = 0
 	adornmentLine.Height = distance
 	adornmentLine.CFrame = orientation * CFrame.new(0, 0, -distance * 0.5)
 	style(adornmentCone)
+	adornmentCone.Adornee = adornee or adornmentCone.Adornee
 	adornmentCone.Height = coneHeight
 	adornmentCone.Radius = coneHeight * 0.5
 	adornmentCone.CFrame = orientation * CFrame.new(0, 0, -distance)
@@ -1037,8 +1052,8 @@ function gizmo.drawArrow(from, to)
 end
 
 -- Draws an arrow at a position in a given direction
-function gizmo.drawRay(from, direction)
-	gizmo.drawArrow(from, from + direction)
+function gizmo.drawRay(from, direction, adornee)
+	gizmo.drawArrow(from, from + direction, adornee)
 end
 
 -- Draws text on the screen at the given location
@@ -1181,25 +1196,32 @@ local function init()
         local span = wing:GetAttribute("span")
         local chord = wing:GetAttribute("chord")
         local aspectRatio = wing:GetAttribute("aspectRatio")
+        local surfaceType = wing:GetAttribute("surfaceType")
         if chord < 0.001 then chord = 0.001 end
         if engine.autoAspectRatio then aspectRatio = span / chord end
 
-        local new = Coefficidents.new(wing, span, chord, aspectRatio)
+        print(surfaceType)
+
+        local new = Coefficidents.new(wing, span, chord, aspectRatio, surfaceType)
         table.insert(areoSurfaces, new)
     end
 end
 init()
 
 RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
+    --if true then return end
+    --print(_G.set.pitch)
+    --print(_G.set.roll)
     for i, v in pairs(areoSurfaces) do
-        local alt = v.wing:GetAttribute("SurfaceType")
-        if alt == "Pitch" then
+        if v.surfaceType == "Elevator" then
             v:setFlapAngle(_G.set.pitch)
-        elseif alt == "Roll" then
+        elseif v.surfaceType == "AileronL" then
+            v:setFlapAngle(-_G.set.roll)
+        elseif v.surfaceType == "AileronR" then
             v:setFlapAngle(_G.set.roll)
-        elseif alt == "Yaw" then
+        elseif v.surfaceType == "Rudder" then
             v:setFlapAngle(_G.set.yaw)
-        elseif alt == "Flap" then
+        elseif v.surfaceType == "Flap" then
             v:setFlapAngle(_G.set.flap)
         end
     end
@@ -1207,15 +1229,12 @@ end)
 
 RUN_SERVICE.Heartbeat:Connect(function(delta)
     for i: number, aeroSurface in pairs(areoSurfaces) do
-        local velocity, angularVelocity, centerOfMass = drive.AssemblyLinearVelocity, drive.AssemblyAngularVelocity, drive.AssemblyCenterOfMass
+        local velocity, angularVelocity = aeroSurface.wing.AssemblyLinearVelocity, aeroSurface.wing.AssemblyAngularVelocity
         
-        local relativePosition: Vector3 = aeroSurface.wing.Position - centerOfMass
-        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity:Cross(relativePosition), relativePosition)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity)
 
-        print(forceAndTorque)
-
-        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * delta)
-        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * delta)
+        aeroSurface.wing:ApplyImpulse((Vector3.new(0, 0, velocity.Z):Lerp((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust), 0.5)) * delta)
+        aeroSurface.wing:ApplyAngularImpulse((Vector3.zero:Lerp(forceAndTorque.torque, 0.5)) * delta)
     end
 end)]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
@@ -1239,7 +1258,7 @@ end)]]></ProtectedString>
 			<Item class="VehicleSeat" referent="RBX8F57B880EC7844118C923151356D87EF">
 				<Properties>
 					<bool name="Anchored">false</bool>
-					<BinaryString name="AttributesSerialize"></BinaryString>
+					<BinaryString name="AttributesSerialize">AgAAAAUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFuBgAAAAAAAPA/</BinaryString>
 					<float name="BackParamA">-0.5</float>
 					<float name="BackParamB">0.5</float>
 					<token name="BackSurface">0</token>
@@ -1337,85 +1356,7 @@ end)]]></ProtectedString>
 						<Z>2</Z>
 					</Vector3>
 				</Properties>
-				<Item class="WeldConstraint" referent="RBX24FE886E8DF546A4B68D80607BCD8CEC">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<CoordinateFrame name="CFrame0">
-							<X>-12.25</X>
-							<Y>0</Y>
-							<Z>0</Z>
-							<R00>1</R00>
-							<R01>0</R01>
-							<R02>0</R02>
-							<R10>0</R10>
-							<R11>1</R11>
-							<R12>0</R12>
-							<R20>0</R20>
-							<R21>0</R21>
-							<R22>1</R22>
-						</CoordinateFrame>
-						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
-						<Ref name="Part1Internal">RBXB4C17BF9C7C8473EA87C570B052A3AA4</Ref>
-						<int64 name="SourceAssetId">-1</int64>
-						<int name="State">3</int>
-						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c5</UniqueId>
-					</Properties>
-				</Item>
-				<Item class="WeldConstraint" referent="RBX0FDFD5D207604D1D894D2165294D8D32">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<CoordinateFrame name="CFrame0">
-							<X>12.250001</X>
-							<Y>0</Y>
-							<Z>0</Z>
-							<R00>1</R00>
-							<R01>0</R01>
-							<R02>0</R02>
-							<R10>0</R10>
-							<R11>1</R11>
-							<R12>0</R12>
-							<R20>0</R20>
-							<R21>0</R21>
-							<R22>1</R22>
-						</CoordinateFrame>
-						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
-						<Ref name="Part1Internal">RBX02A631CC2A374AB794A7709E86949E5F</Ref>
-						<int64 name="SourceAssetId">-1</int64>
-						<int name="State">3</int>
-						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c6</UniqueId>
-					</Properties>
-				</Item>
-				<Item class="WeldConstraint" referent="RBX2EC0422857CA4DC9A4303C2F734CE99B">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<CoordinateFrame name="CFrame0">
-							<X>-4.76837158e-07</X>
-							<Y>0</Y>
-							<Z>24.5</Z>
-							<R00>1</R00>
-							<R01>0</R01>
-							<R02>0</R02>
-							<R10>0</R10>
-							<R11>1</R11>
-							<R12>0</R12>
-							<R20>0</R20>
-							<R21>0</R21>
-							<R22>1</R22>
-						</CoordinateFrame>
-						<string name="Name">wing</string>
-						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
-						<Ref name="Part1Internal">RBX123D02DC21054BBCAC7303C97485D66F</Ref>
-						<int64 name="SourceAssetId">-1</int64>
-						<int name="State">3</int>
-						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19004a06c7</UniqueId>
-					</Properties>
-				</Item>
-				<Item class="WeldConstraint" referent="RBXF882E302D4A049B8B3795FCB29B608EC">
+				<Item class="WeldConstraint" referent="RBXBDF0EE29FB354F03BFC5047FE5C1B9FF">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<CoordinateFrame name="CFrame0">
@@ -1438,7 +1379,163 @@ end)]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<int name="State">3</int>
 						<BinaryString name="Tags"></BinaryString>
-						<UniqueId name="UniqueId">77c5ffdb955b998a02f6b4d602377eb5</UniqueId>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4ea5</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX8C4AD79AECB047F1843CB86B19755F35">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-17</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX7C6F2B7FAED342C6880058D65B7D2C39</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4ea6</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX7B05AAA6481742FF92F95B101C58EB5E">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>7.50000048</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX2253357CE88B4B308FFF2B3D506EF790</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4ea7</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX8977D5DBD97E4C89BBC873FE688249A7">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>17.6499996</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBXE470ED24906E4CD9BAC4E0F76B4D6587</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4ea8</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX867A0CB7EEF54D84BCFCB3974387B126">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>5.19999981</X>
+							<Y>-2.98023224e-08</Y>
+							<Z>24.5</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBX2098CDD89C8341B5858F9A6399F5AFBE</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4ea9</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBXE6A2B534612445FB9CA53332E02C4813">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-5.20000124</X>
+							<Y>-2.98023224e-08</Y>
+							<Z>24.5</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBXA3B0241E1CAE4C77A5A18FD1CEC310D4</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4eaa</UniqueId>
+					</Properties>
+				</Item>
+				<Item class="WeldConstraint" referent="RBX389B1ECEDDBB4911AABC8E409603AE6E">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<CoordinateFrame name="CFrame0">
+							<X>-6.85000086</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">wing</string>
+						<Ref name="Part0Internal">RBX8F57B880EC7844118C923151356D87EF</Ref>
+						<Ref name="Part1Internal">RBXB4C17BF9C7C8473EA87C570B052A3AA4</Ref>
+						<int64 name="SourceAssetId">-1</int64>
+						<int name="State">3</int>
+						<BinaryString name="Tags"></BinaryString>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c4eab</UniqueId>
 					</Properties>
 				</Item>
 			</Item>
@@ -1453,8 +1550,8 @@ end)]]></ProtectedString>
 				<Item class="Part" referent="RBXB4C17BF9C7C8473EA87C570B052A3AA4">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2gLAAAAYXNwZWN0UmF0aW8GAAAAAAAA8D8F
-AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAgQAAABGbGFw]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1464,7 +1561,7 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 						<token name="BottomSurface">0</token>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
-							<X>-19.25</X>
+							<X>-13.8500004</X>
 							<Y>0.499976158</Y>
 							<Z>-13.8000031</Z>
 							<R00>1</R00>
@@ -1540,17 +1637,17 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 						<token name="formFactorRaw">1</token>
 						<token name="shape">1</token>
 						<Vector3 name="size">
-							<X>20.2999992</X>
+							<X>9.49999905</X>
 							<Y>0.399999976</Y>
 							<Z>3.5999999</Z>
 						</Vector3>
 					</Properties>
 				</Item>
-				<Item class="Part" referent="RBX02A631CC2A374AB794A7709E86949E5F">
+				<Item class="Part" referent="RBX7C6F2B7FAED342C6880058D65B7D2C39">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIFAAAAUGl0Y2gLAAAAYXNwZWN0UmF0aW8GAAAAAAAA8D8F
-AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAggAAABBaWxlcm9uTA==]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1560,7 +1657,7 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 						<token name="BottomSurface">0</token>
 						<token name="BottomSurfaceInput">0</token>
 						<CoordinateFrame name="CFrame">
-							<X>5.25000143</X>
+							<X>-24</X>
 							<Y>0.499976158</Y>
 							<Z>-13.8000031</Z>
 							<R00>1</R00>
@@ -1627,7 +1724,7 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 						<token name="TopSurface">0</token>
 						<token name="TopSurfaceInput">0</token>
 						<float name="Transparency">0</float>
-						<UniqueId name="UniqueId">2dbf0b6cf61c7126026d6fc600028467</UniqueId>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c1f0a</UniqueId>
 						<Vector3 name="Velocity">
 							<X>0</X>
 							<Y>0</Y>
@@ -1636,7 +1733,391 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 						<token name="formFactorRaw">1</token>
 						<token name="shape">1</token>
 						<Vector3 name="size">
-							<X>20.2999992</X>
+							<X>10.7999992</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXE470ED24906E4CD9BAC4E0F76B4D6587">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAggAAABBaWxlcm9uUg==]]></BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>10.6499996</X>
+							<Y>0.499976158</Y>
+							<Z>-13.8000031</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">false</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c2c61</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>9.49999905</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX2253357CE88B4B308FFF2B3D506EF790">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAgQAAABGbGFw]]></BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>0.500000954</X>
+							<Y>0.499976158</Y>
+							<Z>-13.8000031</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">false</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c2c62</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>10.7999992</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX2098CDD89C8341B5858F9A6399F5AFBE">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAAAAQAQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAggAAABFbGV2YXRvcg==]]></BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>-1.79999971</X>
+							<Y>0.499976128</Y>
+							<Z>10.6999969</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">false</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c3723</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>9.89999962</X>
+							<Y>0.399999976</Y>
+							<Z>3.5999999</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXA3B0241E1CAE4C77A5A18FD1CEC310D4">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAAAAQAQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAggAAABFbGV2YXRvcg==]]></BinaryString>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<CoordinateFrame name="CFrame">
+							<X>-12.2000008</X>
+							<Y>0.499976128</Y>
+							<Z>10.6999969</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">true</bool>
+						<bool name="CanQuery">true</bool>
+						<bool name="CanTouch">true</bool>
+						<bool name="CastShadow">true</bool>
+						<int name="CollisionGroupId">0</int>
+						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<bool name="Massless">false</bool>
+						<token name="Material">256</token>
+						<string name="MaterialVariantSerialized"></string>
+						<string name="Name">wing</string>
+						<CoordinateFrame name="PivotOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<int name="RootPriority">0</int>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<UniqueId name="UniqueId">4de0846ac6e8760202f8fd3e001c39af</UniqueId>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">1</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>9.89999962</X>
 							<Y>0.399999976</Y>
 							<Z>3.5999999</Z>
 						</Vector3>
@@ -1645,8 +2126,8 @@ AAAAY2hvcmQGAAAAAAAAFEAEAAAAc3BhbgYAAAAAAAAUQA==]]></BinaryString>
 				<Item class="Part" referent="RBX2C71C579DC6341A7AEF2CE38656D155E">
 					<Properties>
 						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIDAAAAWWF3CwAAAGFzcGVjdFJhdGlvBgAAAAAAAPA/BQAA
-AGNob3JkBgAAAAAAAAhABAAAAHNwYW4GAAAAAAAACEA=]]></BinaryString>
+						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUAAABjaG9yZAYAAAAAAADwPwQAAABzcGFu
+BgAAAAAAAPA/CwAAAHN1cmZhY2VUeXBlAgYAAABSdWRkZXI=]]></BinaryString>
 						<float name="BackParamA">-0.5</float>
 						<float name="BackParamB">0.5</float>
 						<token name="BackSurface">0</token>
@@ -1738,129 +2219,33 @@ AGNob3JkBgAAAAAAAAhABAAAAHNwYW4GAAAAAAAACEA=]]></BinaryString>
 						</Vector3>
 					</Properties>
 				</Item>
-				<Item class="Part" referent="RBX123D02DC21054BBCAC7303C97485D66F">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<BinaryString name="AttributesSerialize"><![CDATA[BAAAAAsAAABTdXJmYWNlVHlwZQIEAAAAUm9sbAsAAABhc3BlY3RSYXRpbwYAAAAAAADwPwUA
-AABjaG9yZAYAAAAAAAAQQAQAAABzcGFuBgAAAAAAABBA]]></BinaryString>
-						<float name="BackParamA">-0.5</float>
-						<float name="BackParamB">0.5</float>
-						<token name="BackSurface">0</token>
-						<token name="BackSurfaceInput">0</token>
-						<float name="BottomParamA">-0.5</float>
-						<float name="BottomParamB">0.5</float>
-						<token name="BottomSurface">0</token>
-						<token name="BottomSurfaceInput">0</token>
-						<CoordinateFrame name="CFrame">
-							<X>-7</X>
-							<Y>0.499976158</Y>
-							<Z>10.6999969</Z>
-							<R00>1</R00>
-							<R01>0</R01>
-							<R02>0</R02>
-							<R10>0</R10>
-							<R11>1</R11>
-							<R12>0</R12>
-							<R20>0</R20>
-							<R21>0</R21>
-							<R22>1</R22>
-						</CoordinateFrame>
-						<bool name="CanCollide">true</bool>
-						<bool name="CanQuery">true</bool>
-						<bool name="CanTouch">true</bool>
-						<bool name="CastShadow">true</bool>
-						<int name="CollisionGroupId">0</int>
-						<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
-						<PhysicalProperties name="CustomPhysicalProperties">
-							<CustomPhysics>false</CustomPhysics>
-						</PhysicalProperties>
-						<float name="FrontParamA">-0.5</float>
-						<float name="FrontParamB">0.5</float>
-						<token name="FrontSurface">0</token>
-						<token name="FrontSurfaceInput">0</token>
-						<float name="LeftParamA">-0.5</float>
-						<float name="LeftParamB">0.5</float>
-						<token name="LeftSurface">0</token>
-						<token name="LeftSurfaceInput">0</token>
-						<bool name="Locked">false</bool>
-						<bool name="Massless">false</bool>
-						<token name="Material">256</token>
-						<string name="MaterialVariantSerialized"></string>
-						<string name="Name">wing</string>
-						<CoordinateFrame name="PivotOffset">
-							<X>0</X>
-							<Y>0</Y>
-							<Z>0</Z>
-							<R00>1</R00>
-							<R01>0</R01>
-							<R02>0</R02>
-							<R10>0</R10>
-							<R11>1</R11>
-							<R12>0</R12>
-							<R20>0</R20>
-							<R21>0</R21>
-							<R22>1</R22>
-						</CoordinateFrame>
-						<float name="Reflectance">0</float>
-						<float name="RightParamA">-0.5</float>
-						<float name="RightParamB">0.5</float>
-						<token name="RightSurface">0</token>
-						<token name="RightSurfaceInput">0</token>
-						<int name="RootPriority">0</int>
-						<Vector3 name="RotVelocity">
-							<X>0</X>
-							<Y>0</Y>
-							<Z>0</Z>
-						</Vector3>
-						<int64 name="SourceAssetId">-1</int64>
-						<BinaryString name="Tags"></BinaryString>
-						<float name="TopParamA">-0.5</float>
-						<float name="TopParamB">0.5</float>
-						<token name="TopSurface">0</token>
-						<token name="TopSurfaceInput">0</token>
-						<float name="Transparency">0</float>
-						<UniqueId name="UniqueId">5a6820a17568807b02db0f19000bac17</UniqueId>
-						<Vector3 name="Velocity">
-							<X>0</X>
-							<Y>0</Y>
-							<Z>0</Z>
-						</Vector3>
-						<token name="formFactorRaw">1</token>
-						<token name="shape">1</token>
-						<Vector3 name="size">
-							<X>20.2999992</X>
-							<Y>0.399999976</Y>
-							<Z>3.5999999</Z>
-						</Vector3>
-					</Properties>
-				</Item>
 			</Item>
 		</Item>
 		<Item class="Camera" referent="RBX198C2F56FB4E489ABD8E449625A2C7A6">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<CoordinateFrame name="CFrame">
-					<X>-16.5462151</X>
-					<Y>23.4791489</Y>
-					<Z>7.137393</Z>
-					<R00>0.970362127</R00>
-					<R01>0.194780305</R01>
-					<R02>-0.143032074</R02>
-					<R10>-7.45058149e-09</R10>
-					<R11>0.5918836</R11>
-					<R12>0.806023598</R12>
-					<R20>0.241655827</R20>
-					<R21>-0.782134771</R21>
-					<R22>0.574341297</R22>
+					<X>-2.1993475</X>
+					<Y>13.8282242</Y>
+					<Z>-11.2313242</Z>
+					<R00>0.982292116</R00>
+					<R01>0.0634687617</R01>
+					<R02>-0.176278099</R02>
+					<R10>3.7252903e-09</R10>
+					<R11>0.940872788</R11>
+					<R12>0.338760346</R12>
+					<R20>0.187355936</R20>
+					<R21>-0.332761616</R21>
+					<R22>0.92421186</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<token name="FieldOfViewMode">0</token>
 				<CoordinateFrame name="Focus">
-					<X>-16.2601509</X>
-					<Y>21.8671017</Y>
-					<Z>5.9887104</Z>
+					<X>-1.84679127</X>
+					<Y>13.1507034</Y>
+					<Z>-13.0797482</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2368,35 +2753,35 @@ game:GetService("UserInputService").InputBegan:Connect(function(i)
 	if i.KeyCode == Enum.KeyCode.W then
 		w = task.spawn(function()
 			while true do
-				_G.set.pitch += 0.025
+				_G.set.pitch = 0.3
 				_G.set.pitch = math.clamp(_G.set.pitch, -math.rad(50), math.rad(50))
-				task.wait(0.1)
+				task.wait()
 			end
 		end)
 	elseif i.KeyCode == Enum.KeyCode.S then
 		s = task.spawn(function()
 			while true do
-				_G.set.pitch -= 0.025
+				_G.set.pitch = -0.3
 				_G.set.pitch = math.clamp(_G.set.pitch, -math.rad(50), math.rad(50))
-				task.wait(0.1)
+				task.wait()
 			end
 		end)
 		
 	elseif i.KeyCode == Enum.KeyCode.A then
 		a = task.spawn(function()
 			while true do
-				_G.set.roll += 0.025
+				_G.set.roll = 0.3
 				_G.set.roll = math.clamp(_G.set.roll, -math.rad(50), math.rad(50))
-				task.wait(0.1)
+				task.wait()
 			end
 		end)
 		
 	elseif i.KeyCode == Enum.KeyCode.D then
 		d = task.spawn(function()
 			while true do
-				_G.set.roll -= 0.025
+				_G.set.roll = -0.3
 				_G.set.roll = math.clamp(_G.set.roll, -math.rad(50), math.rad(50))
-				task.wait(0.1)
+				task.wait()
 			end
 		end)
 	end
@@ -2404,13 +2789,13 @@ end)
 
 game:GetService("UserInputService").InputEnded:Connect(function(i, b)
 	if i.KeyCode == Enum.KeyCode.W then
-		if w then task.cancel(w) end
+		if w then _G.set.pitch = 0 task.cancel(w) end
 	elseif i.KeyCode == Enum.KeyCode.S then
-		if s then task.cancel(s) end
+		if s then _G.set.pitch = 0 task.cancel(s) end
 	elseif i.KeyCode == Enum.KeyCode.A then
-		if a then task.cancel(a) end
+		if a then _G.set.roll = 0 task.cancel(a) end
 	elseif i.KeyCode == Enum.KeyCode.D then
-		if d then task.cancel(d) end
+		if d then _G.set.roll = 0 task.cancel(d) end
 	end
 end)
 

@@ -236,39 +236,43 @@ function gizmo.drawWireSphere(orientation, radius)
 end
 
 -- Draws a point at a position
-function gizmo.drawPoint(position)
+function gizmo.drawPoint(position, adornee)
 	local adornment = get("SphereHandleAdornment")
 	style(adornment)
+	adornment.Adornee = adornee or adornment.Adornee
 	adornment.Radius = globalScale * thickness * POINT_SCALE * 0.5
-	adornment.CFrame = globalOrigin * CFrame.new(position)
+	adornment.CFrame = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.new(position)
 	table.insert(queue, adornment)
 end
 
 -- Draws a line between two positions
-function gizmo.drawLine(from, to)
+function gizmo.drawLine(from, to, adornee)
 	local distance = (to - from).magnitude
 	local adornment = get("CylinderHandleAdornment")
 	style(adornment)
+	adornment.Adornee = adornee or adornment.Adornee
 	adornment.Radius = globalScale * thickness * 0.5
 	adornment.InnerRadius = 0
 	adornment.Height = distance
-	adornment.CFrame = globalOrigin * CFrame.lookAt(from, to) * CFrame.new(0, 0, -distance * 0.5)
+	adornment.CFrame = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.lookAt(from, to) * CFrame.new(0, 0, -distance * 0.5)
 	table.insert(queue, adornment)
 end
 
 -- Draws an arrow between two positions
-function gizmo.drawArrow(from, to)
+function gizmo.drawArrow(from, to, adornee)
 	local coneHeight = thickness * POINT_SCALE * globalScale
 	local distance = math.abs((to - from).magnitude - coneHeight)
-	local orientation = globalOrigin * CFrame.lookAt(from, to)
+	local orientation = (adornee and adornee.CFrame:Inverse() or globalOrigin) * CFrame.lookAt(from, to)
 	local adornmentLine = get("CylinderHandleAdornment")
 	local adornmentCone = get("ConeHandleAdornment")
 	style(adornmentLine)
+	adornmentLine.Adornee = adornee or adornmentLine.Adornee
 	adornmentLine.Radius = globalScale * thickness * 0.5
 	adornmentLine.InnerRadius = 0
 	adornmentLine.Height = distance
 	adornmentLine.CFrame = orientation * CFrame.new(0, 0, -distance * 0.5)
 	style(adornmentCone)
+	adornmentCone.Adornee = adornee or adornmentCone.Adornee
 	adornmentCone.Height = coneHeight
 	adornmentCone.Radius = coneHeight * 0.5
 	adornmentCone.CFrame = orientation * CFrame.new(0, 0, -distance)
@@ -277,8 +281,8 @@ function gizmo.drawArrow(from, to)
 end
 
 -- Draws an arrow at a position in a given direction
-function gizmo.drawRay(from, direction)
-	gizmo.drawArrow(from, from + direction)
+function gizmo.drawRay(from, direction, adornee)
+	gizmo.drawArrow(from, from + direction, adornee)
 end
 
 -- Draws text on the screen at the given location
