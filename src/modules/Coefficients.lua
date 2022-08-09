@@ -161,20 +161,20 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z)
+    local angleOfAttack: number = math.rad(self.wing.Orientation.X)-- + self.flapAngle
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
-    local lift: Vector3 = liftDirection * (aerodynamicCoefficidents.X * 0.01) * dynamicPressure * area
+    local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
     local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
 
-    lift = self.liftPredict:Lerp(lift, 0.7)
-    drag = self.dragPredict:Lerp(lift, 0.7)
-    torque = self.torquePredict:Lerp(lift, 0.7)
+    --lift = self.liftPredict:Lerp(lift, 0.7)
+    --drag = self.dragPredict:Lerp(drag, 0.7)
+    --torque = self.torquePredict:Lerp(torque, 0.7)
 
-    self.liftPredict = lift
-    self.dragPredict = drag
-    self.torquePredict = torque
+    --self.liftPredict = lift
+    --self.dragPredict = drag
+    --self.torquePredict = torque
 
     forceAndTorque.force += lift + drag
     forceAndTorque.torque += torque

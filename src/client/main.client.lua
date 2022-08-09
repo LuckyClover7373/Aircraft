@@ -56,7 +56,7 @@ RUN_SERVICE.Heartbeat:Connect(function(delta)
         
         local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity)
 
-        aeroSurface.wing:ApplyImpulse((Vector3.new(0, 0, velocity.Z):Lerp((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust), 0.5)) * delta)
-        aeroSurface.wing:ApplyAngularImpulse((Vector3.zero:Lerp(forceAndTorque.torque, 0.5)) * delta)
+        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * delta)
+        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * delta)
     end
 end)
