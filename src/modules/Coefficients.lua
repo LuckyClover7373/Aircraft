@@ -161,7 +161,7 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = math.rad(self.wing.Orientation.X)-- + self.flapAngle
+    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z) + self.flapAngle
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
