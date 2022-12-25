@@ -6,6 +6,7 @@ local Coefficidents = require(modules.Coefficients)
 local BiVector = require(modules.BiVector)
 
 local RUN_SERVICE = game:GetService("RunService")
+local FIXED_CORRECTION = 0.1
 
 local drive: VehicleSeat = settingObj.Parent:FindFirstChildWhichIsA("VehicleSeat")
 local wings: Folder = settingObj.Parent.wings
@@ -51,12 +52,14 @@ RUN_SERVICE.RenderStepped:Connect(function(deltaTime)
 end)
 
 RUN_SERVICE.Heartbeat:Connect(function(delta)
+    local torque = Vector3.zero
     for i: number, aeroSurface in pairs(areoSurfaces) do
         local velocity, angularVelocity = aeroSurface.wing.AssemblyLinearVelocity, aeroSurface.wing.AssemblyAngularVelocity
         
-        local forceAndTorque = aeroSurface:CalculateForces(-velocity - angularVelocity)
-
-        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (drive.CFrame.LookVector * engine.thrust)) * delta)
-        aeroSurface.wing:ApplyAngularImpulse((forceAndTorque.torque) * delta)
+        local forceAndTorque = aeroSurface:CalculateForces(-velocity -angularVelocity)
+        
+        aeroSurface.wing:ApplyImpulse(((forceAndTorque.force) + (aeroSurface.wing.CFrame.LookVector * engine.thrust)) * delta)
+        torque += aeroSurface:forceToTorque(drive.Position, forceAndTorque.force) * delta * FIXED_CORRECTION
     end
+    drive:ApplyAngularImpulse(torque)
 end)

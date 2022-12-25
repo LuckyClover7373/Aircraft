@@ -16,7 +16,7 @@
 ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
 
 Aircraft Engine
-Made by LuckyClover7373 (A huge help by wjoh0315, I'm so appreciate to him)
+Made by LuckyClover7373 (A huge help by wjoh0315)
 
 ]]--
 
@@ -27,8 +27,8 @@ engine.airDensity = 1
 engine.liftSlope = 6.28
 engine.skinFriction = 0.02
 engine.zeroLiftAoA = 0
-engine.stallAngleHigh = 50
-engine.stallAngleLow = -50
+engine.stallAngleHigh = 60
+engine.stallAngleLow = -60
 engine.flapFraction = 0.2
 engine.autoAspectRatio = true
 engine.thrust = 3000

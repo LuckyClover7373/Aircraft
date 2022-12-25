@@ -29,7 +29,7 @@ local function LiftCoefficientMaxFraction(flapFraction: number): number
 end
 
 local function CalculateCoefficidentsAtLowAoA(angleOfAttack: number, correctedLiftSlope: number, zeroLiftAoA: number, aspectRatio: number): Vector3
-    local liftCoefficient: number = correctedLiftSlope * (angleOfAttack - zeroLiftAoA)
+    local liftCoefficient: number = correctedLiftSlope * (angleOfAttack - zeroLiftAoA) --((angleOfAttack - zeroLiftAoA) < 0 and -1 or 1) * math.max(math.abs(angleOfAttack - zeroLiftAoA), math.rad(1))
     local inducedAngle: number = liftCoefficient / (math.pi * aspectRatio)
     local effectiveAngle: number = angleOfAttack - zeroLiftAoA - inducedAngle
 
@@ -121,15 +121,22 @@ function Coefficidents.new(wing: BasePart, span: number, chord: number, aspectRa
         ["chord"] = chord,
         ["aspectRatio"] = aspectRatio,
         ["surfaceType"] = surfaceType,
-        ["wing"] = wing,
-        ["liftPredict"] = Vector3.zero,
-        ["dragPredict"] = Vector3.zero,
-        ["torquePredict"] = Vector3.zero
+        ["wing"] = wing
     }, Coefficidents)
 end
 
 function Coefficidents:setFlapAngle(angle: number)
     self.flapAngle = math.clamp(angle, -math.rad(50), math.rad(50))
+end
+
+function Coefficidents:forceToTorque(position: Vector3, force: Vector3)
+    local diff = (position - self.wing.Position)
+    if RUN_SERVICE:IsStudio() then
+        gizmo.setScale(5)
+        gizmo.setColor(Color3.fromRGB(10, 187, 19))
+        gizmo.drawRay(self.wing.Position, diff, self.wing)
+    end
+    return diff:Cross(force)
 end
 
 function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
@@ -161,12 +168,13 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
 
     local area: number = self.chord * self.span
     local dynamicPressure: number = 0.5 * engine.airDensity * airVelocity.Magnitude ^ 2
-    local angleOfAttack: number = -math.atan2(airVelocity.Unit.Y, -airVelocity.Unit.Z) + self.flapAngle
+    local unitAirVel = airVelocity.Magnitude <= 0 and Vector3.zero or airVelocity.Unit 
+    local angleOfAttack: number = -math.atan2(unitAirVel.Y, -unitAirVel.Z)
     local aerodynamicCoefficidents: Vector3 = CalculateCoefficidents(angleOfAttack, correctedLiftSlope, zeroLiftAoA, stallAngleHigh, stallAngleLow, self.flapAngle, self.aspectRatio)
     
     local lift: Vector3 = liftDirection * aerodynamicCoefficidents.X * dynamicPressure * area
     local drag: Vector3 = dragDirection * aerodynamicCoefficidents.Y * dynamicPressure * area
-    local torque: Vector3 = -self.wing.CFrame.RightVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
+    local torque: Vector3 = -self.wing.CFrame.LookVector * aerodynamicCoefficidents.Z * dynamicPressure * area * self.chord
 
     --lift = self.liftPredict:Lerp(lift, 0.7)
     --drag = self.dragPredict:Lerp(drag, 0.7)
@@ -177,16 +185,16 @@ function Coefficidents:CalculateForces(worldAirVelocity: Vector3)
     --self.torquePredict = torque
 
     forceAndTorque.force += lift + drag
-    forceAndTorque.torque += torque
 
     if RUN_SERVICE:IsStudio() then
         gizmo.setScale(5)
         --gizmo.setColor(Color3.fromRGB(199, 2, 2))
-        --gizmo.drawText(self.wing.Position, lift.Magnitude)
-        gizmo.setColor(Color3.fromRGB(13, 2, 167))
-        gizmo.drawText(self.wing.Position, "")
         gizmo.setColor(Color3.fromRGB(255, 255, 255))
+		gizmo.drawText(self.wing.Position, aerodynamicCoefficidents.Z)
+        gizmo.setColor(Color3.fromRGB(13, 2, 167))
         gizmo.drawRay(self.wing.Position, lift, self.wing)
+        gizmo.setColor(Color3.fromRGB(255, 255, 255))
+        gizmo.drawRay(self.wing.Position, dragDirection, self.wing)
         --gizmo.setScale(5)
         --gizmo.setColor(Color3.fromRGB(22, 189, 0))
         --gizmo.drawText(self.wing.Position, angleOfAttack)
